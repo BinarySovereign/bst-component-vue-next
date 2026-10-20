@@ -8,7 +8,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BinarySovereign/bs-component-vue-next.git",
+    "url": "git+https://github.com/BinarySovereign/bst-component-vue-next.git",
     "directory": "packages/bst-ai-components"
   },
   "peerDependencies": {

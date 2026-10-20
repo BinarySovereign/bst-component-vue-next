@@ -164,7 +164,7 @@ export default defineConfig({
     // 内置本地搜索（VitePress 自带 minisearch），无需接第三方搜索服务
     search: { provider: 'local' },
 
-    socialLinks: [{ icon: 'github', link: 'https://github.com/BinarySovereign/bs-component-vue-next' }],
+    socialLinks: [{ icon: 'github', link: 'https://github.com/BinarySovereign/bst-component-vue-next' }],
 
     outline: { level: [2, 3], label: '本页目录' },
     docFooter: { prev: '上一篇', next: '下一篇' },

@@ -4,21 +4,21 @@
 
 组件与样式以 **GitHub Release 附件**的形式分发：每个发布单元一个 `.tgz`，不使用 npm registry。
 
-先打开 [Releases](https://github.com/BinarySovereign/bs-component-vue-next/releases) 确认要安装的版本号，
+先打开 [Releases](https://github.com/BinarySovereign/bst-component-vue-next/releases) 确认要安装的版本号，
 下文以 `<版本号>` 表示（如 `1.1.0`），四个单元的版本可能不同，以各 Release 标题为准。
 
 ```bash
 # 安装基础组件包
-pnpm add https://github.com/BinarySovereign/bs-component-vue-next/releases/download/vue-next%40<版本号>/bst-vue-next-<版本号>.tgz
+pnpm add https://github.com/BinarySovereign/bst-component-vue-next/releases/download/vue-next%40<版本号>/bst-vue-next-<版本号>.tgz
 
 # 安装高级组件包
-pnpm add https://github.com/BinarySovereign/bs-component-vue-next/releases/download/vue-next-pro%40<版本号>/bst-vue-next-pro-<版本号>.tgz
+pnpm add https://github.com/BinarySovereign/bst-component-vue-next/releases/download/vue-next-pro%40<版本号>/bst-vue-next-pro-<版本号>.tgz
 
 # 安装 AI 组件包
-pnpm add https://github.com/BinarySovereign/bs-component-vue-next/releases/download/vue-next-pro-ai%40<版本号>/bst-vue-next-pro-ai-<版本号>.tgz
+pnpm add https://github.com/BinarySovereign/bst-component-vue-next/releases/download/vue-next-pro-ai%40<版本号>/bst-vue-next-pro-ai-<版本号>.tgz
 
 # 安装样式包
-pnpm add https://github.com/BinarySovereign/bs-component-vue-next/releases/download/styles%40<版本号>/bst-styles-<版本号>.tgz
+pnpm add https://github.com/BinarySovereign/bst-component-vue-next/releases/download/styles%40<版本号>/bst-styles-<版本号>.tgz
 ```
 
 只安装实际用到的单元，无需四个全装。
@@ -44,10 +44,10 @@ pnpm add ./bst-styles-<版本号>.tgz
 
 ```bash
 # 克隆仓库到本地
-git clone https://github.com/BinarySovereign/bs-component-vue-next.git
+git clone https://github.com/BinarySovereign/bst-component-vue-next.git
 
 # 切换到项目目录
-cd bs-component-vue-next
+cd bst-component-vue-next
 
 pnpm install
 

@@ -7,11 +7,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BinarySovereign/bs-component-vue-next.git",
+    "url": "git+https://github.com/BinarySovereign/bst-component-vue-next.git",
     "directory": "packages/bst-vue-next-pro-ai"
   },
   "bugs": {
-    "url": "https://github.com/BinarySovereign/bs-component-vue-next/issues"
+    "url": "https://github.com/BinarySovereign/bst-component-vue-next/issues"
   },
   "keywords": [
     "vue",
