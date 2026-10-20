@@ -1,0 +1,34 @@
+{
+  "name": "@binarysovereign/docs",
+  "version": "0.0.1",
+  "private": true,
+  "description": "BstComponent 文档站：基于 VitePress 的组件文档与示例站点，脚本名与根 package.json 的 dev:docs / build:docs / preview:docs 一一对应",
+  "type": "module",
+  "author": "Felix Tang(BinarySovereign)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BinarySovereign/bs-component-vue-next.git",
+    "directory": "packages/bst-vue-next/site"
+  },
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@binarysovereign/styles": "workspace:*",
+    "@binarysovereign/bst-basic-components": "workspace:*",
+    "@binarysovereign/bst-advanced-components": "workspace:*",
+    "@binarysovereign/bst-ai-components": "workspace:*",
+    "vue": "catalog:runtime"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:types",
+    "@vitejs/plugin-vue-jsx": "catalog:build",
+    "postcss": "catalog:build",
+    "vitepress": "catalog:docs",
+    "vue-tsc": "catalog:types"
+  }
+}

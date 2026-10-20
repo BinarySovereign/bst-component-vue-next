@@ -1,0 +1,37 @@
+{
+  "name": "@binarysovereign/test",
+  "version": "0.0.1",
+  "private": true,
+  "description": "BstComponent 测试包：统一维护组件单元测试与 SSR / CSR 快照测试的 Vitest 基建、配置与全局挂载逻辑",
+  "type": "module",
+  "author": "Felix Tang(BinarySovereign)",
+  "license": "MIT",
+  "scripts": {
+    "test": "pnpm test:unit && pnpm test:snap",
+    "test:update": "vitest run -u --config ../../../vitest.config.ts && pnpm test:snap-update",
+    "test:unit": "vitest run --config ../../../vitest.config.ts",
+    "test:unit-dev": "vitest --config ../../../vitest.config.ts",
+    "test:unit-gui": "vitest --ui --coverage --config ../../../vitest.config.ts",
+    "test:unit-coverage": "vitest run --coverage --config ../../../vitest.config.ts",
+    "test:snap": "cross-env TEST_TARGET=snap vitest run --config ../../../vitest.config.ts",
+    "test:snap-update": "cross-env TEST_TARGET=snap vitest run -u --config ../../../vitest.config.ts"
+  },
+  "devDependencies": {
+    "@binarysovereign/bst-types": "workspace:*",
+    "@vitejs/plugin-vue": "catalog:build",
+    "@vitejs/plugin-vue-jsx": "catalog:build",
+    "@vitest/coverage-v8": "catalog:test",
+    "@vitest/ui": "catalog:test",
+    "@vue/server-renderer": "catalog:test",
+    "@vue/test-utils": "catalog:test",
+    "cross-env": "catalog:build",
+    "glob": "catalog:build",
+    "jsdom": "catalog:test",
+    "lodash-es": "catalog:runtime",
+    "mockdate": "catalog:test",
+    "vite": "catalog:build",
+    "vitest": "catalog:test",
+    "vue": "catalog:runtime",
+    "vue-router": "catalog:runtime"
+  }
+}

@@ -1,0 +1,48 @@
+// 全局共享动画
+// 淡入
+@keyframes bst-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+// 淡出
+@keyframes bst-fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+// 旋转
+@keyframes bst-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// 从小放大入场
+@keyframes bst-zoom-out {
+  from {
+    transform: scale(.2);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+.@{prefix}-icon-loading {
+  animation: bst-spin 1.5s linear infinite;
+}

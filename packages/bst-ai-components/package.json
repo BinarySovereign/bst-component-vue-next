@@ -1,0 +1,20 @@
+{
+  "name": "@binarysovereign/bst-ai-components",
+  "version": "0.0.1",
+  "private": true,
+  "description": "BstComponent AI 组件源码包（private）：以 TSX 编写的 AI 场景组件源码，产出 es / lib / umd 三形态，由 @binarysovereign/vue-next-pro-ai 聚合后发布",
+  "type": "module",
+  "author": "Felix Tang(BinarySovereign)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BinarySovereign/bs-component-vue-next.git",
+    "directory": "packages/bst-ai-components"
+  },
+  "peerDependencies": {
+    "vue": "catalog:runtime"
+  },
+  "dependencies": {
+    "@binarysovereign/bst-types": "workspace:*"
+  }
+}

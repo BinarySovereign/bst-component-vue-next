@@ -1,0 +1,24 @@
+# 统一行尾与文本判定，保证跨平台协作时工作区一致
+#
+# Windows 检出默认为 CRLF，而 `.prettierrc.js` 要求 `endOfLine: 'lf'`，
+# 若不在此声明，同一份文件在 Windows 与 Linux（CI）上会被 Prettier 判定为不一致。
+# `text=auto` 让 Git 自动识别文本文件并在仓库内统一存为 LF，
+# `eol=lf` 进一步把检出到工作区的行尾也固定为 LF，使格式检查与平台无关。
+* text=auto eol=lf
+
+# 二进制文件不做行尾转换
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.zip binary
+*.pdf binary
+
+# 锁文件、快照与产物保持原样，避免无意义的转换噪声
+pnpm-lock.yaml text eol=lf

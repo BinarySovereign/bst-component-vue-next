@@ -1,0 +1,171 @@
+/* 「样式预览」页的容器外观：设计令牌总览表。
+
+   与 demo.css 同规：取值一律走组件库的语义令牌，故本文件不需要任何暗色分支。
+   注意不要直接取 `--bst-gray-color-*` 这类原始色板，它在暗色下语义会反转。 */
+
+/* 令牌总览 */
+
+.bst-token-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--bst-size-3) var(--bst-size-5);
+  margin: var(--bst-size-5) 0;
+  padding: var(--bst-size-5);
+  border: 1px solid var(--bst-component-stroke);
+  border-radius: var(--bst-radius-medium);
+  background-color: var(--bst-bg-color-secondarycontainer);
+}
+
+.bst-token-field {
+  display: flex;
+  align-items: center;
+  gap: var(--bst-size-2);
+  color: var(--bst-text-color-primary);
+  font: var(--bst-font-body-small);
+}
+
+.bst-token-field-label {
+  color: var(--bst-text-color-secondary);
+}
+
+.bst-token-field input[type='search'] {
+  min-width: 260px;
+  padding: var(--bst-comp-padding-tb-xs) var(--bst-comp-padding-lr-xs);
+  border: 1px solid var(--bst-component-stroke);
+  border-radius: var(--bst-radius-default);
+  background-color: var(--bst-bg-color-container);
+  color: var(--bst-text-color-primary);
+  font: var(--bst-font-body-small);
+}
+
+.bst-token-field-check input[type='checkbox'] {
+  accent-color: var(--bst-brand-color-7);
+}
+
+.bst-token-actions {
+  display: flex;
+  gap: var(--bst-size-2);
+}
+
+.bst-token-button {
+  padding: var(--bst-comp-padding-tb-xxs) var(--bst-comp-padding-lr-xs);
+  border: 1px solid var(--bst-component-stroke);
+  border-radius: var(--bst-radius-default);
+  background-color: var(--bst-bg-color-container);
+  color: var(--bst-text-color-primary);
+  font: var(--bst-font-body-small);
+  cursor: pointer;
+}
+
+.bst-token-button:hover {
+  background-color: var(--bst-bg-color-container-hover);
+}
+
+.bst-token-summary {
+  flex: 1 1 100%;
+  margin: 0;
+  color: var(--bst-text-color-secondary);
+  font: var(--bst-font-body-small);
+}
+
+.bst-token-hint {
+  margin: var(--bst-size-4) 0;
+  color: var(--bst-text-color-placeholder);
+  font: var(--bst-font-body-small);
+}
+
+.bst-token-group {
+  margin: var(--bst-size-6) 0;
+  border: 1px solid var(--bst-component-stroke);
+  border-radius: var(--bst-radius-medium);
+  background-color: var(--bst-bg-color-container);
+}
+
+.bst-token-group-summary {
+  display: flex;
+  align-items: baseline;
+  gap: var(--bst-size-3);
+  padding: var(--bst-size-4) var(--bst-size-5);
+  color: var(--bst-text-color-primary);
+  font: var(--bst-font-title-small);
+  cursor: pointer;
+}
+
+.bst-token-group-summary:hover {
+  background-color: var(--bst-bg-color-container-hover);
+}
+
+.bst-token-group-count {
+  color: var(--bst-text-color-placeholder);
+  font: var(--bst-font-body-small);
+}
+
+.bst-token-group-description {
+  margin: 0;
+  padding: 0 var(--bst-size-5) var(--bst-size-3);
+  color: var(--bst-text-color-secondary);
+  font: var(--bst-font-body-small);
+}
+
+.bst-token-table {
+  display: table;
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  font: var(--bst-font-body-small);
+}
+
+.bst-token-table th,
+.bst-token-table td {
+  padding: var(--bst-size-1) var(--bst-size-5);
+  border-top: 1px solid var(--bst-component-stroke);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.bst-token-table th {
+  color: var(--bst-text-color-secondary);
+  font-weight: 400;
+}
+
+.bst-token-cell-name code {
+  background-color: transparent;
+  color: var(--bst-text-color-brand);
+}
+
+.bst-token-cell-value {
+  white-space: nowrap;
+}
+
+.bst-token-cell-note {
+  color: var(--bst-text-color-placeholder);
+}
+
+.bst-token-swatch {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: var(--bst-size-2);
+  border: 1px solid var(--bst-component-stroke);
+  border-radius: var(--bst-radius-small);
+  vertical-align: middle;
+}
+
+.bst-token-value {
+  margin-right: var(--bst-size-4);
+  color: var(--bst-text-color-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.bst-token-value em {
+  margin-right: var(--bst-size-1);
+  color: var(--bst-text-color-placeholder);
+  font-style: normal;
+}
+
+/* 别名提示：说明该令牌取自另一令牌，取值列已展示解析后的实际值 */
+.bst-token-alias {
+  color: var(--bst-text-color-placeholder);
+  font-family: monospace;
+}

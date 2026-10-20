@@ -1,0 +1,7 @@
+*.md
+pnpm-lock.yaml
+**/__snapshots__/*.snap
+packages/bst-styles/
+.agents/
+.vscode/
+dist/

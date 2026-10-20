@@ -1,0 +1,10 @@
+// 不在 _index.less 当中导出，组件库内部使用
+// 用来给组件统一设置【键盘聚焦可见样式】，多用于 Tab 标签、按钮、可聚焦元素
+.tab-focus-style-rect() {
+  &:focus-visible {
+    outline: 2px solid @brand-color;
+    // 命名与 tokens/_variables.less 的 @comp-padding-tb-* 段序保持一致
+    outline-offset: @comp-padding-tb-xs;
+    border-radius: 0;
+  }
+}

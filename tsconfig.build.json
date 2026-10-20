@@ -1,0 +1,42 @@
+{
+  // 构建用 tsconfig：在根 tsconfig 之上补上「只产出声明文件」的差异
+  // 根配置继承自 @vue/tsconfig，其 noEmit: true 面向类型检查，不能用于产出 .d.ts
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationMap": false,
+    // 剥离声明文件中的源码注释：产物只保留构建脚本补写的统一文件头
+    "removeComments": true,
+    // 以仓库根为根目录，产出结构才会保持 packages/<包名>/** 的层级，
+    // 从而可按包精确取出各自的声明文件
+    "rootDir": "."
+  },
+  "include": [
+    // 共享类型包：声明需随每个组件包一起产出，构建期内联进产物
+    "packages/bst-types/**/*.ts",
+    "packages/bst-basic-components/**/*.ts",
+    "packages/bst-basic-components/**/*.tsx",
+    "packages/bst-advanced-components/**/*.ts",
+    "packages/bst-advanced-components/**/*.tsx",
+    "packages/bst-ai-components/**/*.ts",
+    "packages/bst-ai-components/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "coverage",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    // 组件模板仅作规范骨架，不参与构建
+    "**/template/**",
+    // 单测、示例与快照用例不进产物
+    "**/__test__/**",
+    "**/__tests__/**",
+    "**/_example/**",
+    "**/examples/**",
+    // 排除已是产物的目录，避免把上一轮结果再当源码处理
+    "**/build/**"
+  ]
+}

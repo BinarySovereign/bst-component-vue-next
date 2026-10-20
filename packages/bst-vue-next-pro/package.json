@@ -1,0 +1,49 @@
+{
+  "name": "@binarysovereign/vue-next-pro",
+  "version": "0.0.1",
+  "description": "BstComponent 高级组件主包（Vue 3）：聚合 @binarysovereign/bst-advanced-components 的产物对外发布，可与 @binarysovereign/styles 配套按需引入",
+  "type": "module",
+  "author": "Felix Tang(BinarySovereign)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BinarySovereign/bs-component-vue-next.git",
+    "directory": "packages/bst-vue-next-pro"
+  },
+  "bugs": {
+    "url": "https://github.com/BinarySovereign/bs-component-vue-next/issues"
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "vue-next",
+    "component",
+    "component-library",
+    "ui",
+    "pro",
+    "binarysovereign"
+  ],
+  "main": "./lib/index.js",
+  "module": "./es/index.mjs",
+  "types": "./es/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./es/index.d.ts",
+      "import": "./es/index.mjs",
+      "require": "./lib/index.js"
+    },
+    "./*": "./*"
+  },
+  "files": [
+    "es",
+    "lib",
+    "umd"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "vue": "catalog:runtime"
+  }
+}

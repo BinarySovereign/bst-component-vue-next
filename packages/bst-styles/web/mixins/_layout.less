@@ -1,0 +1,36 @@
+// flex 水平垂直居中
+.horizontal-vertical-center-with-flex() {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// 绝对定位撑满父容器
+.fill-with-position-absolute() {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+// 清除 ul/li 默认列表样式
+.list-style-none() {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+// 视觉隐藏输入框（屏幕阅读器还能读到，无障碍隐藏）
+.input-visually-hidden() {
+  border: 0;
+  clip-path: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  outline: 0;
+  appearance: none;
+}

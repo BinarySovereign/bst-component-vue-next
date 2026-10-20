@@ -1,0 +1,184 @@
+<!--
+  Docs 预览侧注入：页面背景跟随主题 + Docs 文案汉化
+-->
+
+<!--
+  预览画布背景
+
+  Storybook 默认给 iframe 的 body 白色背景，主题切换后只有组件自身变色，
+  整页看起来「没反应」。这里把画布背景绑定到样式包的页面底色令牌，
+  该令牌在 :root 与 :root.bst-theme-dark 下取值不同，因此切换主题即生效。
+-->
+<style>
+  html,
+  body {
+    background-color: var(--bst-bg-color-page, #fff);
+  }
+</style>
+
+<script>
+  (function () {
+    /** 全局词条：在 Docs 根内任意位置生效 */
+    var GLOBAL_DICT = {
+      'Show code': '显示代码',
+      'Hide code': '隐藏代码',
+      'Copy code': '复制代码',
+      'Copied!': '已复制',
+      'No parameters': '无参数',
+    };
+
+    /** 参数表词条：仅在 `.docblock-argstable` 内生效 */
+    var TABLE_DICT = {
+      Name: '名称',
+      Description: '描述',
+      Default: '默认值',
+      Control: '控件',
+      Type: '类型',
+      Required: '必填',
+      props: '属性',
+      PROPS: '属性',
+      events: '事件',
+      EVENTS: '事件',
+      slots: '插槽',
+      SLOTS: '插槽',
+      exposed: '暴露',
+      EXPOSED: '暴露',
+      methods: '方法',
+      METHODS: '方法',
+    };
+
+    /** 不参与替换的标签 */
+    var SKIP_TAGS = { SCRIPT: 1, STYLE: 1, NOSCRIPT: 1, TEXTAREA: 1, CODE: 1, PRE: 1 };
+
+    /**
+     * 翻译单个字符串，保留首尾空白。
+     *
+     * @param {string} raw 原始文本
+     * @param {boolean} inTable 是否位于参数表内
+     * @returns {string} 翻译结果，无匹配时原样返回
+     */
+    function translate(raw, inTable) {
+      var match = /^(\s*)([\s\S]*?)(\s*)$/.exec(raw);
+
+      if (!match) return raw;
+
+      var core = match[2];
+
+      if (!core) return raw;
+
+      if (inTable && Object.prototype.hasOwnProperty.call(TABLE_DICT, core)) {
+        return match[1] + TABLE_DICT[core] + match[3];
+      }
+
+      if (Object.prototype.hasOwnProperty.call(GLOBAL_DICT, core)) {
+        return match[1] + GLOBAL_DICT[core] + match[3];
+      }
+
+      return raw;
+    }
+
+    /**
+     * 判断文本节点是否应跳过。
+     *
+     * @param {Text} node 文本节点
+     * @returns {boolean} 是否跳过
+     */
+    function shouldSkip(node) {
+      var parent = node.parentNode;
+
+      if (!parent || parent.nodeType !== 1) return true;
+
+      return Boolean(SKIP_TAGS[parent.tagName]);
+    }
+
+    /**
+     * 翻译文本节点；已翻译内容不会再次命中，天然幂等。
+     *
+     * @param {Text} node 文本节点
+     */
+    function translateTextNode(node) {
+      if (shouldSkip(node)) return;
+
+      var parent = node.parentNode;
+      var inTable = Boolean(parent.closest && parent.closest('.docblock-argstable'));
+      var next = translate(node.nodeValue, inTable);
+
+      if (next !== node.nodeValue) node.nodeValue = next;
+    }
+
+    /**
+     * 遍历并翻译一个子树。
+     *
+     * @param {Node} root 子树根
+     */
+    function translateTree(root) {
+      if (root.nodeType === 3) {
+        translateTextNode(root);
+        return;
+      }
+
+      if (root.nodeType !== 1 || SKIP_TAGS[root.tagName]) return;
+
+      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode: function (node) {
+          return shouldSkip(node) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+        },
+      });
+
+      var current = walker.nextNode();
+
+      while (current) {
+        translateTextNode(current);
+        current = walker.nextNode();
+      }
+    }
+
+    /** 观察后续渲染：Docs 页面由 React 挂载，首屏之后仍有增量写入 */
+    var observer = new MutationObserver(function (mutations) {
+      for (var i = 0; i < mutations.length; i += 1) {
+        var mutation = mutations[i];
+
+        if (mutation.type === 'characterData') {
+          translateTextNode(mutation.target);
+          continue;
+        }
+
+        for (var j = 0; j < mutation.addedNodes.length; j += 1) {
+          translateTree(mutation.addedNodes[j]);
+        }
+      }
+    });
+
+    /** 监听 Docs 根节点出现后再启动翻译 */
+    function start() {
+      var docsRoot = document.querySelector('#storybook-docs');
+
+      if (!docsRoot) return false;
+
+      translateTree(docsRoot);
+      observer.observe(docsRoot, { childList: true, subtree: true, characterData: true });
+
+      return true;
+    }
+
+    /** 轮询等待 Docs 根节点挂载（story 模式下不存在，因此不做任何事） */
+    function bootstrap() {
+      if (start()) return;
+
+      var timer = window.setInterval(function () {
+        if (start()) window.clearInterval(timer);
+      }, 100);
+
+      // 30 秒后放弃，避免在 story 模式下无限轮询
+      window.setTimeout(function () {
+        window.clearInterval(timer);
+      }, 30000);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bootstrap);
+    } else {
+      bootstrap();
+    }
+  })();
+</script>

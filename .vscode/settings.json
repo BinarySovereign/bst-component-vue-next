@@ -1,0 +1,82 @@
+{
+  // 保存文件时自动格式化
+  "editor.formatOnSave": true,
+  // 默认格式化器统一使用 Prettier 扩展
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // 与 .prettierrc.js 的 tabWidth 保持一致
+  "editor.tabSize": 2,
+  // 仅当存在 Prettier 配置文件时才格式化，避免误改无关文件
+  "prettier.requireConfig": true,
+  // 显式指向仓库根配置，避免多包场景下解析错位
+  "prettier.configPath": ".prettierrc.js",
+  // 使用本地依赖的 prettier 版本（3.9.9）
+  "prettier.prettierPath": "./node_modules/prettier",
+  // 换行符统一 LF，与 endOfLine: 'lf' 对齐
+  "files.eol": "\n",
+  // 保存时清理行尾空白
+  "files.trimTrailingWhitespace": true,
+  // 保存时保证文件以单个换行结尾
+  "files.insertFinalNewline": true,
+  // 保存时移除文件末尾多余换行
+  "files.trimFinalNewlines": true,
+  "files.exclude": {
+    // 隐藏 ESLint 缓存文件
+    "**/.eslintcache": true,
+    // 隐藏 Stylelint 缓存文件
+    "**/.stylelintcache": true,
+    // 隐藏增量编译记录
+    "**/*.tsbuildinfo": true
+  },
+  "search.exclude": {
+    // 搜索时排除构建产物
+    "**/dist": true,
+    // 搜索时排除覆盖率报告
+    "**/coverage": true,
+    // 搜索时排除依赖目录
+    "**/node_modules": true
+  },
+  // JavaScript 文件使用 Prettier
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // JSX 文件使用 Prettier
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // TypeScript 文件使用 Prettier
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // TSX 文件使用 Prettier
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // Vue 单文件组件使用 Prettier
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // Less 样式文件使用 Prettier
+  "[less]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // CSS 样式文件使用 Prettier
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // HTML 文件使用 Prettier
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  // JSON 文件使用 Prettier
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // 带注释的 JSON 使用 Prettier
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // YAML 文件使用 Prettier
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}

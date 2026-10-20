@@ -1,0 +1,316 @@
+<!--
+  Manager 界面汉化注入
+
+  背景：Storybook 官方不支持界面语言切换（manager 的文案硬编码在编译后的 React 产物里），
+  因此这里用一段运行时文本替换脚本做「部分汉化」。可替换的范围仅限：
+  - 纯文本节点（侧边栏、标签页、工具栏、提示文字）
+  - title / placeholder / aria-label 三个属性
+
+  维护须知：
+  1. 这是**对 Storybook 内部 DOM 的补丁**，升级 Storybook 后文案可能增删，失效时不会报错，
+     只会退回英文；本文件可整块删除而不影响 Storybook 本身。
+  2. 只做精确整串匹配，不做子串替换，避免误伤 story 名称与组件内容。
+     `Default` / `Name` 这类会与 story 名称撞车的词，只放进 TABLE_DICT，限定在参数表内替换。
+  3. 要扩充词条，直接往对应字典里追加；动态文案走 REGEX_RULES。
+-->
+<script>
+  (function () {
+    /** 全局词条：manager 界面内任意位置生效 */
+    var DICT = {
+      // 新手引导卡片
+      'Get started': '快速上手',
+      'Add 5 components': '添加 5 个组件',
+      'Change a story with Controls': '用 Controls 修改 story',
+      'Publish your Storybook for feedback': '发布 Storybook 获取反馈',
+      'Open onboarding guide': '打开新手引导',
+      'Collapse onboarding guide': '折叠新手引导',
+      "Learn what's new in Storybook": '了解 Storybook 新特性',
+
+      // 侧边栏
+      'Search for components': '搜索组件',
+      'Find components': '搜索组件',
+      'Show new stories': '显示新增 story',
+      'Show new stories since last commit': '显示本次提交以来的新增 story',
+      Stories: '组件',
+      'Collapse all': '全部折叠',
+      Collapse: '折叠',
+      Expand: '展开',
+      'Tag filters': '标签筛选',
+
+      // 插件面板与标签页
+      Controls: '属性',
+      Actions: '动作',
+      Interactions: '交互',
+      Code: '代码',
+      Accessibility: '无障碍',
+      'Available addons': '可用插件',
+      'Addon panel': '插件面板',
+      'Addon panel resize handle': '插件面板分隔条',
+      'Hide addon panel': '隐藏插件面板',
+      'Move addon panel to right': '插件面板移到右侧',
+
+      // 工具栏
+      Toolbar: '工具栏',
+      'Main preview area': '预览区',
+      'Content is loading...': '内容加载中…',
+      'Reload story': '重新加载',
+      'Measure tool': '测量工具',
+      'Outline tool': '轮廓工具',
+      'Viewport size': '视口尺寸',
+      'Vision filter': '视觉滤镜',
+      'Open in isolation mode': '隔离模式打开',
+      'Change zoom level': '调整缩放',
+      'Enter full screen': '全屏',
+      'Open in editor': '在编辑器中打开',
+      'Skip to content': '跳到内容',
+      'Skip to sidebar': '跳到侧边栏',
+      'Sidebar resize handle': '侧边栏分隔条',
+
+      // 右上角菜单
+      Settings: '设置',
+      Shortcuts: '快捷键',
+      About: '关于',
+
+      // Controls 面板中的参数表
+      Name: '名称',
+      Description: '描述',
+      Default: '默认值',
+      Control: '控件',
+      Type: '类型',
+      'Reset controls': '重置控件',
+      Reset: '重置',
+      'Choose option...': '选择选项…',
+      'Set boolean': '设置布尔值',
+      'Set number': '设置数字',
+      'Set string': '设置字符串',
+      'Set object': '设置对象',
+      'Set array': '设置数组',
+      'Set color': '设置颜色',
+      'Set date': '设置日期',
+
+      // 状态标记
+      'Change status: New': '修改状态：新增',
+
+      // 无障碍面板：axe 规则名（如 Color contrast）不在覆盖范围内，仅翻译框架层文案
+      Violations: '违规',
+      Passes: '通过',
+      Inconclusive: '待确认',
+      Critical: '致命',
+      Serious: '严重',
+      Moderate: '中等',
+      Minor: '轻微',
+      'Color contrast': '颜色对比度',
+    };
+
+    /**
+     * 参数表词条：仅在 `.docblock-argstable` 内生效
+     *
+     * 这些词同时可能出现在 story 名称或其他位置，全局替换会误伤，必须限定作用域。
+     */
+    var TABLE_DICT = {
+      Name: '名称',
+      Description: '描述',
+      Default: '默认值',
+      Control: '控件',
+      Type: '类型',
+      Required: '必填',
+      // 参数分组标题：DOM 内为小写，视觉上由 CSS 转大写
+      props: '属性',
+      PROPS: '属性',
+      events: '事件',
+      EVENTS: '事件',
+      slots: '插槽',
+      SLOTS: '插槽',
+      exposed: '暴露',
+      EXPOSED: '暴露',
+      methods: '方法',
+      METHODS: '方法',
+      'Reset controls': '重置控件',
+      Reset: '重置',
+      'Choose option...': '选择选项…',
+      'Set boolean': '设置布尔值',
+      'Set number': '设置数字',
+      'Set string': '设置字符串',
+      'Set object': '设置对象',
+      'Set array': '设置数组',
+      'Set color': '设置颜色',
+      'Set date': '设置日期',
+    };
+
+    /** 动态文案：命中即替换 */
+    var REGEX_RULES = [
+      [/^(\d+)% completed$/, '$1% 已完成'],
+      [/^Set (.+)$/, '设置 $1'],
+    ];
+
+    /** 不参与替换的标签：内容是代码或非展示文本 */
+    var SKIP_TAGS = { SCRIPT: 1, STYLE: 1, NOSCRIPT: 1, TEXTAREA: 1, CODE: 1, PRE: 1 };
+
+    /**
+     * 翻译单个字符串，保留首尾空白。
+     *
+     * @param {string} raw 原始文本
+     * @param {boolean} inTable 是否位于参数表内
+     * @returns {string} 翻译结果，无匹配时原样返回
+     */
+    function translate(raw, inTable) {
+      var match = /^(\s*)([\s\S]*?)(\s*)$/.exec(raw);
+
+      if (!match) return raw;
+
+      var core = match[2];
+
+      if (!core) return raw;
+
+      if (inTable && Object.prototype.hasOwnProperty.call(TABLE_DICT, core)) {
+        return match[1] + TABLE_DICT[core] + match[3];
+      }
+
+      if (Object.prototype.hasOwnProperty.call(DICT, core)) {
+        return match[1] + DICT[core] + match[3];
+      }
+
+      for (var i = 0; i < REGEX_RULES.length; i += 1) {
+        if (REGEX_RULES[i][0].test(core)) {
+          return match[1] + core.replace(REGEX_RULES[i][0], REGEX_RULES[i][1]) + match[3];
+        }
+      }
+
+      return raw;
+    }
+
+    /**
+     * 判断节点是否应跳过。
+     *
+     * @param {Node} node 待判断节点
+     * @returns {boolean} 是否跳过
+     */
+    function shouldSkip(node) {
+      var parent = node.parentNode;
+
+      if (!parent || parent.nodeType !== 1) return true;
+
+      if (SKIP_TAGS[parent.tagName]) return true;
+
+      return parent.closest ? Boolean(parent.closest('[data-bst-i18n-skip]')) : false;
+    }
+
+    /**
+     * 翻译一个文本节点；已翻译过的内容不会再次命中，因此天然幂等。
+     *
+     * @param {Text} node 文本节点
+     */
+    function translateTextNode(node) {
+      if (shouldSkip(node)) return;
+
+      var parent = node.parentNode;
+      var inTable = Boolean(parent.closest && parent.closest('.docblock-argstable'));
+      var next = translate(node.nodeValue, inTable);
+
+      if (next !== node.nodeValue) node.nodeValue = next;
+    }
+
+    /** 需要翻译的展示型属性 */
+    var ATTRS = ['title', 'placeholder', 'aria-label'];
+
+    /**
+     * 翻译元素上的展示型属性。
+     *
+     * @param {Element} el 目标元素
+     */
+    function translateAttributes(el) {
+      if (!el.getAttribute) return;
+
+      for (var i = 0; i < ATTRS.length; i += 1) {
+        var name = ATTRS[i];
+        var value = el.getAttribute(name);
+
+        if (!value) continue;
+
+        var next = translate(value, false);
+
+        if (next !== value) el.setAttribute(name, next);
+      }
+    }
+
+    /**
+     * 遍历并翻译一个子树。
+     *
+     * 文本与属性要分别遍历：TreeWalker 只走文本节点，属性需对每个元素单独处理，
+     * 否则首屏挂载的大量按钮 aria-label 会全部漏掉。
+     *
+     * @param {Node} root 子树根
+     */
+    function translateTree(root) {
+      if (root.nodeType === 3) {
+        translateTextNode(root);
+        return;
+      }
+
+      if (root.nodeType !== 1 || SKIP_TAGS[root.tagName]) return;
+
+      translateAttributes(root);
+
+      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT, {
+        acceptNode: function (node) {
+          if (node.nodeType === 1) {
+            return SKIP_TAGS[node.tagName] ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+          }
+
+          return shouldSkip(node) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+        },
+      });
+
+      var current = walker.nextNode();
+
+      while (current) {
+        if (current.nodeType === 1) {
+          translateAttributes(current);
+        } else {
+          translateTextNode(current);
+        }
+
+        current = walker.nextNode();
+      }
+    }
+
+    /** 观察后续渲染：React 重新渲染会把文本写回英文，需要持续补齐 */
+    var observer = new MutationObserver(function (mutations) {
+      for (var i = 0; i < mutations.length; i += 1) {
+        var mutation = mutations[i];
+
+        if (mutation.type === 'characterData') {
+          translateTextNode(mutation.target);
+          continue;
+        }
+
+        if (mutation.type === 'attributes') {
+          translateAttributes(mutation.target);
+          continue;
+        }
+
+        for (var j = 0; j < mutation.addedNodes.length; j += 1) {
+          translateTree(mutation.addedNodes[j]);
+        }
+      }
+    });
+
+    /** 启动：首屏全量翻译 + 增量监听 */
+    function start() {
+      translateTree(document.body);
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        characterData: true,
+        attributes: true,
+        attributeFilter: ATTRS,
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', start);
+    } else {
+      start();
+    }
+  })();
+</script>

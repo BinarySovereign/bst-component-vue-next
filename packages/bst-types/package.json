@@ -1,0 +1,15 @@
+{
+  "name": "@binarysovereign/bst-types",
+  "version": "0.0.1",
+  "private": true,
+  "description": "BstComponent 共享类型包（private）：集中声明三个组件源码包共用的 Props / Emits / Slots / Expose 与业务类型，只存放类型声明，构建期内联进各组件包产物",
+  "type": "module",
+  "author": "Felix Tang(BinarySovereign)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BinarySovereign/bs-component-vue-next.git",
+    "directory": "packages/bst-types"
+  },
+  "types": "./src/index.ts"
+}

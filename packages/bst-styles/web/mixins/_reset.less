@@ -1,0 +1,17 @@
+// 不在 _index.less 当中导出，组件库内部使用
+// 用来快速抹平元素默认样式
+@import '../tokens/_variables.less';
+
+.reset-base() {
+  font: @font-body-medium;
+  color: @text-color-primary;
+  box-sizing: border-box;
+  padding: 0;
+  list-style: none;
+}
+
+.reset() {
+  .reset-base;
+
+  margin: 0;
+}

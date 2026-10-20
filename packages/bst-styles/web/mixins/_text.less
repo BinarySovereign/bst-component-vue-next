@@ -1,0 +1,24 @@
+// 文本截断混合器
+// 单行文本省略混合器
+.text-ellipsis() {
+  // 强制单行，禁止自动换行
+  white-space: nowrap;
+  // 复位断词策略：normal 仅在既有断点断行，使断行完全由 white-space 控制
+  overflow-wrap: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// 多行文本省略混合器
+// @line：截断行数（默认 2）
+.text-ellipsis-multi-line(@line: 2) {
+  overflow: hidden;
+
+  // -webkit-box 为 WebKit 私有显示值，需与下方 -webkit-line-clamp、-webkit-box-orient 配合生效。
+  // 此处有意将 display 置于 overflow 之后，以保持「先行截断、再定盒模型」的书写语序。
+  display: -webkit-box;
+  -webkit-line-clamp: @line;
+
+  // 盒模型纵向排列，与上方 -webkit-box 缺一不可
+  -webkit-box-orient: vertical;
+}

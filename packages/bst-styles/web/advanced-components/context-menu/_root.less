@@ -1,0 +1,33 @@
+// .reset-base() 未被 mixins/_index.less 导出，本分片显式引入
+@import '../../mixins/_reset.less';
+
+// 根容器：面板视觉基线与滚动职责归属层
+.@{prefix}-context-menu {
+  .reset-base();
+
+  // 纵向排布菜单项与分割线，超出最大高度时由本层承接滚动
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+
+  // 稿面 flex-shrink: 0：面板若被放进弹性父容器，禁止被压缩
+  flex: none;
+
+  // 宽度可被 CSS 变量或 Props 覆盖；高度由最大高度约束，上下各让出安全间距
+  width: @context-menu-width;
+  max-height: calc(100vh - @context-menu-viewport-gap * 2);
+
+  // 面板内边距
+  padding: @context-menu-padding;
+
+  // 面板视觉：底色、圆角、投影
+  background-color: @context-menu-bg-color;
+  border-radius: @context-menu-radius;
+  box-shadow: @context-menu-shadow;
+
+  // 浮层层级：稿面未覆盖，上下文菜单必然需要
+  z-index: @context-menu-z-index;
+
+  // 保留滚动能力，仅隐藏滚动条外观
+  .hideScrollbar();
+}

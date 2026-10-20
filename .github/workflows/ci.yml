@@ -1,0 +1,113 @@
+# 持续集成：在干净、可复现的环境中执行全部质量门禁
+#
+# 门禁清单在此文件内串联，逐 step 执行，任一失败即整体失败。
+# 门禁清单与本地 `pnpm ci:local` 共用 `scripts/ci/steps.js`，首步会校验两侧逐条一致。
+# 提交信息校验不在 CI 执行，只在本地门禁（`pnpm ci:local`）中跑。
+#
+# 分支策略：仓库默认分支为 `develop`，且只保留该分支，
+# 因此 push 与 pull_request 均只针对 `develop` 触发。
+name: CI
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+  workflow_dispatch:
+
+# 同一分支的新推送取消尚未完成的旧运行，避免排队与重复消耗
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# 本工作流只读仓库内容
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: 提交检查与质量门禁
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: 检出仓库
+        uses: actions/checkout@v7
+
+      - name: 安装 pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          # 版本由 package.json 的 packageManager 字段决定，避免与本地漂移
+          run_install: false
+
+      - name: 安装 Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      # 本地门禁清单必须与这里逐条一致，否则 `pnpm ci:local` 会给出错误结论
+      - name: 门禁清单同步校验
+        run: pnpm ci:local --check-sync
+
+      # 格式问题改起来成本最低，放在最前面可最快反馈
+      - name: 格式检查
+        run: pnpm exec prettier --check .
+
+      - name: TypeScript 类型检查
+        run: pnpm typecheck
+
+      # 根 package.json 的 lint 只扫 packages/，此处补上 scripts/ 与根配置
+      - name: ESLint 静态检查
+        run: >-
+          pnpm exec eslint
+          ./packages
+          ./scripts
+          ./babel.config.cjs
+          ./eslint.config.js
+          ./stylelint.config.js
+          ./vitest.config.ts
+          --max-warnings 0
+          --no-cache
+
+      - name: Stylelint 样式检查
+        run: pnpm lint:style
+
+      - name: 单元测试
+        run: pnpm test:unit
+
+      - name: 快照测试
+        run: pnpm test:snap
+
+      - name: 组件源码包构建
+        run: pnpm build:private
+
+      - name: 样式包构建
+        run: pnpm build:style
+
+      # 以下三步把源码包产物聚合到各自的主包，依赖上面的 build:private
+      - name: 基础组件主包聚合
+        run: pnpm build:vue:next
+
+      - name: 高级组件主包聚合
+        run: pnpm build:vue:next:pro
+
+      - name: AI 组件主包聚合
+        run: pnpm build:vue:next:pro:ai
+
+      # 文档站与 Storybook 都引用样式包的构建产物（packages/bst-styles/build），
+      # 因此必须排在 move:main:dist 之前 —— 归拢会删除各包的 build/ 目录
+      - name: 文档站构建
+        run: pnpm build:docs
+
+      - name: Storybook 构建
+        run: pnpm build:storybook
+
+      # 必须排在全部构建之后：归拢完成后会删除各包的 build/ 中间产物
+      - name: 归拢产物到根 dist
+        run: pnpm move:main:dist

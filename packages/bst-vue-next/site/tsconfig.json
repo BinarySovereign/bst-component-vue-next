@@ -1,0 +1,16 @@
+{
+  // 文档站自成一套工具链（VitePress 自带打包器），故独立于仓库根 tsconfig：
+  // 根配置的 include 面向组件源码包，types 也只为 Node 环境与 Vitest 准备。
+  // 本配置取 Vue 官方基座，并按 VitePress 官方口径引入其客户端类型
+  // （`vitepress/client` 会 re-export `vite/client`，`import.meta.glob` 的类型由它提供）。
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    // 仅做类型检查，产物由 VitePress 打包
+    "noEmit": true,
+    // node：构建期插件读写示例文件（node:fs / node:path）；vitepress/client：页面与主题侧，
+    // 它 re-export vite/client，import.meta.glob 的类型由它提供
+    "types": ["node", "vitepress/client"]
+  },
+  "include": [".vitepress/**/*.ts", ".vitepress/**/*.vue", "src/**/*.ts", "src/**/*.vue"],
+  "exclude": [".vitepress/cache", ".vitepress/dist"]
+}

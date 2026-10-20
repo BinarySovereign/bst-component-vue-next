@@ -1,0 +1,41 @@
+{
+  "name": "@binarysovereign/styles",
+  "version": "0.0.1",
+  "description": "BstComponent 样式包：以设计令牌（:root 自定义属性 + Less 变量）为基座，基于 Less 产出全量样式与按需组件样式两类 CSS 产物（每份另出同名压缩版），是组件库唯一的样式来源，组件包自身不写样式",
+  "type": "module",
+  "author": "Felix Tang(BinarySovereign)",
+  "license": "MIT",
+  "main": "./build/web/index.css",
+  "exports": {
+    ".": {
+      "default": "./build/web/index.css"
+    },
+    "./web": {
+      "default": "./build/web/index.css"
+    },
+    "./web/base.css": "./build/web/base.css",
+    "./web/tokens.css": "./build/web/tokens.css",
+    "./web/theme-light.css": "./build/web/theme-light.css",
+    "./web/theme-dark.css": "./build/web/theme-dark.css",
+    "./web/basic-components/*": "./build/web/basic-components/*/index.css",
+    "./web/advanced-components/*": "./build/web/advanced-components/*/index.css",
+    "./web/ai-components/*": "./build/web/ai-components/*/index.css",
+    "./*": "./*"
+  },
+  "files": [
+    "build"
+  ],
+  "sideEffects": [
+    "**/*.css",
+    "**/*.less"
+  ],
+  "scripts": {
+    "style:lint": "stylelint \"**/*.{less,css}\" --max-warnings 0",
+    "style:lint:fix": "stylelint \"**/*.{less,css}\" --fix"
+  },
+  "devDependencies": {
+    "less": "catalog:build",
+    "postcss": "catalog:build",
+    "postcss-less": "catalog:lint"
+  }
+}

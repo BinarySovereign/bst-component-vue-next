@@ -1,0 +1,13 @@
+// 组件级状态收敛：禁用态需同时作用于菜单项与其文本子元素
+// 入场 / 出场动画状态见 _animation.less
+
+// 禁用项：不可操作；悬浮高亮已在 _item.less 的就近反馈中排除本状态类
+.@{prefix}-context-menu-item-is-disabled {
+  cursor: not-allowed;
+
+  // 文本子元素自带颜色，须显式覆盖为同一禁用色
+  .@{prefix}-context-menu-item-left-text,
+  .@{prefix}-context-menu-item-right-text {
+    color: @context-menu-item-text-color-disabled;
+  }
+}

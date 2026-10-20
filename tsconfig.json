@@ -1,0 +1,28 @@
+{
+  // 以 Vue 官方基座为准：TS 6 下默认 strict、`jsx: preserve` 与 `jsxImportSource: vue` 已内置，
+  // `moduleResolution: bundler` 与 `verbatimModuleSyntax` 也与本项目的 ESM 源码一致
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    // 基座默认清空 types 以避免污染全局；本项目在 Node 环境执行测试与配置文件，需显式声明
+    // - node：配置文件中的 import.meta.dirname 等 Node 专有 API
+    // - vitest/globals：测试配置开启了 globals，使 describe / it / expect 可直接使用
+    "types": ["node", "vitest/globals"]
+  },
+  "include": [
+    // 根级 TS 配置与类型声明（`*.ts` 同时涵盖 `*.d.ts`）
+    "*.ts",
+    // 全部组件包与共享类型包源码，含 .vue 示例与快照用例
+    "packages/**/*.ts",
+    "packages/**/*.tsx",
+    "packages/**/*.vue"
+  ],
+  "exclude": [
+    // 依赖与构建产物
+    "node_modules",
+    "dist",
+    // 覆盖率报告产物
+    "coverage",
+    // Storybook 自成一套工具链（独立 tsconfig 与 types），由子包自己的 typecheck 负责
+    "packages/bst-vue-next/storybook"
+  ]
+}

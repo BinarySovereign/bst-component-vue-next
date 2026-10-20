@@ -1,0 +1,24 @@
+{
+  "servers": {
+    "sequential-thinking": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ]
+    },
+    "context7": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp@latest"
+      ]
+    },
+    "ardot-remote": {
+      "type": "http",
+      "url": "https://ardot.tencent.com/mcp"
+    }
+  }
+}

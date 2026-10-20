@@ -1,0 +1,108 @@
+# 文档站部署：构建 VitePress 静态站点并发布到 GitHub Pages
+#
+# 触发条件只看会改变站点内容的路径：站点源码、样式包产物、三个组件源码包与共享类型。
+# 质量门禁（lint / 类型 / 测试 / 死链）由 ci.yml 负责，本工作流只确认「能构建 + 能部署」，
+# 避免同一份改动排队跑两遍全量检查。
+#
+# base 路径由 `actions/configure-pages` 提供的 base_path 推导，同时兼容：
+#   - 项目页 https://<owner>.github.io/<repo>/  → base = /<repo>/
+#   - 用户页 https://<owner>.github.io/         → base = /
+# 因此仓库改名或改部署形态时无需修改此文件。
+name: Deploy Docs
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - 'packages/bst-vue-next/site/**'
+      - 'packages/bst-styles/**'
+      - 'packages/bst-basic-components/**'
+      - 'packages/bst-advanced-components/**'
+      - 'packages/bst-ai-components/**'
+      - 'packages/bst-types/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - '.nvmrc'
+      - '.github/workflows/deploy-docs.yml'
+  workflow_dispatch:
+
+# 静态资源部署不应被中途取消：一次部署被 cancel 会留下半更新的站点
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    name: 构建并部署文档站
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: 检出仓库
+        uses: actions/checkout@v7
+
+      - name: 安装 pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+
+      - name: 安装 Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      # 必须在 build:docs 之前：站点主题直接引入 @binarysovereign/styles 的构建产物
+      # （其 exports 指向 build/web/*.css），缺这一步 Vite 会因无法解析导入而失败
+      - name: 样式包构建
+        run: pnpm build:style
+
+      - name: 读取 Pages 配置
+        id: pages
+        uses: actions/configure-pages@v5
+
+      # normalize 理由：configure-pages 的项目页输出 /<repo>（无结尾斜杠），用户页输出 /；
+      # 而 VitePress 的 base 必须带结尾斜杠，否则资源路径会被拼错
+      - name: 推导站点 base 路径
+        run: |
+          BASE_PATH="${{ steps.pages.outputs.base_path }}"
+
+          if [ -z "$BASE_PATH" ]; then
+            DOCS_BASE="/"
+          else
+            case "$BASE_PATH" in
+              */) DOCS_BASE="$BASE_PATH" ;;
+              *) DOCS_BASE="$BASE_PATH/" ;;
+            esac
+          fi
+
+          echo "DOCS_BASE=$DOCS_BASE" >> "$GITHUB_ENV"
+          echo "站点 base：$DOCS_BASE"
+
+      # 死链在 ci.yml 已阻断，此处只需产出可部署的静态文件
+      - name: 文档站构建
+        run: pnpm build:docs
+
+      - name: 上传 Pages 产物
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # 与 site/README.md 约定一致：站点产物留在站点目录，不并入根 dist/
+          path: packages/bst-vue-next/site/.vitepress/dist
+
+      - name: 部署到 GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

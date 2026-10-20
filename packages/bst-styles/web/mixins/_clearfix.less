@@ -1,0 +1,8 @@
+// 用来解决子元素 `float` 之后父容器高度塌陷的问题
+.clearfix() {
+  &::after {
+    display: table;
+    clear: both;
+    content: '';
+  }
+}

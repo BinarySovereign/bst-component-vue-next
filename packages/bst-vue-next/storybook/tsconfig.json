@@ -1,0 +1,22 @@
+{
+  // 与 site 同理：Storybook 自成一套工具链（Vite + 独立 tsconfig），不并入仓库根的 types 集合。
+  // 基座已内置 `jsx: preserve` 与 `jsxImportSource: vue`，无需重复声明
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    // 仅做类型检查，产物由 Storybook 打包
+    "noEmit": true,
+    // node：main.ts 中的路径与 Node 内置模块类型
+    "types": ["node"],
+    // 组件源码包走工作区源码而非构建产物，路径映射与 vite 的解析结果保持一致
+    "paths": {
+      "@binarysovereign/bst-basic-components": ["../../bst-basic-components/index.ts"],
+      "@binarysovereign/bst-basic-components/*": ["../../bst-basic-components/*"],
+      "@binarysovereign/bst-advanced-components": ["../../bst-advanced-components/index.ts"],
+      "@binarysovereign/bst-advanced-components/*": ["../../bst-advanced-components/*"],
+      "@binarysovereign/bst-ai-components": ["../../bst-ai-components/index.ts"],
+      "@binarysovereign/bst-ai-components/*": ["../../bst-ai-components/*"]
+    }
+  },
+  "include": [".storybook/**/*.ts", ".storybook/**/*.tsx", "src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["storybook-static"]
+}

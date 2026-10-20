@@ -1,0 +1,38 @@
+{
+  "name": "@binarysovereign/storybook",
+  "version": "0.0.1",
+  "private": true,
+  "description": "BstComponent 组件预览环境：基于 Storybook 的内部调试与视觉验证工装，不参与任何发布链路",
+  "type": "module",
+  "author": "Felix Tang(BinarySovereign)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BinarySovereign/bs-component-vue-next.git",
+    "directory": "packages/bst-vue-next/storybook"
+  },
+  "scripts": {
+    "dev": "storybook dev -p 6006",
+    "build": "storybook build -o storybook-static",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@binarysovereign/bst-advanced-components": "workspace:*",
+    "@binarysovereign/bst-ai-components": "workspace:*",
+    "@binarysovereign/bst-basic-components": "workspace:*",
+    "@binarysovereign/bst-types": "workspace:*",
+    "@binarysovereign/styles": "workspace:*",
+    "vue": "catalog:runtime"
+  },
+  "devDependencies": {
+    "@storybook/addon-a11y": "catalog:docs",
+    "@storybook/addon-docs": "catalog:docs",
+    "@storybook/vue3-vite": "catalog:docs",
+    "@types/node": "catalog:types",
+    "@vitejs/plugin-vue": "catalog:build",
+    "@vitejs/plugin-vue-jsx": "catalog:build",
+    "storybook": "catalog:docs",
+    "typescript": "catalog:types",
+    "vite": "catalog:build"
+  }
+}

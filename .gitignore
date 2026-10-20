@@ -1,0 +1,25 @@
+node_modules/
+.pnpm-store/
+packages/**/build/
+**/.vitepress/cache/
+**/.vitepress/dist/
+packages/bst-vue-next/storybook/storybook-static/
+coverage/
+.DS_Store
+Thumbs.db
+.idea
+.history/
+*.log
+tmp/
+temp/
+*.tmp
+*.temp
+package-lock.json
+yarn.lock
+.eslintcache
+.env
+# 以下三条必须锚定仓库根：不加前导 `/` 会连 `scripts/release/` 这类同名源码目录一起忽略
+/dist/
+# Release 附件与发布说明均由 tag 触发重新生成，属一次性产物
+/release/
+/release-notes.md

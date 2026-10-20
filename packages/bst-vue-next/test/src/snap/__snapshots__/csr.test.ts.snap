@@ -1,0 +1,109 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`csr snapshot test > csr test packages/bst-advanced-components/context-menu/_example/_test_snap_example.vue 1`] = `
+<div
+  class="context-menu-demo"
+>
+  <div
+    class="bst-context-menu bst-context-menu-is-open"
+    role="menu"
+    style="position: fixed; left: 100px; top: 100px;"
+  >
+    
+    <div
+      class="bst-context-menu-item"
+      data-index="0"
+      role="menuitem"
+    >
+      
+      <span
+        class="bst-context-menu-item-left-text"
+      >
+        打开
+      </span>
+      <span
+        class="bst-context-menu-item-right-text"
+      >
+        Ctrl+O
+      </span>
+      
+    </div>
+    <div
+      class="bst-context-menu-item"
+      data-index="1"
+      role="menuitem"
+    >
+      
+      <span
+        class="bst-context-menu-item-left-text"
+      >
+        重命名
+      </span>
+      <span
+        class="bst-context-menu-item-right-text"
+      >
+        F2
+      </span>
+      
+    </div>
+    
+  </div>
+  <div
+    class="bst-context-menu bst-context-menu-is-open"
+    role="menu"
+    style="position: fixed; left: 100px; top: 240px;"
+  >
+    
+    <div
+      class="bst-context-menu-item"
+      data-index="0"
+      role="menuitem"
+    >
+      
+      <span
+        class="bst-context-menu-item-left-text"
+      >
+        复制
+      </span>
+      
+    </div>
+    <div
+      aria-hidden="true"
+      class="bst-context-menu-item bst-context-menu-item-is-divider"
+      data-index="1"
+      role="separator"
+    >
+      <!---->
+    </div>
+    <div
+      aria-disabled="true"
+      class="bst-context-menu-item bst-context-menu-item-is-disabled"
+      data-index="2"
+      role="menuitem"
+    >
+      
+      <span
+        class="bst-context-menu-item-left-text"
+      >
+        删除
+      </span>
+      
+    </div>
+    
+  </div>
+  <div
+    class="bst-context-menu bst-context-menu-is-open"
+    role="menu"
+    style="position: fixed; left: 100px; top: 380px; width: 360px; max-height: 320px;"
+  >
+    
+    <div
+      class="context-menu-demo-custom"
+    >
+      自定义内容
+    </div>
+    
+  </div>
+  <!---->
+</div>
+`;

@@ -1,0 +1,174 @@
+:root.bst-theme-dark,
+:root[theme-mode='dark'] {
+  // 品牌色
+  --bst-brand-color-1: #142419;
+  --bst-brand-color-2: #12361c;
+  --bst-brand-color-3: #11471d;
+  --bst-brand-color-4: #0d5e20;
+  --bst-brand-color-5: #087d24;
+  --bst-brand-color-6: #049d27;
+  --bst-brand-color-7: #1eb13c;
+  --bst-brand-color-8: #40c657;
+  --bst-brand-color-9: #67d575;
+  --bst-brand-color-10: #93e49a;
+
+  // 警告色
+  --bst-warning-color-1: #2a1d15;
+  --bst-warning-color-2: #402817;
+  --bst-warning-color-3: #53351b;
+  --bst-warning-color-4: #71431c;
+  --bst-warning-color-5: #98561e;
+  --bst-warning-color-6: #bf6920;
+  --bst-warning-color-7: #d68a44;
+  --bst-warning-color-8: #ecb06f;
+  --bst-warning-color-9: #f8cf9d;
+  --bst-warning-color-10: #fae5c5;
+
+  // 错误色
+  --bst-error-color-1: #261718;
+  --bst-error-color-2: #3a1a1b;
+  --bst-error-color-3: #4c2020;
+  --bst-error-color-4: #652423;
+  --bst-error-color-5: #882a28;
+  --bst-error-color-6: #aa2f2d;
+  --bst-error-color-7: #bf5550;
+  --bst-error-color-8: #d48179;
+  --bst-error-color-9: #e5aea7;
+  --bst-error-color-10: #f3dcd8;
+
+  // 成功色
+  --bst-success-color-1: #161d24;
+  --bst-success-color-2: #182836;
+  --bst-success-color-3: #1d3647;
+  --bst-success-color-4: #1f455f;
+  --bst-success-color-5: #22587e;
+  --bst-success-color-6: #266c9d;
+  --bst-success-color-7: #4588b1;
+  --bst-success-color-8: #6ca6c6;
+  --bst-success-color-9: #96c1d5;
+  --bst-success-color-10: #c4dbe4;
+
+  // 中性色
+  --bst-gray-color-1: #f3f3f3;
+  --bst-gray-color-2: #eee;
+  --bst-gray-color-3: #e8e8e8;
+  --bst-gray-color-4: #ddd;
+  --bst-gray-color-5: #c6c6c6;
+  --bst-gray-color-6: #a6a6a6;
+  --bst-gray-color-7: #8b8b8b;
+  --bst-gray-color-8: #777;
+  --bst-gray-color-9: #5e5e5e;
+  --bst-gray-color-10: #4b4b4b;
+  --bst-gray-color-11: #393939;
+  --bst-gray-color-12: #2c2c2c;
+  --bst-gray-color-13: #242424;
+  --bst-gray-color-14: #181818;
+
+  // 文字图标色
+  --bst-font-white-1: rgb(255 255 255 / 100%);
+  --bst-font-white-2: rgb(255 255 255 / 55%);
+  --bst-font-white-3: rgb(255 255 255 / 35%);
+  --bst-font-white-4: rgb(255 255 255 / 22%);
+  --bst-font-gray-1: rgb(0 0 0 / 90%);
+  --bst-font-gray-2: rgb(0 0 0 / 60%);
+  --bst-font-gray-3: rgb(0 0 0 / 40%);
+  --bst-font-gray-4: rgb(0 0 0 / 26%);
+
+  // 基础颜色与扩展颜色 - 品牌色
+  --bst-brand-color: var(--bst-brand-color-6);
+  --bst-brand-color-hover: var(--bst-brand-color-7);
+  --bst-brand-color-focus: var(--bst-brand-color-8);
+  --bst-brand-color-active: var(--bst-brand-color-9);
+  --bst-brand-color-disabled: var(--bst-brand-color-3);
+  --bst-brand-color-light: var(--bst-brand-color-1);
+  --bst-brand-color-light-hover: var(--bst-brand-color-2);
+
+  // 基础颜色与扩展颜色 - 警告色
+  --bst-warning-color: var(--bst-warning-color-6);
+  --bst-warning-color-hover: var(--bst-warning-color-7);
+  --bst-warning-color-focus: var(--bst-warning-color-8);
+  --bst-warning-color-active: var(--bst-warning-color-9);
+  --bst-warning-color-disabled: var(--bst-warning-color-3);
+  --bst-warning-color-light: var(--bst-warning-color-1);
+  --bst-warning-color-light-hover: var(--bst-warning-color-2);
+
+  // 基础颜色与扩展颜色 - 错误色
+  --bst-error-color: var(--bst-error-color-6);
+  --bst-error-color-hover: var(--bst-error-color-7);
+  --bst-error-color-focus: var(--bst-error-color-8);
+  --bst-error-color-active: var(--bst-error-color-9);
+  --bst-error-color-disabled: var(--bst-error-color-3);
+  --bst-error-color-light: var(--bst-error-color-1);
+  --bst-error-color-light-hover: var(--bst-error-color-2);
+
+  // 基础颜色与扩展颜色 - 成功色
+  --bst-success-color: var(--bst-success-color-6);
+  --bst-success-color-hover: var(--bst-success-color-7);
+  --bst-success-color-focus: var(--bst-success-color-8);
+  --bst-success-color-active: var(--bst-success-color-9);
+  --bst-success-color-disabled: var(--bst-success-color-3);
+  --bst-success-color-light: var(--bst-success-color-1);
+  --bst-success-color-light-hover: var(--bst-success-color-2);
+
+  // 遮罩颜色
+  --bst-mask-active: rgb(0 0 0 / 40%);
+  --bst-mask-disabled: rgb(0 0 0 / 60%);
+  --bst-mask-background: rgb(36 36 36 / 96%);
+  --bst-mask-gradient: rgb(36 36 36 / 0%);
+
+  // 背景色
+  --bst-bg-color-page: var(--bst-gray-color-14);
+  --bst-bg-color-container: var(--bst-gray-color-13);
+  --bst-bg-color-container-hover: var(--bst-gray-color-12);
+  --bst-bg-color-container-active: var(--bst-gray-color-10);
+  --bst-bg-color-container-select: var(--bst-gray-color-9);
+  --bst-bg-color-secondarycontainer: var(--bst-gray-color-12);
+  --bst-bg-color-secondarycontainer-hover: var(--bst-gray-color-11);
+  --bst-bg-color-secondarycontainer-active: var(--bst-gray-color-9);
+  --bst-bg-color-component: var(--bst-gray-color-11);
+  --bst-bg-color-component-hover: var(--bst-gray-color-10);
+  --bst-bg-color-component-active: var(--bst-gray-color-9);
+  --bst-bg-color-secondarycomponent: var(--bst-gray-color-10);
+  --bst-bg-color-secondarycomponent-hover: var(--bst-gray-color-9);
+  --bst-bg-color-secondarycomponent-active: var(--bst-gray-color-8);
+  --bst-bg-color-component-disabled: var(--bst-gray-color-12);
+
+  // 特殊组件背景色
+  --bst-bg-color-specialcomponent: transparent;
+
+  // 文本颜色
+  --bst-text-color-primary: var(--bst-font-white-1);
+  --bst-text-color-secondary: var(--bst-font-white-2);
+  --bst-text-color-placeholder: var(--bst-font-white-3);
+  --bst-text-color-disabled: var(--bst-font-white-4);
+  --bst-text-color-anti: #fff;
+  --bst-text-color-brand: var(--bst-brand-color-6);
+  --bst-text-color-link: var(--bst-brand-color-6);
+  --bst-text-color-watermark: rgb(255 255 255 / 10%);
+
+  // 分割线与边框
+  --bst-component-stroke: var(--bst-gray-color-11);
+  --bst-component-border: var(--bst-gray-color-9);
+
+  // 基础投影
+  --bst-shadow-1:
+    0 4px 6px rgb(0 0 0 / 6%), 0 1px 10px rgb(0 0 0 / 8%), 0 2px 4px rgb(0 0 0 / 12%);
+  --bst-shadow-2:
+    0 8px 10px rgb(0 0 0 / 12%), 0 3px 14px rgb(0 0 0 / 10%), 0 5px 5px rgb(0 0 0 / 16%);
+  --bst-shadow-3:
+    0 16px 24px rgb(0 0 0 / 14%), 0 6px 30px rgb(0 0 0 / 12%), 0 8px 10px rgb(0 0 0 / 20%);
+
+  // 内投影
+  --bst-shadow-inset-top: inset 0 0.5px 0 #5e5e5e;
+  --bst-shadow-inset-left: inset 0.5px 0 0 #5e5e5e;
+  --bst-shadow-inset-bottom: inset 0 -0.5px 0 #5e5e5e;
+  --bst-shadow-inset-right: inset -0.5px 0 0 #5e5e5e;
+
+  // table 特定阴影 | 只有颜色
+  --bst-table-shadow-color: rgb(0 0 0 / 55%);
+
+  // 滚动条颜色
+  --bst-scrollbar-color: rgb(255 255 255 / 10%);
+  --bst-scrollbar-hover-color: rgb(255 255 255 / 30%);
+  --bst-scroll-track-color: #333;
+}

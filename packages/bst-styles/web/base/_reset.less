@@ -1,0 +1,221 @@
+// 本文件为浏览器归一化（reset）样式
+//
+// 作用范围：仅 Blink 内核（Chrome / Edge / Electron），目标下限由根 package.json 的 browserslist 声明。
+// 不再为 Firefox、Safari、IE 与旧版 Edge 适配，相关厂商专属声明已清除。
+//
+// 声明策略：本层同时做两件事——
+//   1. 修正与 UA 默认值确实不同的部分（box-sizing、body 字号、表单控件字体、sub/sup、legend 等）；
+//   2. 其余元素显式写出与 UA 默认值相同的值，把基线钉住，避免 UA 默认值变动时设计基线被静默改变。
+// 下列声明在当前 Blink 上属等值覆盖，是刻意保留的，不要因「实测无差异」而删除：
+// h1、abbr[title]、b/strong、button 与 input 的 overflow、button 与 select 的 text-transform、fieldset 内边距。
+// （结论来自逐条消融实验；反向验证：可点击类型的 appearance 与搜索框的 appearance 一旦移除即发生变化。）
+/* stylelint-disable */
+
+// 文档（Document）
+// 全局盒模型归一为 border-box：内边距与边框计入元素宽度，避免布局溢出。
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+// 1. 统一默认行高（UA 为 normal）
+// 2. 阻止移动端横屏时自动放大字号
+html {
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+}
+
+// 区块（Sections）
+// 移除所有浏览器中的默认外边距，并设定页面基础字体与字号。
+body {
+  margin: 0;
+  font-family:
+    PingFang SC,
+    Microsoft YaHei,
+    Arial Regular;
+  font-size: 14px;
+}
+
+// h1 的字号与边距均为 em 值，实际大小随 body 的 14px 缩放（2em = 28px）；
+// 与 UA 默认值一致，显式写出以钉住该层基线。
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+// 分组内容（Grouping content）
+// 1. 固定为 content-box，抵消上方全局 border-box（否则高度会把边框算进去）。
+// 2. 溢出内容需可见而非被裁剪（UA 为 hidden）。
+hr {
+  box-sizing: content-box;
+  height: 0;
+  overflow: visible;
+}
+
+// 1. 修正字体大小的继承与缩放。
+// 2. 修正奇数 em 的字体大小；等宽字体重复声明以覆盖 UA 的连字回退。
+pre {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+// 文本级语义（Text-level semantics）
+// 文本装饰先声明 underline 作为回退，再声明 dotted 变体；并清零下边框。
+// （两项均与 UA 默认值一致，显式写出以钉住该层基线。）
+abbr[title] {
+  border-bottom: 0;
+  text-decoration: underline;
+  text-decoration: underline dotted;
+}
+
+// 加粗至 bolder（与 UA 默认值一致，显式写出以钉住该层基线）。
+b,
+strong {
+  font-weight: bolder;
+}
+
+// 1. 修正字体大小的继承与缩放。
+// 2. 修正奇数 em 的字体大小；等宽字体重复声明以覆盖 UA 的连字回退。
+code,
+kbd,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+// 收敛为更小的字号。
+small {
+  font-size: 80%;
+}
+
+// 上标与下标不得影响行高：清零 line-height 并改为相对定位。
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+sup {
+  top: -0.5em;
+}
+
+// 表单（Forms）
+// 1. 统一表单控件的字体样式：继承页面字体并跟随页面字号。
+// 2. 清零默认外边距。
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+}
+
+// 溢出内容保持可见。
+// 注意：在 Blink 上 UA 以更高优先级为 input 声明了 overflow: clip，
+// 故本规则实际只对 button 生效（且与 button 的 UA 默认值一致）。
+button,
+input {
+  overflow: visible;
+}
+
+// 阻断祖先 text-transform 的继承，表单控件不随外部大小写变换。
+// （Blink 的 UA 已声明 none，此处显式写出以钉住该层基线。）
+button,
+select {
+  text-transform: none;
+}
+
+// 可点击类型显式采用按钮外观。
+// 实测：移除后 computed appearance 会由 button 回落到 auto，故本条确实生效。
+// （autoprefixer 已按当前目标集移除冗余的 -webkit-appearance 写法。）
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  -webkit-appearance: button;
+  appearance: button;
+}
+
+// 归一化 fieldset 内边距。
+// 实测 Chromium 的 UA 默认值与本规则为同一组数值（16px 下 computed 为 5.6px 12px 10px），
+// 属等值覆盖，显式写出以钉住该层基线。
+fieldset {
+  padding: 0.35em 0.75em 0.625em;
+}
+
+// 1. 允许文本正常换行。
+// 2. 颜色改为继承，避免与暗色主题冲突。
+// 3. 清零内边距，并把 display 固定为 table 以切断与 fieldset 边距的联动。
+legend {
+  box-sizing: border-box;
+  color: inherit;
+  display: table;
+  max-width: 100%;
+  padding: 0;
+  white-space: normal;
+}
+
+// 修正垂直对齐（UA 为 -2.8px，本层统一为 baseline）。
+progress {
+  vertical-align: baseline;
+}
+
+// 背景归零为透明，用于适配暗色主题。
+textarea {
+  background-color: transparent;
+}
+
+// 数字输入框的增减按钮以高度自适应呈现。
+[type='number']::-webkit-inner-spin-button,
+[type='number']::-webkit-outer-spin-button {
+  height: auto;
+}
+
+// 1. 搜索框外观统一为文本框。
+// 2. 轮廓内缩，避免溢出容器。
+// （实测移除后 computed appearance 由 textfield 回落 auto、outline-offset 由 -2px 归零。）
+[type='search'] {
+  -webkit-appearance: textfield;
+  appearance: textfield;
+  outline-offset: -2px;
+}
+
+// 移除 macOS 上搜索框的内边距装饰（Chromium 继承自 WebKit 的行为）。
+[type='search']::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+// 移除 macOS 上搜索框的取消按钮（Chromium 继承自 WebKit 的行为）。
+[type='search']::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+// 1. 文件选择按钮可被样式化。
+// 2. 字体改为 inherit，使其跟随页面字体。
+::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  font: inherit;
+}
+
+// 交互（Interactive）
+// 修正默认显示方式（UA 亦为 block，显式写出以钉住该层基线）。
+details {
+  display: block;
+}
+
+// 修正默认显示方式。
+summary {
+  display: list-item;
+}
+
+/* stylelint-enable */

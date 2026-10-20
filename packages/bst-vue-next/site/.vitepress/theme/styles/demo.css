@@ -1,0 +1,128 @@
+/* 站点示例容器的外观。
+
+   取值一律走组件库的语义令牌（--bst-*）而非硬编码色值：语义令牌会随 `theme-mode` 自动切换明暗，
+   故本文件无需再写任何暗色分支。注意不要取 `--bst-gray-color-*` 这类原始色板，
+   它在暗色下语义会反转，只适合被语义令牌引用。 */
+
+.bst-demo-block {
+  margin: var(--bst-size-6) 0;
+  border: 1px solid var(--bst-component-stroke);
+  border-radius: var(--bst-radius-medium);
+  overflow: hidden;
+}
+
+.bst-demo-block-header {
+  padding: var(--bst-size-5) var(--bst-size-6) 0;
+}
+
+.bst-demo-block-title {
+  margin: 0;
+  color: var(--bst-text-color-primary);
+  font: var(--bst-font-title-small);
+}
+
+.bst-demo-block-description {
+  margin: var(--bst-size-1) 0 0;
+  color: var(--bst-text-color-secondary);
+  font: var(--bst-font-body-small);
+}
+
+.bst-demo-block-preview {
+  padding: var(--bst-size-6);
+  background-color: var(--bst-bg-color-secondarycontainer);
+}
+
+/* 「整块预览区都要能接事件」的示例（如右键菜单）在根节点加这个类即可：
+   负外边距抵消预览区留白，再用等量内边距把内容放回原位，
+   于是根节点盒子覆盖整块预览区，事件不会再落在留白死区上。
+   示例文件因此仍然不需要写任何样式。 */
+.bst-demo-fill {
+  margin: calc(-1 * var(--bst-size-6));
+  padding: var(--bst-size-6);
+}
+
+/* 示例里用于「自定义渲染」的标签小胶囊：让插槽渲染结果与默认渲染一眼可辨，
+   示例文件因此仍不需要写任何样式。 */
+.bst-demo-tag {
+  padding: var(--bst-comp-padding-tb-xs) var(--bst-comp-padding-lr-s);
+  border-radius: var(--bst-radius-default);
+  background-color: var(--bst-bg-color-container-hover);
+  color: var(--bst-text-color-secondary);
+  font: var(--bst-font-body-small);
+  white-space: nowrap;
+}
+
+/* 同上，仅作为序号等次要信息的弱化变体 */
+.bst-demo-tag-muted {
+  padding: 0 var(--bst-size-1);
+  background-color: transparent;
+  color: var(--bst-text-color-placeholder);
+}
+
+.bst-demo-block-missing {
+  margin: 0;
+  color: var(--bst-text-color-placeholder);
+  font: var(--bst-font-body-small);
+}
+
+.bst-demo-block-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--bst-size-2) var(--bst-size-6) var(--bst-size-3);
+  border-top: 1px solid var(--bst-component-stroke);
+}
+
+.bst-demo-block-toggle {
+  padding: var(--bst-comp-padding-tb-xs) var(--bst-comp-padding-lr-s);
+  border: none;
+  border-radius: var(--bst-radius-default);
+  background-color: transparent;
+  color: var(--bst-text-color-link);
+  font: var(--bst-font-link-medium);
+  cursor: pointer;
+}
+
+.bst-demo-block-toggle:hover {
+  background-color: var(--bst-bg-color-container-hover);
+}
+
+.bst-demo-source {
+  border-top: 1px solid var(--bst-component-stroke);
+}
+
+.bst-demo-source-hint {
+  margin: 0;
+  padding: var(--bst-size-6);
+  color: var(--bst-text-color-placeholder);
+  font: var(--bst-font-body-small);
+}
+
+/* 高亮 HTML 自带 `vp-code` 类，其 span 的字色由 vitepress 默认主题的
+   `.dark .vp-code span` / `html:not(.dark) .vp-code span` 规则按 --shiki-light / --shiki-dark 决定，
+   故此处不写任何颜色，只补默认主题不管的盒模型（那份样式的作用域是 .vp-doc 下的 language-* 代码块）。 */
+.bst-demo-source-body pre {
+  margin: 0;
+  padding: var(--bst-size-6);
+  overflow-x: auto;
+  background-color: var(--vp-code-block-bg);
+  color: var(--vp-code-block-color);
+  font-family: ui-monospace, sfmono-regular, menlo, monaco, consolas, monospace;
+  font-size: var(--bst-font-size-body-small);
+  line-height: var(--bst-line-height-body-small);
+}
+
+/* 窄屏下收紧预览区留白，避免示例被挤压 */
+@media (max-width: 640px) {
+  .bst-demo-block-preview {
+    padding: var(--bst-size-4);
+  }
+
+  .bst-demo-fill {
+    margin: calc(-1 * var(--bst-size-4));
+    padding: var(--bst-size-4);
+  }
+
+  .bst-demo-source-body pre {
+    padding: var(--bst-size-4);
+  }
+}
