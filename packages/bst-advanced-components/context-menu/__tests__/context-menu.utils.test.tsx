@@ -1,5 +1,6 @@
 import {
   clampContextMenuPosition,
+  isContextMenuItemActionable,
   isContextMenuDivider,
   isContextMenuItemDisabled,
   isInsideContextMenu,
@@ -73,6 +74,22 @@ describe('isContextMenuItemDisabled', () => {
 
   it('divider ignores disabled flag', () => {
     expect(isContextMenuItemDisabled({ key: 'a', type: 'divider', isDisabled: true })).toBe(false);
+  });
+});
+
+describe('isContextMenuItemActionable', () => {
+  it('regular item -> true', () => {
+    expect(isContextMenuItemActionable({ key: 'a' })).toBe(true);
+    expect(isContextMenuItemActionable({ key: 'a', type: 'item' })).toBe(true);
+  });
+
+  it('disabled item -> false', () => {
+    expect(isContextMenuItemActionable({ key: 'a', isDisabled: true })).toBe(false);
+  });
+
+  it('divider -> false', () => {
+    expect(isContextMenuItemActionable({ key: 'a', type: 'divider' })).toBe(false);
+    expect(isContextMenuItemActionable({ key: 'a', type: 'divider', isDisabled: true })).toBe(false);
   });
 });
 

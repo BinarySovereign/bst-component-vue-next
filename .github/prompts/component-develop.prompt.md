@@ -14,6 +14,8 @@ agent: "agent"
 | 源码目录 | `packages/bst-basic-components/<组件>` | `packages/bst-advanced-components/<组件>` | `packages/bst-ai-components/<组件>` |
 | 类型文件 | `packages/bst-types/src/basic-<组件>.types.ts` | `advanced-<组件>.types.ts` | `ai-<组件>.types.ts` |
 | hooks | 可省略 | 必须：`controller` / `prop` / `life` / `{component}` | 同 advanced |
+| 能力拆分 hook | — | 按需：`{component}-{capability}.hooks.ts` | 同 advanced |
+| 内部类型 | — | 按需：`src/types.ts` | 同 advanced |
 | `constants.ts` / `utils.ts` / `elements/` | 按需，简单组件可省略 | 按需，子元素必须配套 | 同 advanced |
 | Props 运行期声明 | `src/props.ts` | `src/hooks/prop.hooks.ts` | `src/hooks/prop.hooks.ts` |
 | 依赖方向 | 不依赖 advanced / ai | 可引用 basic 的类型 | 可引用 basic / advanced 的类型 |
@@ -26,13 +28,15 @@ agent: "agent"
 1. 读 `packages/bst-basic-components/template/README.md` 与目标层已有组件，确认目录结构与命名，再动手。
 2. 类型：写 `packages/bst-types/src/<层>-<组件>.types.ts`，命名 `Bst{Component}Props` / `Emits` / `Slots` / `Expose`；随后在 `packages/bst-types/src/index.ts` 追加 `export type * from './<层>-<组件>.types';`（不带 `.ts`），顺序 `basic` → `advanced` → `ai`，同层按字母序。
 3. advanced / ai 的源码结构：
-   - `src/constants.ts`：常量前缀 `BST_{COMPONENT}_CONSTANT_`，必含 `..._COMPONENT_NAMES` 与 `..._ERROR_MESSAGES`。
-   - `src/utils.ts`：只放与业务无耦合的纯工具。
+   - `src/constants.ts`：常量前缀 `BST_{COMPONENT}_CONSTANT_`，必含 `..._COMPONENT_NAMES` 与 `..._ERROR_MESSAGES`；只放多文件共用的常量。
+   - `src/utils.ts`：只放被 2 处以上使用的纯函数（无副作用、不持状态），可有与组件数据语义相关的判定函数（如 `is{Component}ItemActionable`）；只用一次的逻辑留在原地。
+   - `src/types.ts`（按需）：只放组件内部类型，如阶段联合类型、内部事件签名；被多个 hook 共用时放此处，避免互相引用形成循环依赖。
    - `src/hooks/prop.hooks.ts`：Props 接收、归一化、校验、默认值。
    - `src/hooks/life.hooks.ts`：全部 `onMounted` / `onUnmounted` / `watch` / `watchEffect`，不散落。
-   - `src/hooks/{component}.hooks.ts`：按组件或子元素拆分，单一职责；子元素配套 `{element}.hooks.ts`。
+   - `src/hooks/{component}.hooks.ts`：组件或子元素的**装配层**，组合下游能力 hook 后对外提供整体能力；一个组件至少一个，子元素配套 `{element}.hooks.ts`。
+   - `src/hooks/{component}-{capability}.hooks.ts`（按需）：从 `{component}.hooks.ts` 按能力拆出的专职 hook，`capability` 取 `phase` / `position` / `keyboard` / `outside` / `view` 这类含义明确的名字；一个文件只维护一类状态与行为，且**不得反向引用** `{component}.hooks.ts`。
    - `src/hooks/controller.hooks.ts`：`use{Component}Controller()` 只做胶水组装。
-   - `src/hooks/index.ts`：只导出 controller。
+   - `src/hooks/index.ts`：只导出 `controller.hooks.ts`；能力 hook 与 `types.ts` 一律不在此导出。
    - `src/elements/{element-name}.tsx`：只渲染已处理的数据，不碰原始 props。
    - `src/{component}.tsx`：只调用 `use{Component}Controller()` 并写 TSX。
 4. basic 的源码结构：`src/props.ts` 声明运行期 Props，`src/{component}.tsx` 直接写视图与轻量逻辑；确实出现复用子结构时再引入 `elements/`，确实产生生命周期与状态编排时再按 advanced 结构补 hooks。
@@ -44,6 +48,18 @@ agent: "agent"
 7. 测试与示例：`<组件>/__tests__/` 放单测（五类分组），`<组件>/_example/_test_snap_example.vue` 放唯一快照 demo。
 8. 可选：文档站示例与文档页、Storybook story，分别按 `/docs-demo` 与 `/storybook-story` 提示词处理。
 
+## 新增文件的时机
+
+| 触发条件 | 新增文件 |
+| --- | --- |
+| 新增子元素 | `elements/{element-name}.tsx` + 对应 `{element}.hooks.ts` |
+| 单个 hook 同时维护 2 类以上互不相关的状态（如显隐阶段 + 坐标 + 键盘高亮） | `{component}-{capability}.hooks.ts` |
+| 单个 hook 文件超过约 300 行 | 同上，按能力拆分 |
+| 多个 hook 需要共用同一内部类型 | `src/types.ts` |
+| 同一纯函数或判定在 2 处以上出现 | 收进 `utils.ts` |
+
+达不到条件就不拆：没有子元素不建 `elements/`，单一职责的 hook 不预先分片，避免为抽象而抽象。
+
 ## 硬性约束
 
 - 组件源码内不写任何样式，类名契约对齐 `@binarysovereign/styles`。
@@ -51,6 +67,8 @@ agent: "agent"
 - 禁止反向依赖（basic → advanced / ai）与循环引用。
 - 依赖版本只写 `catalog:` / `workspace:*`，新依赖先改 `pnpm-workspace.yaml` 的 catalog 并同步 `docs/rules/dependencies.md`。
 - 不创建空文件或空目录：没有子元素就不建 `elements/` 与对应 hooks。
+- `hooks/index.ts` 只导出 controller；能力 hook 与 `src/types.ts` 不对外导出。
+- 私有函数名以 `_` 开头并集中在文件前部，公共方法在后部按调用顺序排列。
 - 单测目录用 `__tests__`，不用 `__test__`。
 - 只面向 Chromium，不写兼容 Firefox / Safari / IE 的降级分支。
 

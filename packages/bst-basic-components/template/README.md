@@ -14,6 +14,7 @@
 │   ├── hooks/                # 组合式钩子（仅高级、AI 组件）
 │   ├── elements/             # 子元素（仅高级、AI 组件）
 │   ├── utils.ts              # 组件公用工具函数（仅高级、AI 组件）
+│   ├── types.ts              # 组件内部类型（仅高级、AI 组件，按需）
 │   ├── constants.ts          # 组件常量（仅高级、AI 组件）
 │   ├── props.ts              # Props 运行期声明（基础组件）
 │   └── {component}.tsx       # 根组件
@@ -55,8 +56,11 @@
 | `controller.hooks.ts` | 固定命名 | 组合函数调度中枢，统筹编排调度所有其他 hooks；接收 props / emit，分发给各个钩子，聚合状态与方法返回给视图 | 只组装，不写具体业务逻辑 |
 | `prop.hooks.ts` | 固定命名 | Props 运行期类型校验、参数是否合法、归一化、数据清洗等 | 只处理入参检查，不修改业务状态 |
 | `life.hooks.ts` | 固定命名 | 组件全部生命周期：`onMounted` / `onUnmounted` / `watch` / `watchEffect` 等所有生命周期作用 | 禁止生命周期钩子散落在其他 hooks 当中 |
-| `{component}.hooks.ts` | `component` 替换组件或者子元素名，根组件至少存在1个，子元素按需新增 | 单一职责，一个文件只负责一个组件或者子元素，便于单元测试 |
+| `{component}.hooks.ts` | `component` 替换组件或者子元素名 | 单一职责，只负责该组件或子元素的整体能力，作为装配层组合下游能力 hook | 被拆出的能力 hook 不得反向引用本文件 |
+| `{component}-{capability}.hooks.ts` | `capability` 为能力名，如 `phase` / `position` / `keyboard` / `outside` / `view` | 从 `{component}.hooks.ts` 中按能力拆出的专职 hook；一个文件只维护一类状态与行为 | 仅供同组件内部使用，不进入 `index.ts` 导出 |
 | `index.ts` | 固定命名 | 仅需要导出 `controller.hooks.ts` 的组合式函数 | - |
+
+> 何时拆出 `{component}-{capability}.hooks.ts`：当一个 hook 同时维护 2 类以上互不相关的状态（如显隐阶段 + 坐标 + 键盘高亮），或单文件超过约 300 行时，按能力拆文件；否则不拆，避免为抽象而抽象。
 
 
 ### constants 常量文件（按需）
@@ -82,7 +86,16 @@
 ### utils.ts 工具文件
 
 1. `utils.ts` 组件通用的工具函数
-  - 只存放和组件业务逻辑无耦合的工具函数。
+  - 存放组件内多个文件共用的纯函数（无副作用、不持有状态）。
+  - 包含两类：与组件无关的通用纯函数；依附于组件数据语义的纯判定函数（如 `is{Component}ItemActionable`）。
+  - 同一个判定在 2 处以上出现才抽取；只在一处使用的逻辑留在原地。
+
+### types.ts 内部类型（按需）
+
+1. `types.ts` 组件内部类型
+  - 只放组件内部使用、不从 `index.ts` 导出的类型（如阶段联合类型、内部事件签名）。
+  - 需要拆分的多个 hook 共用同一类型时放在此处，避免 hook 之间互相引用形成循环依赖。
+  - **跨包共享的类型仍必须放在 `packages/bst-types`**，本文件不得替代它。
 
 ### src/{component}.tsx
 
@@ -99,8 +112,12 @@
 2. 除基础组件外，生命周期钩子全部收拢在 `life.hooks.ts`，禁止散落在其他逻辑文件。
 3. 除基础组件外，Props 相关操作全部放在 `prop.hooks.ts`。
 4. 除基础组件外，业务逻辑按组件拆分多个 `{component}.hooks.ts`，单一职责。
+5. `hooks/index.ts` 只导出 `controller.hooks.ts`；`{component}-{capability}.hooks.ts` 与 `types.ts` 一律不对外导出。
+6. 私有函数名以 `_` 开头，集中在文件前部；公共方法集中在后部并按调用顺序排列。
 
 ## 什么时候新增文件
 
 1. 新增子元素 → 新增 `elements/yyy.tsx`、对应`yyy.hooks.ts`业务hook。
-2. 不要创建空文件，没有子元素就不创建子元素 hooks 文件、子元素文件。
+2. 单个 hook 承担 2 类以上互不相关的状态，或单文件超过约 300 行 → 拆出 `{component}-{capability}.hooks.ts`。
+3. 多个 hook 需要共用同一内部类型 → 新增 `src/types.ts`。
+4. 不要创建空文件，没有子元素就不创建子元素 hooks 文件、子元素文件。

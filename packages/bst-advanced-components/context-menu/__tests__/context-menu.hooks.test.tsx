@@ -3,10 +3,7 @@ import { flushPromises, mount } from '@vue/test-utils';
 import type { VueWrapper } from '@vue/test-utils';
 import type { BstContextMenuItem, BstContextMenuProps } from '@binarysovereign/bst-types';
 
-import {
-  BST_CONTEXT_MENU_CONSTANT_ANIMATION_DURATION,
-  BST_CONTEXT_MENU_CONSTANT_ANIMATION_FALLBACK_BUFFER,
-} from '../src/constants';
+import { BST_CONTEXT_MENU_CONSTANT_METRICS } from '../src/constants';
 import { contextMenuProps, useContextMenuProp } from '../src/hooks/prop.hooks';
 import type { UseContextMenuReturn } from '../src/hooks/context-menu.hooks';
 import { useContextMenu } from '../src/hooks/context-menu.hooks';
@@ -16,7 +13,7 @@ import { useContextMenuLife } from '../src/hooks/life.hooks';
 import { createHarness } from './mount';
 
 const FALLBACK_DELAY =
-  BST_CONTEXT_MENU_CONSTANT_ANIMATION_DURATION + BST_CONTEXT_MENU_CONSTANT_ANIMATION_FALLBACK_BUFFER;
+  BST_CONTEXT_MENU_CONSTANT_METRICS.ANIMATION_DURATION + BST_CONTEXT_MENU_CONSTANT_METRICS.ANIMATION_FALLBACK_BUFFER;
 
 const mountedWrappers: VueWrapper[] = [];
 

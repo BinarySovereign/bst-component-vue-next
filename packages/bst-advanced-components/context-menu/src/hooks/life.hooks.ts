@@ -1,5 +1,3 @@
-// BstContextMenu 生命周期：监听器增删、受控同步与卸载清理
-// 组件内所有 watch / onUnmounted 都收敛在本文件，其他 hooks 不出现生命周期钩子
 import { nextTick, onUnmounted, watch } from 'vue';
 import type { Ref } from 'vue';
 import type { BstContextMenuPosition, BstContextMenuProps } from '@binarysovereign/bst-types';
@@ -34,20 +32,9 @@ export interface UseContextMenuLifeOptions {
   onCleanup: () => void;
 }
 
-/**
- * 注册上下文菜单的全部生命周期行为。
- *
- * 监听器只在面板可见期间存在：进入可见态时挂载，离开后立即移除，
- * 避免常驻监听带来的判断开销与内存泄漏。
- *
- * @param options 状态引用与回调集合
- */
 export function useContextMenuLife(options: UseContextMenuLifeOptions): void {
   let detachListeners: (() => void) | null = null;
 
-  /**
-   * 移除当前已挂载的监听器。
-   */
   function detach(): void {
     if (!detachListeners) return;
 
@@ -55,19 +42,9 @@ export function useContextMenuLife(options: UseContextMenuLifeOptions): void {
     detachListeners = null;
   }
 
-  /**
-   * 挂载三组外部事件监听。
-   *
-   * - 点击用 `mousedown`：`click` 在 `mouseup` 之后触发，触发元素被面板遮挡时
-   *   会出现「打开即关闭」；
-   * - 滚动必须 `capture`：`scroll` 不冒泡，挂到 `window` 才能收到；
-   * - 键盘监听统一处理 Esc 与上下方向键导航；
-   * - 监听在 `nextTick` 之后挂载，避开触发元素自身这一次事件。
-   */
   async function attach(): Promise<void> {
     await nextTick();
 
-    // 等待期间可能又切回隐藏态，此时不应再挂监听
     if (!options.isActive.value) return;
 
     const listenerOptions: AddEventListenerOptions = { capture: true };
@@ -91,7 +68,6 @@ export function useContextMenuLife(options: UseContextMenuLifeOptions): void {
 
   if (options.isActive.value) void attach();
 
-  // 父级受控值写入内部真值，内部真值再经 watch 派发事件并驱动状态机
   watch(
     () => options.props.isVisible,
     (value) => options.onVisiblePropChange(value === true),
@@ -99,8 +75,6 @@ export function useContextMenuLife(options: UseContextMenuLifeOptions): void {
 
   watch(options.innerVisible, (value) => options.onInnerVisibleChange(value));
 
-  // 位置变化与列表变化都可能改变面板尺寸，需要重新夹取；
-  // 坐标本身也要同步进内部状态，否则受控坐标在挂载后的变更会被丢弃
   watch(
     () => options.props.position,
     (value) => {
