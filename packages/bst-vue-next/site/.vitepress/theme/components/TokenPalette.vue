@@ -1,15 +1,7 @@
 <script setup lang="ts">
-// 设计令牌总览表：清单来自构建期插件（`virtual:bst-tokens`），色块用 `var(--bst-*)` 实时着色。
-//
-// 为什么色块不直接用清单里的静态色值：清单是构建期从两套主题源文件里解析出来的**快照**，
-// 用静态色值着色则色块恒为亮色取值。改为内联 `var(--bst-*)` 后，色块随站点主题实时切换，
-// 静态色值只承担文本展示与「是否随主题变化」的判定。
-//
-// 分组默认折叠：全量令牌约 245 条，全部展开会把页面撑到一万八千像素以上，既不便浏览，
-// 也让「滚动到某处」与自动化截图一类的操作变得不可用。筛选项一有输入即自动展开命中的分组。
+// 设计令牌总览表：清单来自 virtual:bst-tokens，色块用 var(--bst-*) 随主题实时着色。
 import { computed, onMounted, ref, watch } from 'vue';
 
-/** 与 `virtual:bst-tokens` 的导出形态一致，见 `.vitepress/types/virtual-modules.d.ts` */
 interface PaletteToken {
   name: string;
   note: string;
@@ -32,14 +24,12 @@ const isLoaded = ref(false);
 const openGroups = ref<string[]>([]);
 
 onMounted(async () => {
-  // 动态 import：令牌清单自成独立 chunk，未访问本页时不下载它
   groups.value = (await import('virtual:bst-tokens')).default;
   isLoaded.value = true;
 });
 
 const totalCount = computed(() => groups.value.reduce((sum, group) => sum + group.items.length, 0));
 
-/** 「随主题变化」的判定以两个快照的取值差异为准，与色彩层 / 结构层的划分互为印证 */
 const themeableCount = computed(() =>
   groups.value.reduce((sum, group) => sum + group.items.filter((item) => item.light !== item.dark).length, 0),
 );
@@ -65,21 +55,10 @@ const filteredGroups = computed(() => {
 
 const visibleCount = computed(() => filteredGroups.value.reduce((sum, group) => sum + group.items.length, 0));
 
-// 筛选一变即展开命中的分组：否则「搜到了却看不到」需要再手点一次
 watch([keyword, onlyThemeable], () => {
   openGroups.value = isFiltering.value ? filteredGroups.value.map((group) => group.title) : [];
 });
 
-/**
- * 同步手动的展开 / 折叠
- *
- * `<details>` 的 `open` 由本组数据驱动（受控），故需在原生 toggle 事件里回写，
- * 否则下一次重渲染会把用户的手动操作覆盖掉。
- *
- * @param title 分组标题
- * @param event 原生 toggle 事件
- * @returns 无
- */
 function onGroupToggle(title: string, event: Event): void {
   const { open } = event.target as HTMLDetailsElement;
 
@@ -88,24 +67,10 @@ function onGroupToggle(title: string, event: Event): void {
     : openGroups.value.filter((item) => item !== title);
 }
 
-/**
- * 展开或折叠全部分组
- *
- * @param open 目标状态
- * @returns 无
- */
 function toggleAll(open: boolean): void {
   openGroups.value = open ? filteredGroups.value.map((group) => group.title) : [];
 }
 
-/**
- * 生成色块的着色样式
- *
- * 渐变类令牌需走 `background-image`，写成 `background-color` 会被判为无效值而丢弃。
- *
- * @param item 令牌条目
- * @returns 内联样式对象
- */
 function swatchStyle(item: PaletteToken): Record<string, string> {
   const reference = `var(${item.name})`;
 

@@ -65,26 +65,33 @@ packages/bst-vue-next/storybook/
 
 ## Story 覆盖矩阵
 
-`src/stories/advanced/context-menu.stories.tsx` 的 28 个 story 覆盖组件的全部对外能力：
+`src/stories/advanced/context-menu.stories.tsx` 的 30 个 story 按「正常 / 异常 / 边界」三组排列，覆盖组件的全部对外能力：
 
-| 能力 | 覆盖的 story |
-| --- | --- |
-| `items` / `leftText` / `rightText` / `divider` | 默认、仅左文本、长文本与溢出 |
-| `isDisabled` | 含禁用项、菜单项插槽 |
-| `action` | 单项 action 回调 |
-| `key`（重复 / 非法 / 空项） | 数据校验 |
-| `width`（数字 / 字符串） | 固定宽度（数字）、固定宽度（字符串） |
-| `maxHeight` | 限制最大高度 |
-| `position` | 默认（指针坐标）、固定坐标（受控） |
-| `isVisible` | 固定坐标（受控） |
-| `teleport`（默认 / false / 选择器） | 默认、原地渲染、Teleport 到指定容器 |
-| `isCloseOnOutsideClick` / `Scroll` / `EscKeyDown` | 关闭行为可配置 |
-| `onItemSelect` / `ClickOutside` / `ScrollOutside` / `EscKeyDown` / `AfterEnter` / `AfterLeave` | 事件追踪（画布 + Actions 面板） |
-| `default` 插槽 | 默认插槽（完全自定义） |
-| `item` 插槽 | 菜单项插槽（自定义单项） |
-| `show()` / `hide()` | 实例方法 show / hide |
-| 空数据 | 空数据 |
-| 主题令牌 | 顶部工具栏切换浅色 / 深色 |
+| 能力 | 覆盖的 story | 分组 |
+| --- | --- | --- |
+| `items` / `leftText` / `rightText` / `divider` | 默认、仅左文本、长文本与溢出 | 正常 / 边界 |
+| `isDisabled` | 含禁用项、全部禁用、菜单项插槽 | 正常 / 边界 |
+| `action` | 单项 action 回调 | 正常 |
+| `key`（重复 / 非法 / 空项） | 数据校验 | 异常 |
+| `key`（数字 / 与字符串混用） | 数字 key | 边界 |
+| `width`（数字 / 字符串 / CSS 变量） | 固定宽度（数字）、固定宽度（字符串）、CSS 变量覆盖宽度 | 正常 |
+| `maxHeight`（数字 / 字符串） | 限制最大高度、最大高度（字符串） | 边界 |
+| 面板内滚动不触发关闭 | 面板内滚动不关闭 | 边界 |
+| `position` | 默认（指针坐标）、固定坐标（受控） | 正常 |
+| `isVisible` | 固定坐标（受控）、挂载即显示 | 正常 |
+| `teleport`（默认 / false / 选择器 / 选择器不存在） | 默认、原地渲染、Teleport 到指定容器、选择器不存在时回落 body | 正常 / 异常 |
+| `isCloseOnOutsideClick` / `Scroll` / `EscKeyDown` | 关闭行为可配置 | 正常 |
+| `onItemSelect` / `ClickOutside` / `ScrollOutside` / `EscKeyDown` / `AfterEnter` / `AfterLeave` | 事件追踪（画布 + Actions 面板） | 正常 |
+| `update:isVisible` / `update:position` | 事件追踪 | 正常 |
+| `default` 插槽 | 默认插槽（完全自定义） | 正常 |
+| `item` 插槽 | 菜单项插槽（自定义单项） | 正常 |
+| `show()` / `hide()` | 实例方法 show / hide | 正常 |
+| 键盘操作（↑↓ / Enter / 空格 / Esc） | 键盘操作、全部禁用 | 正常 / 边界 |
+| 视口边缘夹取 / 尺寸变化重新夹取 | 视口边缘自动翻转、打开时增删菜单项 | 边界 |
+| 分割线边界（开头 / 连续 / 结尾） | 分割线边界 | 边界 |
+| 空数据 | 空数据 | 异常 |
+| 多实例隔离 | 同一页面多个实例 | 正常 |
+| 主题令牌 | 顶部工具栏切换浅色 / 深色 | 全局 |
 
 > 工具栏按钮统一放在演示区**上方**：菜单在演示区内按指针位置弹出，放在下方会被面板遮挡。
 

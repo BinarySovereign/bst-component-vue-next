@@ -10,9 +10,6 @@ BstComponent 是一套基于 **Vue 3 + TypeScript + TSX** 的组件库，采用 
 | 高级组件主包 | `@binarysovereign/vue-next-pro` | `packages/bst-vue-next-pro` | 聚合高级组件源码包产物后对外发布 |
 | AI 组件主包 | `@binarysovereign/vue-next-pro-ai` | `packages/bst-vue-next-pro-ai` | 聚合 AI 组件源码包产物后对外发布 |
 | 通用样式包 | `@binarysovereign/styles` | `packages/bst-styles` | 唯一的样式来源 |
-| 基础组件源码包 | `@binarysovereign/bst-basic-components` | `packages/bst-basic-components` | private，不对外发布 |
-| 高级组件源码包 | `@binarysovereign/bst-advanced-components` | `packages/bst-advanced-components` | private，不对外发布 |
-| AI 组件源码包 | `@binarysovereign/bst-ai-components` | `packages/bst-ai-components` | private，不对外发布 |
 
 ## 技术栈
 
@@ -29,7 +26,7 @@ BstComponent 是一套基于 **Vue 3 + TypeScript + TSX** 的组件库，采用 
 
 | 项 | 要求 |
 | --- | --- |
-| Node.js | `>= 20` |
+| Node.js | `>= 22.13.0` |
 | 包管理器 | pnpm |
 | 浏览器 | Chrome / Edge 152 及以上、Electron 42 及以上，不支持 IE / Firefox / Safari |
 

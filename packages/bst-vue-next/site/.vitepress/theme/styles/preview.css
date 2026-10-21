@@ -1,9 +1,4 @@
-/* 「样式预览」页的容器外观：设计令牌总览表。
-
-   与 demo.css 同规：取值一律走组件库的语义令牌，故本文件不需要任何暗色分支。
-   注意不要直接取 `--bst-gray-color-*` 这类原始色板，它在暗色下语义会反转。 */
-
-/* 令牌总览 */
+/* 「样式预览」页的容器外观：设计令牌总览表。 */
 
 .bst-token-toolbar {
   display: flex;
@@ -164,7 +159,6 @@
   font-style: normal;
 }
 
-/* 别名提示：说明该令牌取自另一令牌，取值列已展示解析后的实际值 */
 .bst-token-alias {
   color: var(--bst-text-color-placeholder);
   font-family: monospace;

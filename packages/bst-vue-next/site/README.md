@@ -63,8 +63,9 @@ packages/bst-vue-next/site/
 │  ├─ theme/
 │  │  ├─ index.ts                # 主题入口：引组件库样式、注册站点组件、明暗桥接
 │  │  ├─ demo-source.ts          # 示例索引：懒加载组件 + 高亮数据载入器
-│  │  ├─ styles/                 # 站点外壳样式，与组件库样式互不混写
-│  │  └─ components/             # DemoBlock（示例预览 + 高亮源码）、TokenPalette（令牌总览）
+│  │  ├─ styles/                 # 站点外壳样式，与组件库样式互不混写│  │  │  ├─ demo/                # 示例样式：index.css 汇总 + block / shared / 各组件层分片
+│  │  │  ├─ vars.css             # VitePress 品牌色与组件库令牌的接缝
+│  │  │  └─ preview.css          # 样式预览页（设计令牌总览）│  │  └─ components/             # DemoBlock（示例预览 + 高亮源码）、TokenPalette（令牌总览）
 │  ├─ types/                     # 补声明：styles 按需入口无类型文件、虚拟模块
 │  ├─ cache/                     # 运行期缓存（git 忽略）
 │  └─ dist/                      # 构建产物（git 忽略）
@@ -73,7 +74,7 @@ packages/bst-vue-next/site/
 │  ├─ guide/                     # 指南
 │  ├─ components/                # 组件文档
 │  ├─ styles/                    # 样式预览：设计令牌总览（无组件样式预览，见其页面说明）
-│  ├─ examples/                  # 示例源码（当前已有 context-menu/），目录说明见其 README.md
+│  ├─ examples/                  # 示例源码，按 basic/ advanced/ ai/ 分层，目录说明见其 README.md
 │  └─ public/                    # 原样拷贝到产物根，如 logo.svg
 ├─ package.json
 ├─ tsconfig.json
@@ -88,7 +89,7 @@ packages/bst-vue-next/site/
 
 ## 示例的写法
 
-> `src/examples/` 已开始沉淀真实示例（首个为 `context-menu/`）。示例一律以真实组件为准，
+> `src/examples/` 已开始沉淀真实示例（首个为 `advanced/context-menu/`）。示例一律以真实组件为准，
 > 不预先造「用原生标签拼出样式效果」的演示。目录、索引与高亮链路均已就绪，
 > 新增示例按下述约定放入即可，无需改动任何配置。
 >
@@ -97,12 +98,20 @@ packages/bst-vue-next/site/
 
 示例遵循「一个示例一个文件、实时渲染与源码展示共用该文件」的约定：
 
-1. 在 `src/examples/<组件名>/<场景名>.vue` 写示例，**不写样式**，只落地类名契约；
-2. 在文档页用 `<DemoBlock>` 引用，`demo` 取相对于 `src/examples/` 且去掉 `.vue` 的路径。
+1. 在 `src/examples/<层>/<组件名>/<场景名>.vue` 写示例（`<层>` 为 `basic` / `advanced` / `ai`），
+   **不写样式**，只落地类名契约；
+2. 在文档页用 `<DemoBlock>` 引用，`demo` 取相对于 `src/examples/` 且去掉 `.vue` 的路径（含层名）。
 
 ```md
-<DemoBlock demo="<组件名>/<场景名>" title="场景标题" description="一句话说明。" />
+<DemoBlock demo="<层>/<组件名>/<场景名>" title="场景标题" description="一句话说明。" />
 ```
+
+三层路径一一对应：示例目录、组件文档页（`src/components/<层>/`）、样式分片
+（`theme/styles/demo/<层>/<组件名>.css`）同名同层级，新增组件时三处一起建即可。
+
+样式分层的收录规则：`block.css` 只放 DemoBlock 骨架；`shared.css` 只放被两个以上层用到的辅助类；
+其余落在 `demo/<层>/<组件名>.css`，并在同层 `index.css` 里 `@import` 登记。
+全量静态引入（`demo/index.css` 统一汇总），不做按层懒加载。
 
 `src/examples/README.md` 同样记录了一份约定，便于直接在该目录下工作的人就地看到。
 
@@ -144,7 +153,7 @@ packages/bst-vue-next/site/
 | 决策 | 原因 |
 | --- | --- |
 | 复用 vitepress 的渲染器，而非直引 `shiki` | 站点本就未声明 shiki；复用后示例的配色、主题切换行为与页面正文代码块完全一致 |
-| 不复用默认主题的代码块样式，只复用它给的颜色规则 | 高亮 HTML 自带 `vp-code` 类，`.dark .vp-code span` 那条全局规则会自动命中；而代码块的盒模型样式作用域是 `.vp-doc` 下的 `language-*` 选择器，命中不了，需在 `theme/styles/demo.css` 自补 |
+| 不复用默认主题的代码块样式，只复用它给的颜色规则 | 高亮 HTML 自带 `vp-code` 类，`.dark .vp-code span` 那条全局规则会自动命中；而代码块的盒模型样式作用域是 `.vp-doc` 下的 `language-*` 选择器，命中不了，需在 `theme/styles/demo/block.css` 自补 |
 | 去掉输出中的 `v-pre` 属性 | 该属性是 markdown 渲染器为「参与 Vue 编译」而加的，而源码区经 `v-html` 输出、不经过模板编译 |
 | 高亮主题设为 `{ light, dark }` 双套 | 颜色以内联 CSS 变量挂在每个 span 上，切换明暗无需重新渲染 |
 | 不声明 `markdown.languages` | 默认语言集已覆盖本站所需（实测无回退警告）；且该字段类型为 shiki 的 `LanguageInput[]`（只接受语言注册对象），与其运行时接受语言 id 字符串不符，显式声明需加断言。详见 `markdown-options.ts` 注释 |

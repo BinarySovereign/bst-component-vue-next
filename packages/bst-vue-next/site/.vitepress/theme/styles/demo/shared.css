@@ -1,0 +1,28 @@
+/* 跨层复用的示例辅助类：铺满预览区与自定义渲染标签。 */
+
+.bst-demo-fill {
+  margin: calc(-1 * var(--bst-size-6));
+  padding: var(--bst-size-6);
+}
+
+.bst-demo-tag {
+  padding: var(--bst-comp-padding-tb-xs) var(--bst-comp-padding-lr-s);
+  border-radius: var(--bst-radius-default);
+  background-color: var(--bst-bg-color-container-hover);
+  color: var(--bst-text-color-secondary);
+  font: var(--bst-font-body-small);
+  white-space: nowrap;
+}
+
+.bst-demo-tag-muted {
+  padding: 0 var(--bst-size-1);
+  background-color: transparent;
+  color: var(--bst-text-color-placeholder);
+}
+
+@media (max-width: 640px) {
+  .bst-demo-fill {
+    margin: calc(-1 * var(--bst-size-4));
+    padding: var(--bst-size-4);
+  }
+}

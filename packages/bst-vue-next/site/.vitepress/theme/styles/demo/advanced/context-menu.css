@@ -1,0 +1,86 @@
+/* 高级组件 ContextMenu 示例的辅助类。 */
+
+.bst-demo-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--bst-size-2);
+  margin: 0 0 var(--bst-size-3);
+}
+
+.bst-demo-button {
+  padding: var(--bst-comp-padding-tb-xxs) var(--bst-comp-padding-lr-xs);
+  border: 1px solid var(--bst-component-stroke);
+  border-radius: var(--bst-radius-default);
+  background-color: var(--bst-bg-color-container);
+  color: var(--bst-text-color-primary);
+  font: var(--bst-font-body-small);
+  cursor: pointer;
+}
+
+.bst-demo-button:hover {
+  background-color: var(--bst-bg-color-container-hover);
+}
+
+.bst-demo-button-is-active {
+  border-color: var(--bst-brand-color-7);
+  color: var(--bst-brand-color-7);
+}
+
+.bst-demo-log {
+  max-height: 180px;
+  margin: var(--bst-size-3) 0 0;
+  padding: var(--bst-comp-padding-tb-xs) var(--bst-comp-padding-lr-s);
+  overflow-y: auto;
+  border: 1px solid var(--bst-component-stroke);
+  border-radius: var(--bst-radius-default);
+  background-color: var(--bst-bg-color-container);
+  color: var(--bst-text-color-secondary);
+  font-family: ui-monospace, sfmono-regular, menlo, monaco, consolas, monospace;
+  font-size: var(--bst-font-size-body-small);
+  line-height: var(--bst-line-height-body-small);
+  list-style: none;
+}
+
+.bst-demo-log li + li {
+  margin-top: var(--bst-size-1);
+}
+
+.bst-demo-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--bst-size-2) var(--bst-size-5);
+  margin: 0 0 var(--bst-size-3);
+  color: var(--bst-text-color-primary);
+  font: var(--bst-font-body-small);
+}
+
+.bst-demo-field {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bst-size-2);
+}
+
+.bst-demo-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bst-size-2);
+}
+
+.bst-demo-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bst-size-3);
+  padding: var(--bst-comp-padding-tb-s) var(--bst-comp-padding-lr-s);
+  border: 1px solid var(--bst-component-stroke);
+  border-radius: var(--bst-radius-default);
+  background-color: var(--bst-bg-color-container);
+  color: var(--bst-text-color-primary);
+  font: var(--bst-font-body-medium);
+  cursor: context-menu;
+}
+
+.bst-demo-row + .bst-demo-row {
+  margin-top: var(--bst-size-2);
+}

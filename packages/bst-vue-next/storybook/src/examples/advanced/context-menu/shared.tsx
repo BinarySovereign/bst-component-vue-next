@@ -273,7 +273,8 @@ export const createDemo = (args: BstContextMenuProps, options: DemoOptions = {})
   defineComponent({
     name: 'BstContextMenuStoryDemo',
     setup() {
-      const isVisible = ref(false);
+      // 初始显隐跟随入参：支持验证「挂载即显示」时的首帧测量与防闪
+      const isVisible = ref(args.isVisible === true);
       const position = ref<BstContextMenuPosition>(args.position ?? { x: 0, y: 0 });
       const menuRef = ref<BstContextMenuExpose | null>(null);
       const lastSelected = ref('尚未选择');
@@ -543,9 +544,11 @@ export const createDemo = (args: BstContextMenuProps, options: DemoOptions = {})
             isCloseOnOutsideScroll: args.isCloseOnOutsideScroll,
             isCloseOnEscKeyDown: args.isCloseOnEscKeyDown,
             'onUpdate:isVisible': (value: boolean) => {
+              pushEvent('update:isVisible', String(value));
               isVisible.value = value;
             },
             'onUpdate:position': (value: BstContextMenuPosition) => {
+              pushEvent('update:position', `x=${String(Math.round(value.x))} y=${String(Math.round(value.y))}`);
               position.value = value;
             },
             onItemSelect: handleItemSelect,

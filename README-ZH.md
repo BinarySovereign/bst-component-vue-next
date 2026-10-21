@@ -37,6 +37,7 @@
 | 构建 | Rollup + Babel，样式由 Less + PostCSS 产出 |
 | 测试 | Vitest（单元测试 + SSR / CSR 快照测试） |
 | 包管理 | pnpm workspace + catalog |
+| 文档站 | [快速跳转](https://binarysovereign.github.io/bst-component-vue-next/) |
 
 ## 包命名约定
 

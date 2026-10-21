@@ -7,7 +7,7 @@
 ### 基础用法
 
 <DemoBlock
-  demo="context-menu/basic-usage"
+  demo="advanced/context-menu/basic-usage"
   title="基础用法"
   description="在区域内右键唤出菜单，点击任意项后显示选中结果。"
 />
@@ -15,7 +15,7 @@
 ### 分割线与禁用项
 
 <DemoBlock
-  demo="context-menu/divider-and-disabled"
+  demo="advanced/context-menu/divider-and-disabled"
   title="分割线与禁用项"
   description="分割线用于分组，禁用项保持可见但不参与交互。"
 />
@@ -23,9 +23,81 @@
 ### 自定义项渲染
 
 <DemoBlock
-  demo="context-menu/custom-item-slot"
+  demo="advanced/context-menu/custom-item-slot"
   title="自定义项渲染"
   description="通过 item 插槽渲染序号、文本与状态胶囊，点击与禁用逻辑仍由组件负责。"
+/>
+
+### 键盘操作
+
+<DemoBlock
+  demo="advanced/context-menu/keyboard-navigation"
+  title="键盘操作"
+  description="用按钮打开菜单后，靠方向键、回车与 Esc 完成整套操作，高亮会自动跳过禁用项与分割线。"
+/>
+
+### 业务回调
+
+<DemoBlock
+  demo="advanced/context-menu/item-action-callback"
+  title="业务回调"
+  description="items[].action 与 @item-select 并存，日志按触发顺序记录两者谁先执行。"
+/>
+
+### 关闭行为开关
+
+<DemoBlock
+  demo="advanced/context-menu/close-behavior-switches"
+  title="关闭行为开关"
+  description="三个布尔开关分别控制点击外部、外部滚动与 Esc 是否关闭，日志记录每次关闭的触发来源。"
+/>
+
+### 程序化控制
+
+<DemoBlock
+  demo="advanced/context-menu/programmatic-show-hide"
+  title="程序化控制"
+  description="通过实例暴露的 show(x, y) 与 hide() 由业务代码控制显隐，并观察 after-enter 与 after-leave 的时机。"
+/>
+
+### 视口边缘自适应
+
+<DemoBlock
+  demo="advanced/context-menu/viewport-edge-clamping"
+  title="视口边缘自适应"
+  description="在预览区右下角右键，坐标会被夹取到视口内，v-model:position 同步回夹取后的结果。"
+/>
+
+### 面板尺寸与滚动
+
+<DemoBlock
+  demo="advanced/context-menu/panel-size-and-scroll"
+  title="面板尺寸与滚动"
+  description="切换 width 与 maxHeight，长菜单在面板内部滚动而不撑破视口。"
+/>
+
+### 完全自定义内容
+
+<DemoBlock
+  demo="advanced/context-menu/custom-panel-content"
+  title="完全自定义内容"
+  description="default 插槽接管面板内容，键盘导航仍以 items 为准。"
+/>
+
+### 动态菜单数据
+
+<DemoBlock
+  demo="advanced/context-menu/dynamic-items"
+  title="动态菜单数据"
+  description="切换只读与编辑模式后，同一个实例的菜单项随数据实时变化。"
+/>
+
+### 多实例
+
+<DemoBlock
+  demo="advanced/context-menu/multiple-instances"
+  title="多实例"
+  description="每行各持有一份菜单，在某行右键时其他行的菜单状态互不干扰。"
 />
 
 ## API

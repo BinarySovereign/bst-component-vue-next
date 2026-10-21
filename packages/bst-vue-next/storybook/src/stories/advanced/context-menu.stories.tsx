@@ -13,11 +13,13 @@
 // - Slots：default（完全接管内容）、item（只替换单项内容）
 // - Expose：show / hide
 // - 菜单项字段：key（字符串与数字）/ leftText / rightText / type=divider / isDisabled / action
-// - 场景：视口边缘夹取、打开中增删项、键盘操作、CSS 变量覆盖、多实例、Teleport 回落
+// - 场景：挂载即显示、视口边缘夹取、打开中增删项、键盘操作、全部禁用、面板内滚动、
+//   CSS 变量覆盖、多实例、Teleport 回落
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 import { BstContextMenu } from '@binarysovereign/bst-advanced-components/context-menu';
 
+import { allDisabledExample } from '../../examples/advanced/context-menu/all-disabled.example';
 import { closeBehaviorExample } from '../../examples/advanced/context-menu/close-behavior.example';
 import { controlledPositionExample } from '../../examples/advanced/context-menu/controlled-position.example';
 import { defaultExample } from '../../examples/advanced/context-menu/default.example';
@@ -30,6 +32,7 @@ import { emptyItemsExample } from '../../examples/advanced/context-menu/empty-it
 import { eventsExample } from '../../examples/advanced/context-menu/events.example';
 import { exposeMethodsExample } from '../../examples/advanced/context-menu/expose-methods.example';
 import { inlineRenderingExample } from '../../examples/advanced/context-menu/inline-rendering.example';
+import { innerScrollExample } from '../../examples/advanced/context-menu/inner-scroll.example';
 import { invalidDataExample } from '../../examples/advanced/context-menu/invalid-data.example';
 import { itemActionExample } from '../../examples/advanced/context-menu/item-action.example';
 import { itemSlotExample } from '../../examples/advanced/context-menu/item-slot.example';
@@ -45,6 +48,7 @@ import { stringWidthExample } from '../../examples/advanced/context-menu/string-
 import { teleportMissingSelectorExample } from '../../examples/advanced/context-menu/teleport-missing-selector.example';
 import { teleportToContainerExample } from '../../examples/advanced/context-menu/teleport-to-container.example';
 import { textOnlyExample } from '../../examples/advanced/context-menu/text-only.example';
+import { visibleOnMountExample } from '../../examples/advanced/context-menu/visible-on-mount.example';
 import { widthByCssVariableExample } from '../../examples/advanced/context-menu/width-by-css-variable.example';
 
 const meta = {
@@ -120,29 +124,16 @@ type Story = StoryObj<typeof meta>;
 // 从外部模块整体导入的对象（`= defaultExample`）解析不出版本号与显示名，
 // 会退化成英文导出名，因此统一采用 `{ name: '…', ...example }` 的写法。
 
+// ───────────────────────────── 正常场景 ─────────────────────────────
+
 /** 默认形态：左右文本、分割线与禁用项 */
 export const Default: Story = { name: '默认', ...defaultExample };
 
 /** 仅左文本：无右侧快捷键时的布局 */
 export const TextOnly: Story = { name: '仅左文本', ...textOnlyExample };
 
-/** 空数据：面板仍然渲染，但没有任何菜单项 */
-export const EmptyItems: Story = { name: '空数据', ...emptyItemsExample };
-
-/** 长文本：左侧单行省略，右侧快捷键不折行 */
-export const LongText: Story = { name: '长文本与溢出', ...longTextExample };
-
 /** 禁用项：`isDisabled` 的项不响应点击，也不触发 `item-select` */
 export const WithDisabledItems: Story = { name: '含禁用项', ...disabledItemsExample };
-
-/** 超出 `maxHeight` 时在面板内部滚动 */
-export const WithMaxHeight: Story = { name: '限制最大高度', ...maxHeightExample };
-
-/** `width` 传数字：内部补 `px` */
-export const NumericWidth: Story = { name: '固定宽度（数字）', ...numericWidthExample };
-
-/** `width` 传字符串：原样作为 CSS 长度 */
-export const StringWidth: Story = { name: '固定宽度（字符串）', ...stringWidthExample };
 
 /** `default` 插槽：完全接管菜单内容，`items` 被忽略 */
 export const DefaultSlot: Story = { name: '默认插槽（完全自定义）', ...defaultSlotExample };
@@ -152,6 +143,9 @@ export const ItemSlot: Story = { name: '菜单项插槽（自定义单项）', .
 
 /** 固定坐标（受控）：不使用 `show()`，仅改 Props */
 export const ControlledPosition: Story = { name: '固定坐标（受控）', ...controlledPositionExample };
+
+/** 挂载即显示：`isVisible` 初始为 `true`，验证首帧测量与回写 */
+export const VisibleOnMount: Story = { name: '挂载即显示', ...visibleOnMountExample };
 
 /** `teleport=false`：面板留在组件所在位置，但定位仍为 `position: fixed` */
 export const InlineRendering: Story = { name: '原地渲染（teleport=false）', ...inlineRenderingExample };
@@ -168,11 +162,51 @@ export const Events: Story = { name: '事件追踪', ...eventsExample };
 /** 实例方法：通过组件 `ref` 调用 `show()` / `hide()` */
 export const ExposeMethods: Story = { name: '实例方法 show / hide', ...exposeMethodsExample };
 
+/** 单项 `action`：`item-select` 之后执行该项自带的业务逻辑，随后自动关闭 */
+export const ItemAction: Story = { name: '单项 action 回调', ...itemActionExample };
+
+/** 键盘操作：上下方向键切换菜单项，Enter / 空格选中，Esc 关闭 */
+export const KeyboardInteraction: Story = { name: '键盘操作', ...keyboardInteractionExample };
+
+/** `width` 传数字：内部补 `px` */
+export const NumericWidth: Story = { name: '固定宽度（数字）', ...numericWidthExample };
+
+/** `width` 传字符串：原样作为 CSS 长度 */
+export const StringWidth: Story = { name: '固定宽度（字符串）', ...stringWidthExample };
+
+/** 用 CSS 变量覆盖宽度：`--bst-context-menu-width` */
+export const WidthByCssVariable: Story = { name: 'CSS 变量覆盖宽度', ...widthByCssVariableExample };
+
+/** 多实例：同一页面两个菜单互不干扰 */
+export const MultipleMenus: Story = { name: '同一页面多个实例', ...multipleMenusExample };
+
+// ───────────────────────────── 异常场景 ─────────────────────────────
+
+/** 空数据：面板仍然渲染，但没有任何菜单项 */
+export const EmptyItems: Story = { name: '空数据', ...emptyItemsExample };
+
 /** 数据校验：重复 key、非法 key、空项与带文本的分割线 */
 export const InvalidData: Story = { name: '数据校验（重复与非法 key）', ...invalidDataExample };
 
-/** 单项 `action`：`item-select` 之后执行该项自带的业务逻辑，随后自动关闭 */
-export const ItemAction: Story = { name: '单项 action 回调', ...itemActionExample };
+/** `teleport` 选择器不存在：回落到 `body` */
+export const TeleportMissingSelector: Story = { name: '选择器不存在时回落 body', ...teleportMissingSelectorExample };
+
+// ───────────────────────────── 边界场景 ─────────────────────────────
+
+/** 长文本：左侧单行省略，右侧快捷键不折行 */
+export const LongText: Story = { name: '长文本与溢出', ...longTextExample };
+
+/** 超出 `maxHeight` 时在面板内部滚动 */
+export const WithMaxHeight: Story = { name: '限制最大高度', ...maxHeightExample };
+
+/** `maxHeight` 传字符串：接受任意 CSS 长度，超出后内部滚动 */
+export const MaxHeightString: Story = { name: '最大高度（字符串）', ...maxHeightStringExample };
+
+/** 面板内部滚动：滚动面板自身不应触发 `scroll-outside` */
+export const InnerScroll: Story = { name: '面板内滚动不关闭', ...innerScrollExample };
+
+/** 全部禁用：没有任何可激活项，键盘与点击均无响应 */
+export const AllDisabled: Story = { name: '全部禁用', ...allDisabledExample };
 
 /** 视口边缘自动翻转：越界坐标被夹取回视口内 */
 export const EdgeClamp: Story = { name: '视口边缘自动翻转', ...edgeClampExample };
@@ -180,23 +214,8 @@ export const EdgeClamp: Story = { name: '视口边缘自动翻转', ...edgeClamp
 /** 打开状态下增删菜单项：尺寸变化会触发重新夹取 */
 export const DynamicItems: Story = { name: '打开时增删菜单项', ...dynamicItemsExample };
 
-/** 键盘操作：上下方向键切换菜单项，Enter / 空格选中，Esc 关闭 */
-export const KeyboardInteraction: Story = { name: '键盘操作', ...keyboardInteractionExample };
-
-/** 数字 key：`key` 支持有限数字，且可与字符串 key 混用 */
-export const NumericKey: Story = { name: '数字 key', ...numericKeyExample };
-
 /** 分割线边界：开头、连续两条、结尾 */
 export const DividerEdges: Story = { name: '分割线边界', ...dividerEdgesExample };
 
-/** 用 CSS 变量覆盖宽度：`--bst-context-menu-width` */
-export const WidthByCssVariable: Story = { name: 'CSS 变量覆盖宽度', ...widthByCssVariableExample };
-
-/** `maxHeight` 传字符串：接受任意 CSS 长度，超出后内部滚动 */
-export const MaxHeightString: Story = { name: '最大高度（字符串）', ...maxHeightStringExample };
-
-/** `teleport` 选择器不存在：回落到 `body` */
-export const TeleportMissingSelector: Story = { name: '选择器不存在时回落 body', ...teleportMissingSelectorExample };
-
-/** 多实例：同一页面两个菜单互不干扰 */
-export const MultipleMenus: Story = { name: '同一页面多个实例', ...multipleMenusExample };
+/** 数字 key：`key` 支持有限数字，且可与字符串 key 混用 */
+export const NumericKey: Story = { name: '数字 key', ...numericKeyExample };

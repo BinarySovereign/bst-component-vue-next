@@ -38,6 +38,7 @@ One directory per component · source packages separated from published packages
 | Build | Rollup + Babel; styles are compiled by Less + PostCSS |
 | Testing | Vitest (unit tests + SSR / CSR snapshot tests) |
 | Package management | pnpm workspace + catalog |
+| Documentation Site | [Quick Jump](https://binarysovereign.github.io/bst-component-vue-next/) |
 
 ## Package naming
 
