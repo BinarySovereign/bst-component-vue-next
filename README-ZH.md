@@ -4,7 +4,7 @@
 
 **Vue 3 组件库 · 基础 / 高级 / AI 三层组件**
 
-一个组件一个目录 · 源码包与主包分离 · Rollup + Babel 产出 `es` / `lib` 双形态
+一个组件一个目录 · 源码包与主包分离 · Rollup + Babel 产出 `es` / `lib` / `umd` 三形态
 
 ![Use: Personal Only](https://img.shields.io/badge/use-personal%20only-red)
 
@@ -81,7 +81,7 @@
 # 1. 安装依赖
 pnpm install
 
-# 2. 构建三个组件源码包，产出 es / lib 两种形态（当前无包根入口，不产出 umd）
+# 2. 构建三个组件源码包，产出 es / lib / umd 三种形态
 pnpm build:private
 
 # 3. 构建样式包
@@ -101,7 +101,7 @@ pnpm move:main:dist
 
 ## 构建产物结构示例
 
-以下以 `button`、`context-menu` 两个假想组件为例，展示从源码包产物到最终发布产物的完整结构。
+以下以 `button`（结构示意）与 `context-menu`（真实组件，源码位于 `packages/bst-advanced-components`）为例，展示从源码包产物到最终发布产物的完整结构。
 
 ### 一、源码包中间产物（`pnpm build:private` 后）
 
@@ -145,7 +145,7 @@ packages/bst-basic-components/
    │  │  └─ button.d.ts
    │  └─ _types/                              # 与 es/_types 内容一致
    └─ umd/
-      └─ bst-basic-components.js              # 需包根 index.ts；无入口时该目录不产出
+      └─ bst-basic-components.js              # UMD 单文件产物，三个源码包均已产出
 ```
 
 > `es/button/button.d.ts` 中对共享类型的引用已被改写为相对路径，发布单元因此自包含：
@@ -161,7 +161,7 @@ packages/bst-vue-next/
 └─ build/
    ├─ es/          # 从 packages/bst-basic-components/build/es 整体复制
    ├─ lib/         # 从 packages/bst-basic-components/build/lib 整体复制
-   └─ umd/         # 源包未产出 UMD 时该目录不存在
+   └─ umd/         # 从 packages/bst-basic-components/build/umd 整体复制
 ```
 
 ### 三、根 `dist` 发布产物（`pnpm move:main:dist` 后）
@@ -185,9 +185,10 @@ dist/
 │  │     ├─ index.d.ts
 │  │     ├─ basic-button.types.d.ts
 │  │     └─ basic-context-menu.types.d.ts
-│  └─ lib/
-│     ├─ button/
-│     └─ _types/
+│  ├─ lib/
+│  │  ├─ button/
+│  │  └─ _types/
+│  └─ umd/
 ├─ vue-next-pro/                              # 结构同 vue-next，内容来自高级组件源码包
 │  ├─ package.json
 │  ├─ LICENSE
@@ -246,16 +247,18 @@ app.mount('#app');
 
 ```vue
 <template>
-  <BsButton type="primary">提交</BsButton>
+  <BstContextMenu :items="items" />
 </template>
 
 <script setup lang="ts">
-import { BsButton } from '@binarysovereign/vue-next/es/button';
-import '@binarysovereign/styles/web/basic-components/button';
+import { BstContextMenu } from '@binarysovereign/vue-next-pro/es/context-menu';
+import '@binarysovereign/styles/web/advanced-components/context-menu';
+
+const items = [{ key: 'copy', leftText: '复制' }];
 </script>
 ```
 
-> 按需引入样式时**不要**带 `/index.css`：`./web/basic-components/*` 的 `*` 会整段吃掉，`.../button/index.css` 会被拼成 `.../button/index.css/index.css` 而解析失败。
+> 按需引入样式时**不要**带 `/index.css`：`./web/advanced-components/*` 的 `*` 会整段吃掉，`.../context-menu/index.css` 会被拼成 `.../context-menu/index.css/index.css` 而解析失败。
 
 ## 适配浏览器
 

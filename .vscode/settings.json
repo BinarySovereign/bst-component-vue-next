@@ -9,7 +9,7 @@
   "prettier.requireConfig": true,
   // 显式指向仓库根配置，避免多包场景下解析错位
   "prettier.configPath": ".prettierrc.js",
-  // 使用本地依赖的 prettier 版本（3.9.9）
+  // 使用本地依赖的 prettier 版本（3.9.10）
   "prettier.prettierPath": "./node_modules/prettier",
   // 换行符统一 LF，与 endOfLine: 'lf' 对齐
   "files.eol": "\n",

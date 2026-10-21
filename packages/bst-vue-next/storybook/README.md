@@ -141,7 +141,7 @@ Storybook 官方**没有界面语言开关**：manager（侧边栏、标签页�
 
 1. **样式无热更新**。产物路线下改 `.less` 必须重跑 `pnpm build:style`；若要样式热更新，需把 `@binarysovereign/styles/web` 别名到 `packages/bst-styles/web/_index.less`，属于后续优化项。
 2. **Autodocs 的属性提取质量待验证**。`vue-component-meta` 对 `defineComponent` + TSX 的 props / events / slots 提取能力弱于 SFC，若属性表不完整，属性文档继续由 VitePress 承担。
-3. **交互回归尚未接入**。`play` 函数需要 `@storybook/addon-vitest` 与 `@vitest/browser` + provider；视觉回归需要 `chromatic`（其 `engines.node >= 22`，与仓库当前 Node 20 下限冲突）。
+3. **交互回归尚未接入**。`play` 函数需要 `@storybook/addon-vitest` 与 `@vitest/browser` + provider；视觉回归需要 `chromatic`（其 `engines.node >= 22`，与仓库 `>=22.13.0` 下限一致，接入时主要评估的是依赖体积与外部服务成本）。
 4. **非 Teleport 到 body 的 story 在 Docs 页必须用 iframe 渲染**。Storybook Docs 的每个 story 外层带
    `transform: matrix(1, 0, 0, 1, 0, 0)`，而**带 transform 的祖先会成为 `position: fixed` 的包含块**。
    组件已在首帧测量中补偿了这一偏移（对比期望坐标与实际 `getBoundingClientRect()`），位置不再跑偏；

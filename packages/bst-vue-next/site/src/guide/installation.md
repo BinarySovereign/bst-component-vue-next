@@ -103,18 +103,17 @@ app.mount('#app');
 
 ```vue
 <template>
-  <BsButton type="primary">提交</BsButton>
-  <BsProTable :data="data" />
+  <BstContextMenu :items="items" />
 </template>
 
 <script setup lang="ts">
 // 按需引入组件逻辑
-import { BsButton } from '@binarysovereign/vue-next/es/button';
-import { BsProTable } from '@binarysovereign/vue-next-pro/es/table';
+import { BstContextMenu } from '@binarysovereign/vue-next-pro/es/context-menu';
 
 // 按需引入组件样式
-import '@binarysovereign/styles/web/basic-components/button';
-import '@binarysovereign/styles/web/advanced-components/table';
+import '@binarysovereign/styles/web/advanced-components/context-menu';
+
+const items = [{ key: 'copy', leftText: '复制' }];
 </script>
 ```
 

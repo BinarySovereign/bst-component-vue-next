@@ -98,7 +98,7 @@ export default [
       // Storybook 静态站点产物（`build:storybook` 生成）
       '**/storybook-static/**',
       // 组件模板源码
-      'packages/basic-components/template/**',
+      'packages/bst-basic-components/template/**',
     ],
   },
 

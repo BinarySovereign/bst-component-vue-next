@@ -224,6 +224,6 @@ packages/
 
 ## 代理协作
 
-- 本仓库已提供 skills：`.agents/skills/component-develop`（写组件）、`unit-test`（补测试）、`dependency-selection`（选依赖版本）、`iconify-search`（搜图标）、`user-prompt-generation`（写提示词）。对应任务优先按 skill 执行。
+- 本仓库已提供 skills：`.agents/skills/component-develop`（写组件）、`unit-test`（补测试）、`dependency-selection`（选依赖版本）、`iconify-search`（搜图标）。对应任务优先按 skill 执行。
 - 修改后至少跑：`pnpm typecheck`；涉及测试跑 `pnpm test:unit`；涉及样式跑 `pnpm lint:style`；准备交付时跑 `pnpm ci:local`。
 - 不要为了让检查通过而修改断言、放宽规则或使用 `v8 ignore`；规范冲突时先看「规范来源」。

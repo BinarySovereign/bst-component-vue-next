@@ -3,7 +3,7 @@
 > 范围：`packages/bst-advanced-components/context-menu` 的单元测试与快照测试。
 > 前置：核心源码、类型包（`@binarysovereign/bst-types`）与样式包（`@binarysovereign/styles`）均已完成，本计划不改动它们。
 > 规范来源：`packages/bst-vue-next/test/README.md`（唯一规范来源）；文档结构对齐同目录 `plan.md`。
-> 当前状态：计划待执行。仓库内尚无 context-menu 的任何测试文件，也没有 `_example` 示例文件。
+> 当前状态：测试已落地。`__tests__/` 下已有 5 个文件（`mount.tsx` 与 4 个用例文件），`_example/_test_snap_example.vue` 亦已就位。
 
 ---
 
@@ -34,7 +34,7 @@
 | 工具函数 | `toCssLength` 等 7 个纯函数 | `src/utils.ts` |
 | 常量 | 组件名、类名、告警文案、动画与几何常量 | `src/constants.ts` |
 | 对外入口 | `BstContextMenu` 与 11 个类型导出 | `index.ts` |
-| 快照 | `_example/_test_snap_example.vue` | 待新增 |
+| 快照 | `_example/_test_snap_example.vue` | 已落地 |
 
 ### 1.2 通过标准
 

@@ -4,7 +4,7 @@
 
 **A Vue 3 component library · basic / advanced / AI layers**
 
-One directory per component · source packages separated from published packages · Rollup + Babel emitting both `es` and `lib`
+One directory per component · source packages separated from published packages · Rollup + Babel emitting `es`, `lib`, and `umd`
 
 ![Use: Personal Only](https://img.shields.io/badge/use-personal%20only-red)
 
@@ -82,7 +82,7 @@ One directory per component · source packages separated from published packages
 # 1. Install dependencies
 pnpm install
 
-# 2. Build the three component source packages as es / lib (no umd yet: no package-level entry exists)
+# 2. Build the three component source packages as es / lib / umd
 pnpm build:private
 
 # 3. Build the styles package
@@ -103,8 +103,8 @@ pnpm move:main:dist
 
 ## Artifact layout example
 
-The structure below assumes two hypothetical components, `button` and `context-menu`, and shows the full
-path from source-package artifacts to the final publish artifacts.
+The structure below uses `button` (layout illustration) and `context-menu` (a real component whose source lives
+in `packages/bst-advanced-components`) to show the full path from source-package artifacts to the final publish artifacts.
 
 ### 1. Source package intermediates (after `pnpm build:private`)
 
@@ -148,7 +148,7 @@ packages/bst-basic-components/
    │  │  └─ button.d.ts
    │  └─ _types/                              # same content as es/_types
    └─ umd/
-      └─ bst-basic-components.js              # requires a package-level index.ts; omitted otherwise
+      └─ bst-basic-components.js              # UMD bundle; all three source packages currently emit it
 ```
 
 > References to shared types inside `es/button/button.d.ts` are rewritten to relative paths so that each
@@ -165,7 +165,7 @@ packages/bst-vue-next/
 └─ build/
    ├─ es/          # copied from packages/bst-basic-components/build/es
    ├─ lib/         # copied from packages/bst-basic-components/build/lib
-   └─ umd/         # absent when the source package produced no UMD bundle
+   └─ umd/         # copied from packages/bst-basic-components/build/umd
 ```
 
 ### 3. Root `dist/` publish artifacts (after `pnpm move:main:dist`)
@@ -189,9 +189,10 @@ dist/
 │  │     ├─ index.d.ts
 │  │     ├─ basic-button.types.d.ts
 │  │     └─ basic-context-menu.types.d.ts
-│  └─ lib/
-│     ├─ button/
-│     └─ _types/
+│  ├─ lib/
+│  │  ├─ button/
+│  │  └─ _types/
+│  └─ umd/
 ├─ vue-next-pro/                              # same layout as vue-next, built from the advanced source package
 │  ├─ package.json
 │  ├─ LICENSE
@@ -250,17 +251,19 @@ app.mount('#app');
 
 ```vue
 <template>
-  <BsButton type="primary">Submit</BsButton>
+  <BstContextMenu :items="items" />
 </template>
 
 <script setup lang="ts">
-import { BsButton } from '@binarysovereign/vue-next/es/button';
-import '@binarysovereign/styles/web/basic-components/button';
+import { BstContextMenu } from '@binarysovereign/vue-next-pro/es/context-menu';
+import '@binarysovereign/styles/web/advanced-components/context-menu';
+
+const items = [{ key: 'copy', leftText: 'Copy' }];
 </script>
 ```
 
-> Do **not** append `/index.css` to on-demand style entries: the `*` in `./web/basic-components/*`
-> swallows the whole segment, so `.../button/index.css` becomes `.../button/index.css/index.css` and fails to resolve.
+> Do **not** append `/index.css` to on-demand style entries: the `*` in `./web/advanced-components/*`
+> swallows the whole segment, so `.../context-menu/index.css` becomes `.../context-menu/index.css/index.css` and fails to resolve.
 
 ## Browser support
 
