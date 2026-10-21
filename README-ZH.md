@@ -29,7 +29,7 @@
 ---
 
 <div align="center">
-  <img src="./assets/banner.png" alt="Bst-Components Banner" width="1200" />
+  <img src="https://raw.githubusercontent.com/BinarySovereign/bst-component-vue-next/refs/heads/develop/assets/banner.png" alt="Bst-Components Banner" />
 </div>
 
 ## 技术栈
