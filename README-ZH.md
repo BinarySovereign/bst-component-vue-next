@@ -6,7 +6,7 @@
 
 一个组件一个目录 · 源码包与主包分离 · Rollup + Babel 产出 `es` / `lib` / `umd` 三形态
 
-![Use: Personal Only](https://img.shields.io/badge/use-personal%20only-red)
+[![CI](https://github.com/BinarySovereign/bst-component-vue-next/actions/workflows/ci.yml/badge.svg)](https://github.com/BinarySovereign/bst-component-vue-next/actions/workflows/ci.yml)
 
 [![Node](https://img.shields.io/badge/node-%3E%3D22.13.0-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 [![pnpm](https://img.shields.io/badge/pnpm-%3E%3D11-F69220?logo=pnpm&logoColor=white)](https://pnpm.io)
@@ -27,6 +27,10 @@
 > 整体设计参考 [tdesign-vue-next](https://github.com/Tencent/tdesign-vue-next)。
 
 ---
+
+<div align="center">
+  <img src="./assets/banner.png" alt="Bst-Components Banner" width="1200" />
+</div>
 
 ## 技术栈
 
