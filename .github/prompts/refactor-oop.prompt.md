@@ -1,6 +1,6 @@
 ---
 description: "按面向对象思路高质量重构组件代码：拆分职责、收拢状态、显式依赖，保持对外行为与 API 完全不变"
-argument-hint: "重构目标与范围（如：context-menu 的 hooks 拆分；或指定文件/组件目录）"
+argument-hint: "重构目标与范围（如：advanced <组件名> 的 hooks 拆分；或指定文件/组件目录）"
 agent: "agent"
 ---
 

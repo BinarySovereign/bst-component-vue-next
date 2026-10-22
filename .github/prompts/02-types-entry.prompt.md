@@ -1,10 +1,12 @@
 ---
 description: "新增或迁移跨包类型到 bst-types，并按规范在 index.ts 导出、让组件源码改为引用共享类型"
-argument-hint: "组件层级与名称（如：advanced context-menu；留空则从当前改动推断）"
+argument-hint: "组件层级与名称（如：advanced <组件名>；留空则从当前改动推断）"
 agent: "agent"
 ---
 
 按仓库规范处理跨包共享类型。
+
+> 组件开发链路第 2 步，完整顺序见 `/03-component-source` 的「全流程顺序」。
 
 ## 执行步骤
 
@@ -18,7 +20,7 @@ agent: "agent"
 4. 在 `packages/bst-types/src/index.ts` 追加导出：
 
 ```ts
-export type * from './advanced-context-menu.types';
+export type * from './<层>-<组件目录名>.types';
 ```
 
    - 不写 `.ts` 扩展名。

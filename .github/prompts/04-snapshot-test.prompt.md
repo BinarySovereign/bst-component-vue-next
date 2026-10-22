@@ -1,10 +1,12 @@
 ---
 description: "维护组件的 _test_snap_example.vue 并更新 CSR / SSR 批量快照，逐条审查快照 diff"
-argument-hint: "组件名与要加入快照的状态（如：context-menu 的禁用项与自定义内容）"
+argument-hint: "组件名与要加入快照的形态（如：advanced <组件名> 的默认态与插槽态）"
 agent: "agent"
 ---
 
 维护指定组件的快照 demo 并更新快照。
+
+> 组件开发链路第 4 步，完整顺序见 `/03-component-source` 的「全流程顺序」。
 
 ## 前置
 
@@ -15,9 +17,9 @@ agent: "agent"
 
 - 路径固定为 `packages/bst-{layer}-components/<组件>/_example/_test_snap_example.vue`，一个组件一份。
 - 只渲染、不写交互：不加点击、hover、键盘等操作，状态直接由 props 给定。
-- `teleport` 必须显式传 `false`：Teleport 内容不进 CSR `wrapper.element`，也不进 SSR 主 HTML。
-- 显隐状态必须显式传 `is-visible`：根组件在 `phase=idle` 时渲染 `null`，快照会变空。
-- 多个形态放在同一文件中，用注释分隔，覆盖代表性组合（默认、禁用与分割线、自定义插槽、固定宽高、隐藏态等）。
+- 会 Teleport 的组件必须在此显式关闭：Teleport 内容不进 CSR `wrapper.element`，也不进 SSR 主 HTML，否则快照里看不到它。
+- 初始渲染为空或按阶段渲染的组件，必须显式传入能产出内容的可见状态，否则快照为空。
+- 多个形态放在同一文件中，用注释分隔；形态从该组件自己的 props / slots / 状态中选取，覆盖默认态、状态修饰（禁用、选中、空数据等）、插槽形态、尺寸与隐藏态。
 - demo 内不写样式，类名只用样式包已有契约；需要区分区域时用语义明确的类名。
 - 组件从同组件目录的 `../index` 导入，类型从 `@binarysovereign/bst-types` 导入。
 

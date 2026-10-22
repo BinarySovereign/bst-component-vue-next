@@ -1,10 +1,12 @@
 ---
 description: "为指定组件补充或整理单元测试，按五类分组编写用例并运行 Vitest 验证覆盖率"
-argument-hint: "组件名与要补充的能力（如：context-menu 的 slots 分组；留空则先盘点现有覆盖）"
+argument-hint: "组件名与要补充的能力（如：advanced <组件名> 的 slots 分组；留空则先盘点现有覆盖）"
 agent: "agent"
 ---
 
 为指定组件补充单元测试。
+
+> 组件开发链路第 5 步，完整顺序见 `/03-component-source` 的「全流程顺序」。
 
 ## 前置
 

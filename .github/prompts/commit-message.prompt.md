@@ -1,6 +1,6 @@
 ---
 description: "根据当前代码改动生成符合仓库规范的提交信息文件 docs/commit-msg/commit-msg-<N>.md，并校验通过"
-argument-hint: "本次提交的范围说明（可选，如：只提交 context-menu 的边界修复）"
+argument-hint: "本次提交的范围说明（可选，如：只提交某个组件的边界修复）"
 agent: "agent"
 ---
 

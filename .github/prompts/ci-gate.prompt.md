@@ -1,6 +1,6 @@
 ---
 description: "运行本地门禁并按失败项做最小修复，直到 typecheck、lint、测试、构建全部通过"
-argument-hint: "档位或改动范围（如：full；只改了样式；只改了 context-menu）"
+argument-hint: "档位或改动范围（如：full；只改了样式；只改动了某个组件）"
 agent: "agent"
 ---
 

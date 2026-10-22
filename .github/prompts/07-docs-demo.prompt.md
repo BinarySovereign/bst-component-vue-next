@@ -1,10 +1,12 @@
 ---
 description: "为组件新增文档站示例与文档页，使用真实组件和 DemoBlock，不写任何样式"
-argument-hint: "组件名与要演示的场景（如：context-menu 的键盘操作）"
+argument-hint: "组件名与要演示的场景（如：advanced <组件名> 的基础用法与自定义插槽）"
 agent: "agent"
 ---
 
 为指定组件补充文档站示例与文档页内容。
+
+> 组件开发链路第 7 步，完整顺序见 `/03-component-source` 的「全流程顺序」。
 
 ## 前置
 
