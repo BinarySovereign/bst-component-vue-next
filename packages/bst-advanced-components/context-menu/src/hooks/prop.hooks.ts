@@ -13,8 +13,6 @@ type PropValueValidator = (value: unknown) => boolean;
 export interface UseContextMenuPropReturn {
   /** 归一化后的菜单项列表 */
   normalizedItems: ComputedRef<BstContextMenuItem[]>;
-  /** 宽度内联样式，未传或非法时为 `undefined` */
-  widthStyle: ComputedRef<string | undefined>;
   /** 最大高度内联样式，未传或非法时为 `undefined` */
   maxHeightStyle: ComputedRef<string | undefined>;
   /** Teleport 目标，`false` 表示原地渲染 */
@@ -105,11 +103,6 @@ export const contextMenuProps = {
     default: true,
     validator: createValidator(MESSAGES.IS_CLOSE_ON_ESC_KEY_DOWN_INVALID, isBoolean),
   },
-  width: {
-    type: [Number, String] as PropType<number | string>,
-    default: undefined,
-    validator: createValidator(MESSAGES.WIDTH_INVALID, isCssLength),
-  },
   maxHeight: {
     type: [Number, String] as PropType<number | string>,
     default: undefined,
@@ -155,11 +148,9 @@ export const contextMenuProps = {
 export function useContextMenuProp(props: BstContextMenuProps): UseContextMenuPropReturn {
   const normalizedItems = computed((): BstContextMenuItem[] => normalizeContextMenuItems(props.items));
 
-  const widthStyle = computed((): string | undefined => toCssLength(props.width));
-
   const maxHeightStyle = computed((): string | undefined => toCssLength(props.maxHeight));
 
   const teleportTarget = computed((): string | false => resolveTeleportTarget(props.teleport ?? true));
 
-  return { normalizedItems, widthStyle, maxHeightStyle, teleportTarget };
+  return { normalizedItems, maxHeightStyle, teleportTarget };
 }

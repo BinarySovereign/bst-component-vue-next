@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2026 Felix Tang (BinarySovereign). Licensed under the MIT License. See the LICENSE file in the root directory for the full license text.
+ */
+
 import type { BstContextMenuEmits } from '@binarysovereign/bst-types';
 
 /** 面板渲染阶段：空闲 / 正在入场 / 已展开 / 正在退场 */

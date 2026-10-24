@@ -26,7 +26,6 @@ const stateItems: BstContextMenuItem[] = [
       :teleport="false"
       :position="{ x: 100, y: 380 }"
       :items="basicItems"
-      :width="360"
       max-height="320px"
     >
       <div class="context-menu-demo-custom">自定义内容</div>

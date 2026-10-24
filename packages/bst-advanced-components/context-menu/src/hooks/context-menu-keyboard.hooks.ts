@@ -1,3 +1,9 @@
+// packages/bst-advanced-components/context-menu/src/hooks/context-menu-keyboard.hooks.ts
+
+/**
+ * Copyright (c) 2026 Felix Tang (BinarySovereign). Licensed under the MIT License. See the LICENSE file in the root directory for the full license text.
+ */
+
 import { nextTick, ref } from 'vue';
 import type { ComputedRef, Ref } from 'vue';
 import type { BstContextMenuItem, BstContextMenuProps } from '@binarysovereign/bst-types';

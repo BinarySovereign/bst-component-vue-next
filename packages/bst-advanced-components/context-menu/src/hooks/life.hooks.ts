@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2026 Felix Tang (BinarySovereign). Licensed under the MIT License. See the LICENSE file in the root directory for the full license text.
+ */
+
 import { nextTick, onUnmounted, watch } from 'vue';
 import type { Ref } from 'vue';
 import type { BstContextMenuPosition, BstContextMenuProps } from '@binarysovereign/bst-types';

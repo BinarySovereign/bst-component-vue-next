@@ -1,15 +1,18 @@
-// 菜单项：恒定高度、就地悬浮反馈；左右文本与分割状态一并收敛在此
+/**
+ * Copyright (c) 2026 Felix Tang (BinarySovereign). Licensed under the MIT License. See the LICENSE file in the root directory for the full license text.
+ */
+
+// 菜单项：恒定行高、左右文本排布与就近悬浮反馈
 .@{prefix}-context-menu-item {
-  // 行内排布：左侧文本撑开剩余宽度，右侧文本贴右
+  // 横向排布与最小宽度
   display: flex;
-  flex-direction: row;
   align-items: center;
   gap: @context-menu-item-gap;
-
-  // 纵向容器内的恒高子项，禁止被等比压缩
   flex: none;
+  box-sizing: border-box;
+  min-width: @context-menu-item-min-width;
 
-  // 恒定高度与左右内边距
+  // 恒定行高与左右内边距
   height: @context-menu-item-height;
   padding: 0 @context-menu-item-padding-lr;
 
@@ -17,38 +20,27 @@
   font: @context-menu-item-font;
   background-color: @context-menu-item-bg-color;
 
-  // 可点击，并禁止拖选文本
+  // 可点击且禁止拖选
   cursor: pointer;
   user-select: none;
 
-  // ==================== 左侧文本：撑开剩余宽度，超长单行截断 ====================
+  // 左侧文本：占据剩余宽度并单行截断
   .@{prefix}-context-menu-item-left-text {
-    // 弹性收缩能力，是截断混合器生效的前提
-    flex: 1;
+    flex: 1 1 auto;
     min-width: 0;
-
     .text-ellipsis();
 
-    // 主文本色
     color: @context-menu-item-left-text-color;
   }
 
-  // ==================== 右侧文本：与左侧等分横向空间，内容贴右 ====================
+  // 右侧文本：不压缩，贴右显示
   .@{prefix}-context-menu-item-right-text {
-    // 稿面 flex: 1 0 0：与左侧文本等分剩余空间，右对齐才有实际落点
-    flex: 1 0 0;
-
-    // 稿面 text-align: right：快捷键等次要信息贴右边缘
-    text-align: right;
-
-    // 固定 36px 行内禁止折行，避免长文本换成两行而溢出菜单项高度
+    flex: none;
     white-space: nowrap;
-
-    // 次要信息文字色
     color: @context-menu-item-right-text-color;
   }
 
-  // ==================== 分割状态：菜单项退化为一条分组分割线 ====================
+  // 分割线
   &.@{prefix}-context-menu-item-is-divider {
     height: @context-menu-divider-height;
     padding: 0;
@@ -56,7 +48,7 @@
     cursor: default;
   }
 
-  // ==================== 就近反馈：悬浮与键盘高亮共用同一底色 ====================
+  // 悬浮与键盘高亮共用底色
   &:hover:not(.@{prefix}-context-menu-item-is-disabled, .@{prefix}-context-menu-item-is-divider),
   &.@{prefix}-context-menu-item-is-active {
     background-color: @context-menu-item-bg-color-hover;

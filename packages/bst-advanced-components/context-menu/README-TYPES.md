@@ -30,7 +30,6 @@
 | `isCloseOnOutsideClick` | `boolean` | 否 | `true` | 点击菜单外部是否自动关闭 |
 | `isCloseOnOutsideScroll` | `boolean` | 否 | `true` | 菜单外部滚动是否自动关闭 |
 | `isCloseOnEscKeyDown` | `boolean` | 否 | `true` | 键盘按下 Esc 是否自动关闭 |
-| `width` | `string \| number` | 否 | - | 菜单宽度，不传则由 CSS 变量提供 |
 | `maxHeight` | `string \| number` | 否 | - | 菜单最大高度，超出显示滚动条 |
 | `teleport` | `boolean \| string` | 否 | `true` | 是否使用 Teleport 渲染到 body 下 |
 | `onItemSelect` | `(context: BstContextMenuItemSelectContext) => void` | 否 | - | 点击菜单项时的回调（等价于 `@item-select`） |

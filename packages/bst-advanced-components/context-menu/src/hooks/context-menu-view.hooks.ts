@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2026 Felix Tang (BinarySovereign). Licensed under the MIT License. See the LICENSE file in the root directory for the full license text.
+ */
+
 import { computed } from 'vue';
 import type { ComputedRef, CSSProperties, Ref } from 'vue';
 import type { BstContextMenuPosition } from '@binarysovereign/bst-types';
@@ -15,8 +19,6 @@ export interface UseContextMenuViewOptions {
   offset: Ref<BstContextMenuPosition>;
   /** 是否处于首帧测量中 */
   isMeasuring: Ref<boolean>;
-  /** 宽度内联样式 */
-  widthStyle: ComputedRef<string | undefined>;
   /** 最大高度内联样式 */
   maxHeightStyle: ComputedRef<string | undefined>;
 }
@@ -30,7 +32,7 @@ export interface UseContextMenuViewReturn {
 }
 
 export function useContextMenuView(options: UseContextMenuViewOptions): UseContextMenuViewReturn {
-  const { phase, position, offset, isMeasuring, widthStyle, maxHeightStyle } = options;
+  const { phase, position, offset, isMeasuring, maxHeightStyle } = options;
 
   const rootClass = computed((): string[] => {
     const classNames: string[] = [BST_CONTEXT_MENU_CONSTANT_CLASS_NAMES.ROOT];
@@ -50,7 +52,6 @@ export function useContextMenuView(options: UseContextMenuViewOptions): UseConte
     position: 'fixed',
     left: `${position.value.x + offset.value.x}px`,
     top: `${position.value.y + offset.value.y}px`,
-    width: widthStyle.value,
     maxHeight: maxHeightStyle.value,
     visibility: isMeasuring.value ? 'hidden' : undefined,
   }));

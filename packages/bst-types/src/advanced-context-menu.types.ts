@@ -75,8 +75,6 @@ export interface BstContextMenuProps {
   isCloseOnOutsideScroll?: boolean;
   /** 键盘按下 Esc 是否自动关闭，默认为 true */
   isCloseOnEscKeyDown?: boolean;
-  /** 菜单的宽度，不传则由 `@context-menu-width: var(--bst-context-menu-width)` 提供 */
-  width?: number | string;
   /** 菜单的最大高度，超出后显示滚动条，不传则由样式包 `calc(100vh - @context-menu-viewport-gap * 2)` 提供 */
   maxHeight?: number | string;
   /** 是否使用 Teleport 渲染到 body 下，默认 true */

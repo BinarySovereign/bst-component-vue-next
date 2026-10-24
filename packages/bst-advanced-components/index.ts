@@ -6,24 +6,21 @@
 //   3. 存在包根 index.ts 时，UMD 形态才会产出（见 scripts/build/components.js）。
 //
 // 组件登记清单内聚在本文件，对外导出清单见 ./components.ts。
+
+/**
+ * Copyright (c) 2026 Felix Tang (BinarySovereign). Licensed under the MIT License. See the LICENSE file in the root directory for the full license text.
+ */
+
 import type { App, Plugin, Component } from 'vue';
 
 import { BstContextMenu } from './context-menu';
 
-/**
- * 全量注册的组件集合
- *
- * 键名即全局注册时的组件名，须与组件 `name` 保持一致。
- */
+// 全量注册的组件集合
 export const components: Record<string, Component> = {
   BstContextMenu,
 };
 
-/**
- * 高级组件库插件
- *
- * 支持 `app.use(BsVueNextPro)` 全量注册；按需引入请直接从组件目录导入。
- */
+// 高级组件库插件
 const BsVueNextPro: Plugin = {
   install(app: App) {
     for (const [name, component] of Object.entries(components)) {
@@ -34,5 +31,5 @@ const BsVueNextPro: Plugin = {
 
 export default BsVueNextPro;
 
-// 具名导出与类型导出统一由 ./components.ts 转发，避免在此重复维护
+// 导出所有组件内容
 export * from './components';

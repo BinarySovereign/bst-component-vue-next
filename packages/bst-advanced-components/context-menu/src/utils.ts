@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2026 Felix Tang (BinarySovereign). Licensed under the MIT License. See the LICENSE file in the root directory for the full license text.
+ */
+
 import type { BstContextMenuItem, BstContextMenuPosition } from '@binarysovereign/bst-types';
 
 import { BST_CONTEXT_MENU_CONSTANT_ERROR_MESSAGES } from './constants';

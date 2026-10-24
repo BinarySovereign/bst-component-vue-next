@@ -1,3 +1,9 @@
+// BstContextMenuItem 子元素对应的 hooks
+
+/**
+ * Copyright (c) 2026 Felix Tang (BinarySovereign). Licensed under the MIT License. See the LICENSE file in the root directory for the full license text.
+ */
+
 import { computed } from 'vue';
 import type { ComputedRef, Ref } from 'vue';
 import type { BstContextMenuItem } from '@binarysovereign/bst-types';

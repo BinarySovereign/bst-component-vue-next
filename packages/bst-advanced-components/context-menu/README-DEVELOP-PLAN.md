@@ -117,7 +117,6 @@ context-menu/
 | `IS_CLOSE_ON_OUTSIDE_CLICK_INVALID` | `isCloseOnOutsideClick` |
 | `IS_CLOSE_ON_OUTSIDE_SCROLL_INVALID` | `isCloseOnOutsideScroll` |
 | `IS_CLOSE_ON_ESC_KEY_DOWN_INVALID` | `isCloseOnEscKeyDown` |
-| `WIDTH_INVALID` | `width` |
 | `MAX_HEIGHT_INVALID` | `maxHeight` |
 | `TELEPORT_INVALID` | `teleport` |
 | `ON_ITEM_SELECT_INVALID` | `onItemSelect` |
@@ -154,7 +153,7 @@ const ROOT_TAG = `[${BST_CONTEXT_MENU_CONSTANT_COMPONENT_NAMES.ROOT}]`;
  * 校验告警文案
  *
  * 格式：`[${BST_CONTEXT_MENU_CONSTANT_COMPONENT_NAMES.ROOT}]` + 英文提示
- * 覆盖：`BstContextMenuProps` 的全部 15 项入参 + `items[].key`
+ * 覆盖：`BstContextMenuProps` 的全部 14 项入参 + `items[].key`
  */
 export const BST_CONTEXT_MENU_CONSTANT_ERROR_MESSAGES = {
   IS_VISIBLE_INVALID: `${ROOT_TAG} "isVisible" must be a boolean.`,
@@ -164,7 +163,6 @@ export const BST_CONTEXT_MENU_CONSTANT_ERROR_MESSAGES = {
   IS_CLOSE_ON_OUTSIDE_CLICK_INVALID: `${ROOT_TAG} "isCloseOnOutsideClick" must be a boolean.`,
   IS_CLOSE_ON_OUTSIDE_SCROLL_INVALID: `${ROOT_TAG} "isCloseOnOutsideScroll" must be a boolean.`,
   IS_CLOSE_ON_ESC_KEY_DOWN_INVALID: `${ROOT_TAG} "isCloseOnEscKeyDown" must be a boolean.`,
-  WIDTH_INVALID: `${ROOT_TAG} "width" must be a number or a CSS length string.`,
   MAX_HEIGHT_INVALID: `${ROOT_TAG} "maxHeight" must be a number or a CSS length string.`,
   TELEPORT_INVALID: `${ROOT_TAG} "teleport" must be a boolean or a selector string.`,
   ON_ITEM_SELECT_INVALID: `${ROOT_TAG} "onItemSelect" must be a function.`,
@@ -364,7 +362,6 @@ export function isInsideContextMenu(root: HTMLElement | null, target: EventTarge
 | `isCloseOnOutsideClick` | `Boolean` | `true` | `typeof === 'boolean'` | `IS_CLOSE_ON_OUTSIDE_CLICK_INVALID` |
 | `isCloseOnOutsideScroll` | `Boolean` | `true` | `typeof === 'boolean'` | `IS_CLOSE_ON_OUTSIDE_SCROLL_INVALID` |
 | `isCloseOnEscKeyDown` | `Boolean` | `true` | `typeof === 'boolean'` | `IS_CLOSE_ON_ESC_KEY_DOWN_INVALID` |
-| `width` | `[Number, String]` | `undefined` | `toCssLength` 非 `undefined` | `WIDTH_INVALID` |
 | `maxHeight` | `[Number, String]` | `undefined` | `toCssLength` 非 `undefined` | `MAX_HEIGHT_INVALID` |
 | `teleport` | `[Boolean, String]` | `true` | `boolean` 或非空字符串 | `TELEPORT_INVALID` |
 | `onItemSelect` | `Function` | `undefined` | `typeof === 'function'` | `ON_ITEM_SELECT_INVALID` |
@@ -407,7 +404,6 @@ type PropValueValidator = (value: unknown) => boolean;
 /** Props 运行期校验结果 */
 export interface UseContextMenuPropReturn {
   normalizedItems: ComputedRef<BstContextMenuItem[]>;
-  widthStyle: ComputedRef<string | undefined>;
   maxHeightStyle: ComputedRef<string | undefined>;
   teleportTarget: ComputedRef<string | false>;
 }
@@ -485,11 +481,6 @@ export const contextMenuProps = {
     default: true,
     validator: createValidator(MESSAGES.IS_CLOSE_ON_ESC_KEY_DOWN_INVALID, isBoolean),
   },
-  width: {
-    type: [Number, String] as PropType<number | string>,
-    default: undefined,
-    validator: createValidator(MESSAGES.WIDTH_INVALID, isCssLength),
-  },
   maxHeight: {
     type: [Number, String] as PropType<number | string>,
     default: undefined,
@@ -554,13 +545,11 @@ function resolveTeleportTarget(teleport: boolean | string): string | false {
 export function useContextMenuProp(props: BstContextMenuProps): UseContextMenuPropReturn {
   const normalizedItems = computed((): BstContextMenuItem[] => normalizeContextMenuItems(props.items));
 
-  const widthStyle = computed((): string | undefined => toCssLength(props.width));
-
   const maxHeightStyle = computed((): string | undefined => toCssLength(props.maxHeight));
 
   const teleportTarget = computed((): string | false => resolveTeleportTarget(props.teleport ?? true));
 
-  return { normalizedItems, widthStyle, maxHeightStyle, teleportTarget };
+  return { normalizedItems, maxHeightStyle, teleportTarget };
 }
 ```
 
@@ -570,7 +559,7 @@ export function useContextMenuProp(props: BstContextMenuProps): UseContextMenuPr
 
 | 项 | 内容 |
 | --- | --- |
-| 输入 | `props`、`emit`、`items`、`widthStyle`、`maxHeightStyle` |
+| 输入 | `props`、`emit`、`items`、`maxHeightStyle` |
 | 依赖 | `constants`、`utils` |
 | 输出 | 状态、坐标、根节点样式与类名、键盘高亮与事件方法 |
 | 消费方 | `controller.hooks` |
@@ -616,7 +605,7 @@ export function useContextMenuProp(props: BstContextMenuProps): UseContextMenuPr
 | `handleOutsideClick(e)` | 开关开启且 `!isInsideContextMenu` → `emit('click-outside', { nativeEvent })` + `hide()` |
 | `handleOutsideScroll(e)` | 开关开启且目标在面板外 → `emit('scroll-outside', { nativeEvent })` + `hide()` |
 | `rootClass` | 按 `phase` 组合 `ROOT` / `ROOT_IS_OPEN` / `ROOT_IS_CLOSING` |
-| `rootStyle` | `position: fixed` + `left` / `top` + 可选 `width` / `maxHeight` + `visibility` |
+| `rootStyle` | `position: fixed` + `left` / `top` + 可选 `maxHeight` + `visibility` |
 
 #### 示例代码
 
@@ -630,10 +619,9 @@ const FALLBACK_DELAY =
 export function useContextMenu(options: {
   props: BstContextMenuProps;
   emit: ContextMenuEmit;
-  widthStyle: ComputedRef<string | undefined>;
   maxHeightStyle: ComputedRef<string | undefined>;
 }): UseContextMenuReturn {
-  const { props, emit, widthStyle, maxHeightStyle } = options;
+  const { props, emit, maxHeightStyle } = options;
 
   const phase = ref<ContextMenuPhase>('idle');
   const innerVisible = ref(props.isVisible ?? false);
@@ -819,7 +807,6 @@ export function useContextMenu(options: {
     position: 'fixed',
     left: `${position.value.x}px`,
     top: `${position.value.y}px`,
-    width: widthStyle.value,
     maxHeight: maxHeightStyle.value,
     visibility: isMeasuring.value ? 'hidden' : undefined,
   }));
@@ -1062,7 +1049,7 @@ export function useContextMenuLife(options: UseContextMenuLifeOptions): void {
 | 成员 | 来源 / 行为 |
 | --- | --- |
 | `normalizedItems` / `teleportTarget` | 转发 `useContextMenuProp` |
-| `widthStyle` / `maxHeightStyle` | 仅内部传给 `useContextMenu` 生成 `rootStyle`，不外泄 |
+| `maxHeightStyle` | 仅内部传给 `useContextMenu` 生成 `rootStyle`，不外泄 |
 | `phase` / `isActive` / `rootRef` / `rootClass` / `rootStyle` | 转发 `useContextMenu` |
 | `show` / `hide` / `handleAnimationEnd` / `handleItemSelect` | 转发 `useContextMenu` |
 | `hasDefaultSlot` | `computed(() => Boolean(slots.default))` |
@@ -1081,10 +1068,10 @@ export function useContextMenuController(
   emit: ContextMenuEmit,
   slots: Slots,
 ): UseContextMenuControllerReturn {
-  const { normalizedItems, widthStyle, maxHeightStyle, teleportTarget } =
+  const { normalizedItems, maxHeightStyle, teleportTarget } =
     useContextMenuProp(props);
 
-  const menu = useContextMenu({ props, emit, widthStyle, maxHeightStyle });
+  const menu = useContextMenu({ props, emit, maxHeightStyle });
 
   const hasDefaultSlot = computed(() => Boolean(slots.default));
 

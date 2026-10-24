@@ -94,7 +94,7 @@ exports[`csr snapshot test > csr test packages/bst-advanced-components/context-m
   <div
     class="bst-context-menu bst-context-menu-is-open"
     role="menu"
-    style="position: fixed; left: 100px; top: 380px; width: 360px; max-height: 320px;"
+    style="position: fixed; left: 100px; top: 380px; max-height: 320px;"
   >
     
     <div

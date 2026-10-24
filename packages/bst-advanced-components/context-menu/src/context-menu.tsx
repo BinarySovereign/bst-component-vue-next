@@ -13,6 +13,10 @@
 //  11. hooks/life.hooks.ts —— 生命周期：监听器挂载与卸载清理
 //  12. elements/context-menu-item.tsx + hooks/context-menu-item.hooks.ts —— 单项渲染
 
+/**
+ * Copyright (c) 2026 Felix Tang (BinarySovereign). Licensed under the MIT License. See the LICENSE file in the root directory for the full license text.
+ */
+
 import { defineComponent, h, Teleport } from 'vue';
 import type { BstContextMenuItem } from '@binarysovereign/bst-types';
 

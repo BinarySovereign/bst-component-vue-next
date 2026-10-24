@@ -16,14 +16,7 @@ interface SizePreset {
 const isVisible = ref(false);
 const position = ref<BstContextMenuPosition>({ x: 0, y: 0 });
 const selectedText = ref('（尚未选择）');
-const width = ref<number | string | undefined>(undefined);
 const maxHeight = ref<number | string | undefined>(undefined);
-
-const widthPresets: SizePreset[] = [
-  { label: '默认 320px', value: undefined },
-  { label: '240（数字）', value: 240 },
-  { label: '480px（字符串）', value: '480px' },
-];
 
 const maxHeightPresets: SizePreset[] = [
   { label: '默认', value: undefined },
@@ -51,19 +44,6 @@ function handleItemSelect(context: BstContextMenuItemSelectContext): void {
   <div class="bst-demo-fill" @contextmenu.prevent="handleContextMenu">
     <div class="bst-demo-fields">
       <span class="bst-demo-field">
-        宽度：
-        <button
-          v-for="preset in widthPresets"
-          :key="preset.label"
-          type="button"
-          class="bst-demo-button"
-          :class="{ 'bst-demo-button-is-active': width === preset.value }"
-          @click="width = preset.value"
-        >
-          {{ preset.label }}
-        </button>
-      </span>
-      <span class="bst-demo-field">
         最大高度：
         <button
           v-for="preset in maxHeightPresets"
@@ -78,7 +58,7 @@ function handleItemSelect(context: BstContextMenuItemSelectContext): void {
       </span>
     </div>
 
-    <div>先选尺寸，再在区域内右键；缩小最大高度后，面板内部会出现滚动而不是继续撑开。</div>
+    <div>先选最大高度，再在区域内右键；缩小最大高度后，面板内部会出现滚动而不是继续撑开。</div>
     <div>最近一次选择：{{ selectedText }}</div>
   </div>
 
@@ -86,7 +66,6 @@ function handleItemSelect(context: BstContextMenuItemSelectContext): void {
     v-model:is-visible="isVisible"
     v-model:position="position"
     :items="items"
-    :width="width"
     :max-height="maxHeight"
     @item-select="handleItemSelect"
   />

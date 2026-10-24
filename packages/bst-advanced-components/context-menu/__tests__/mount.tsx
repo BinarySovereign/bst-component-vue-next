@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2026 Felix Tang (BinarySovereign). Licensed under the MIT License. See the LICENSE file in the root directory for the full license text.
+ */
+
 import { defineComponent } from 'vue';
 import type { Component, SetupContext } from 'vue';
 import { mount } from '@vue/test-utils';

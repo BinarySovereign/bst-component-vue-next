@@ -68,12 +68,12 @@
   description="在预览区右下角右键，坐标会被夹取到视口内，v-model:position 同步回夹取后的结果。"
 />
 
-### 面板尺寸与滚动
+### 面板最大高度与滚动
 
 <DemoBlock
   demo="advanced/context-menu/panel-size-and-scroll"
-  title="面板尺寸与滚动"
-  description="切换 width 与 maxHeight，长菜单在面板内部滚动而不撑破视口。"
+  title="面板最大高度与滚动"
+  description="切换 maxHeight，长菜单在面板内部滚动而不撑破视口；面板宽度始终由菜单项内容自动决定。"
 />
 
 ### 完全自定义内容
@@ -112,7 +112,6 @@
 | `isCloseOnOutsideClick` | `boolean` | `true` | 点击面板外部是否关闭 | N |
 | `isCloseOnOutsideScroll` | `boolean` | `true` | 面板外部滚动是否关闭 | N |
 | `isCloseOnEscKeyDown` | `boolean` | `true` | 按下 `Esc` 是否关闭 | N |
-| `width` | `string \| number` | `undefined` | 面板宽度，数字按 `px` 处理 | N |
 | `maxHeight` | `string \| number` | `undefined` | 面板最大高度，超出后内部滚动；未传时限制为视口高度减去上下安全间距 | N |
 | `teleport` | `boolean \| string` | `true` | `true` → 挂到 `body`；`false` → 原地渲染；字符串 → 选择器 | N |
 | `onItemSelect` | `(context: BstContextMenuItemSelectContext) => void` | — | 等价于 `@item-select` | N |
@@ -190,12 +189,6 @@
 | `bst-context-menu-item-is-divider` | 菜单项 | 分割线 |
 | `bst-context-menu-item-is-disabled` | 菜单项 | 禁用态 |
 | `bst-context-menu-item-is-active` | 菜单项 | 键盘导航或悬浮命中项 |
-
-## 设计令牌
-
-| CSS 变量 | 默认值 | 说明 |
-| --- | --- | --- |
-| `--bst-context-menu-width` | `320px` | 面板默认宽度；`width` prop 优先级更高 |
 
 ## 引入方式
 

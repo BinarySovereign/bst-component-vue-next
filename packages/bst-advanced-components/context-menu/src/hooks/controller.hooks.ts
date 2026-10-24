@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2026 Felix Tang (BinarySovereign). Licensed under the MIT License. See the LICENSE file in the root directory for the full license text.
+ */
+
 import { computed } from 'vue';
 import type { ComputedRef, CSSProperties, Ref, Slots } from 'vue';
 import type { BstContextMenuItem, BstContextMenuProps } from '@binarysovereign/bst-types';
@@ -46,9 +50,9 @@ export function useContextMenuController(
   emit: ContextMenuEmit,
   slots: Slots,
 ): UseContextMenuControllerReturn {
-  const { normalizedItems, widthStyle, maxHeightStyle, teleportTarget } = useContextMenuProp(props);
+  const { normalizedItems, maxHeightStyle, teleportTarget } = useContextMenuProp(props);
 
-  const menu = useContextMenu({ props, emit, items: normalizedItems, widthStyle, maxHeightStyle });
+  const menu = useContextMenu({ props, emit, items: normalizedItems, maxHeightStyle });
 
   const hasDefaultSlot = computed((): boolean => Boolean(slots.default));
 

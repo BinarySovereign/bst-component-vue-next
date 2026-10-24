@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2026 Felix Tang (BinarySovereign). Licensed under the MIT License. See the LICENSE file in the root directory for the full license text.
+ */
+
 import { h, nextTick } from 'vue';
 import { flushPromises, mount } from '@vue/test-utils';
 import type { BstContextMenuItem, BstContextMenuItemSelectContext } from '@binarysovereign/bst-types';
@@ -138,30 +142,6 @@ describe('BstContextMenu', () => {
 
       expect(panel.attributes('style')).toContain('left: 260px');
       expect(panel.attributes('style')).toContain('top: 140px');
-    });
-
-    it('Props width: numeric', async () => {
-      const wrapper = mountContextMenu({ width: 320 });
-      await flushPromises();
-
-      expect(getPanelElement(wrapper).style.width).toBe('320px');
-    });
-
-    it('Props width: string', async () => {
-      const wrapper = mountContextMenu({ width: '20rem' });
-      await flushPromises();
-
-      expect(getPanelElement(wrapper).style.width).toBe('20rem');
-    });
-
-    it('Props width: invalid', async () => {
-      const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-      const wrapper = mountContextMenu({ width: -1 });
-
-      await flushPromises();
-
-      expect(warn).toHaveBeenCalled();
-      expect(getPanelElement(wrapper).style.width).toBe('');
     });
 
     it('Props maxHeight: numeric', async () => {

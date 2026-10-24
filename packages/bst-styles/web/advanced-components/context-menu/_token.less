@@ -1,53 +1,37 @@
 // 组件级令牌映射：组件样式的唯一令牌命名面
 // 来源 1：全局令牌（tokens/_variables.less 已映射）
-// 来源 2：组件专有量（_variables.less 声明，经 var() 纳入同一命名面）
+// 组件无专有量，故不设 _variables.less 与 var() 映射项
+
+/**
+ * Copyright (c) 2026 Felix Tang (BinarySovereign). Licensed under the MIT License. See the LICENSE file in the root directory for the full license text.
+ */
 
 // 面板
-// 来源 2：面板默认宽度，可运行时覆盖
-@context-menu-width: var(--bst-context-menu-width);
-// 来源 1：面板与视口的安全间距 8px，最大高度上下各留一份
 @context-menu-viewport-gap: @pop-padding-l;
-// 来源 1：面板内边距 4px
 @context-menu-padding: @pop-padding-s;
-// 来源 1：面板底色，暗色主题自动切换
 @context-menu-bg-color: @bg-color-container;
-// 来源 1：面板圆角 6px
 @context-menu-radius: @border-radius-medium;
-// 来源 1：面板投影，与稿面三段阴影逐项等价
 @context-menu-shadow: @shadow-2;
-// 来源 1：浮层层级，避免被页面内容覆盖
 @context-menu-z-index: @z-index-Popup;
 
 // 菜单项
-// 来源 1：菜单项固定高度 36px
 @context-menu-item-height: @comp-size-l;
-// 来源 1：菜单项左右内边距 16px
+@context-menu-item-min-width: 320px;
 @context-menu-item-padding-lr: @comp-padding-lr-l;
-// 来源 1：左右文本间最小间距 8px
 @context-menu-item-gap: @comp-margin-s;
-// 来源 1：菜单项字体简写 14px / 22px
 @context-menu-item-font: @font-body-medium;
-// 来源 1：菜单项常态底色，稿面 #FFFFFF
 @context-menu-item-bg-color: @bg-color-container;
-// 来源 1：菜单项悬浮底色，稿面 #F3F3F3
 @context-menu-item-bg-color-hover: @bg-color-container-hover;
 
 // 菜单项文本
-// 来源 1：左侧文本色，稿面 rgba(0, 0, 0, 0.9)
 @context-menu-item-left-text-color: @text-color-primary;
-// 来源 1：右侧文本色，稿面 rgba(0, 0, 0, 0.4)
 @context-menu-item-right-text-color: @text-color-placeholder;
-// 来源 1：左右文本共用的禁用色，稿面 rgba(0, 0, 0, 0.26)
 @context-menu-item-text-color-disabled: @text-color-disabled;
 
 // 分割线
-// 字面值：发丝线 1px；尺寸阶梯最小档 @size-2 为 2px，无更细的令牌可映射
 @context-menu-divider-height: 1px;
-// 来源 1：分割线色，稿面 #E8E8E8
 @context-menu-divider-color: @component-stroke;
 
 // 动画
-// 来源 1：入场与出场时长，库内标准时长 0.2s
 @context-menu-anim-duration: @anim-duration-base;
-// 来源 1：入场与出场的标准缓动曲线
 @context-menu-anim-easing: @anim-time-fn-easing;

@@ -274,15 +274,15 @@ export async function finishAnimation(wrapper: VueWrapper) {
 
 | 用例 | 操作 | 断言 |
 | --- | --- | --- |
-| 15 项入参齐全 | 读取 `Object.keys(contextMenuProps)` | 恰好包含 15 个 key，与 `BstContextMenuProps` 对齐 |
-| 默认值 | 读取各 prop 的 `default` | `isVisible=false`、三个关闭开关 `true`、`teleport=true`、`width/maxHeight/on*=undefined` |
+| 14 项入参齐全 | 读取 `Object.keys(contextMenuProps)` | 恰好包含 14 个 key，与 `BstContextMenuProps` 对齐 |
+| 默认值 | 读取各 prop 的 `default` | `isVisible=false`、三个关闭开关 `true`、`teleport=true`、`maxHeight/on*=undefined` |
 | 引用隔离 | 连续两次调用 `items.default()` / `position.default()` | 返回不同引用 |
 | validator 放行 `undefined` | 每项传入 `undefined` | 全部返回 `true` |
 | 合法值放行 | 每项传入合法值 | 全部返回 `true` |
 | 非法布尔 | `isVisible: 'true'` / 三个关闭开关传字符串 | 返回 `false` 且输出对应告警 |
 | 非法 items | `items: {}` | 返回 `false` 且输出 `ITEMS_INVALID` |
 | 非法 position | `null`、`{ x: 1 }`、`{ x: '1', y: 2 }`、`{ x: NaN, y: 2 }` | 返回 `false` 且输出 `POSITION_INVALID` |
-| 非法 width / maxHeight | `-1`、`''`、`NaN` | 返回 `false` 且输出 `WIDTH_INVALID` / `MAX_HEIGHT_INVALID` |
+| 非法 maxHeight | `-1`、`''`、`NaN` | 返回 `false` 且输出 `MAX_HEIGHT_INVALID` |
 | 非法 teleport | `''`、`'   '`、`1` | 返回 `false` 且输出 `TELEPORT_INVALID` |
 | 非法函数入参 | 6 个 `on*` 依次传 `'fn'` | 返回 `false` 且输出各自告警 |
 
@@ -293,9 +293,6 @@ export async function finishAnimation(wrapper: VueWrapper) {
 | 用例 | 操作 | 断言 |
 | --- | --- | --- |
 | `normalizedItems` 随 `items` 更新 | 修改响应式 `props.items` | 返回最新归一化结果 |
-| 宽度数字 | `width: 320` | `widthStyle.value === '320px'` |
-| 宽度字符串 | `width: '20rem'` | `widthStyle.value === '20rem'` |
-| 宽度非法 / 缺省 | `width: -1`、未传 | `undefined` |
 | 最大高度同上 | 数字 / 字符串 / 非法 | 对应 CSS 长度或 `undefined` |
 | `teleport: false` | 传 `false` | `teleportTarget.value === false` |
 | `teleport: true` | 传 `true` | `'body'` |
@@ -320,8 +317,8 @@ export async function finishAnimation(wrapper: VueWrapper) {
 | 同上 | open | `finish()` | 仅保留根类名 |
 | 同上 | closing | `hide()` 后 `applyVisible(false)` | 追加 `bst-context-menu-is-closing` |
 | `rootStyle` | 定位与层级 | 坐标 `{ x: 24, y: 36 }` | `position: 'fixed'`、`left: '24px'`、`top: '36px'` |
-| 同上 | 可选尺寸 | `widthStyle='320px'`、`maxHeightStyle='240px'` | 对应字段写入 |
-| 同上 | 尺寸缺省 | 两者 `undefined` | `width` / `maxHeight` 为 `undefined` |
+| 同上 | 可选尺寸 | `maxHeightStyle='240px'` | `maxHeight` 字段写入且 `width` 恒为 `undefined` |
+| 同上 | 尺寸缺省 | `maxHeightStyle=undefined` | `width` / `maxHeight` 均为 `undefined` |
 | 同上 | 首帧隐藏 | `isMeasuring=true` | `visibility: 'hidden'`；测量后为 `undefined` |
 | 状态机 | `idle → opening` | `applyVisible(true)` | 进入 `opening`，启动兜底定时器 |
 | 同上 | `opening → open` | `finish()` | `phase='open'`、`emit('after-enter')` |
@@ -432,9 +429,6 @@ export async function finishAnimation(wrapper: VueWrapper) {
 | `Props items: 重复 key` | 两条同 key | 只渲染首条 |
 | `Props items: 空数组` | `[]` | 面板存在但无菜单项 |
 | `Props position: {x,y}` | `{ x: 120, y: 80 }` | 内联 `left: 120px`、`top: 80px` |
-| `Props width: 数字` | `width=320` | 内联 `width: 320px` |
-| `Props width: 字符串` | `width='20rem'` | 内联 `width: 20rem` |
-| `Props width: 非法` | `width=-1` | `WIDTH_INVALID` 告警，`width` 为空 |
 | `Props maxHeight: 数字` | `maxHeight=240` | 内联 `max-height: 240px` |
 | `Props maxHeight: 字符串` | `maxHeight='50vh'` | 内联 `max-height: 50vh` |
 | `Props maxHeight: 非法` | `maxHeight=NaN` | `MAX_HEIGHT_INVALID` 告警，`max-height` 为空 |

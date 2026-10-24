@@ -7,14 +7,14 @@
 // 本文件只负责把它们挂到 CSF 的具名导出上，因此改动某个示例时无需在长文件里定位。
 //
 // 覆盖矩阵：
-// - Props：isVisible / items / position / 三个关闭开关 / width / maxHeight / teleport / 六个回调
+// - Props：isVisible / items / position / 三个关闭开关 / maxHeight / teleport / 六个回调
 // - Events：update:isVisible、update:position、item-select、click-outside、scroll-outside、
 //   esc-key-down、after-enter、after-leave
 // - Slots：default（完全接管内容）、item（只替换单项内容）
 // - Expose：show / hide
 // - 菜单项字段：key（字符串与数字）/ leftText / rightText / type=divider / isDisabled / action
 // - 场景：挂载即显示、视口边缘夹取、打开中增删项、键盘操作、全部禁用、面板内滚动、
-//   CSS 变量覆盖、多实例、Teleport 回落
+//   长文本自适应宽度、多实例、Teleport 回落
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 import { BstContextMenu } from '@binarysovereign/bst-advanced-components/context-menu';
@@ -37,19 +37,17 @@ import { invalidDataExample } from '../../examples/advanced/context-menu/invalid
 import { itemActionExample } from '../../examples/advanced/context-menu/item-action.example';
 import { itemSlotExample } from '../../examples/advanced/context-menu/item-slot.example';
 import { keyboardInteractionExample } from '../../examples/advanced/context-menu/keyboard-interaction.example';
+import { longBothTextExample } from '../../examples/advanced/context-menu/long-both-text.example';
 import { longTextExample } from '../../examples/advanced/context-menu/long-text.example';
 import { maxHeightExample } from '../../examples/advanced/context-menu/max-height.example';
 import { maxHeightStringExample } from '../../examples/advanced/context-menu/max-height-string.example';
 import { multipleMenusExample } from '../../examples/advanced/context-menu/multiple-menus.example';
 import { numericKeyExample } from '../../examples/advanced/context-menu/numeric-key.example';
-import { numericWidthExample } from '../../examples/advanced/context-menu/numeric-width.example';
 import { DEFAULT_ITEMS, TELEPORT_ARG_BODY, TELEPORT_ARG_OPTIONS } from '../../examples/advanced/context-menu/shared';
-import { stringWidthExample } from '../../examples/advanced/context-menu/string-width.example';
 import { teleportMissingSelectorExample } from '../../examples/advanced/context-menu/teleport-missing-selector.example';
 import { teleportToContainerExample } from '../../examples/advanced/context-menu/teleport-to-container.example';
 import { textOnlyExample } from '../../examples/advanced/context-menu/text-only.example';
 import { visibleOnMountExample } from '../../examples/advanced/context-menu/visible-on-mount.example';
-import { widthByCssVariableExample } from '../../examples/advanced/context-menu/width-by-css-variable.example';
 
 const meta = {
   title: '高级组件/ContextMenu',
@@ -74,18 +72,8 @@ const meta = {
     isCloseOnOutsideScroll: true,
     isCloseOnEscKeyDown: true,
   },
-  // 六个回调接到 Actions 面板；三个联合类型入参显式声明控件
+  // 六个回调接到 Actions 面板；两个联合类型入参显式声明控件
   argTypes: {
-    // `number | string` 会被推断成 object 控件（只有一个 JSON 输入框），
-    // 显式声明 text 后可直输 `240` 或 `22rem`
-    width: {
-      control: { type: 'text' },
-      description: '面板宽度：纯数字由组件补 `px`，也可直接写 CSS 长度（如 `22rem`）',
-      table: {
-        type: { summary: 'number | string' },
-        defaultValue: { summary: '--bst-context-menu-width（320px）' },
-      },
-    },
     maxHeight: {
       control: { type: 'text' },
       description: '面板最大高度：纯数字由组件补 `px`，超出后内部滚动',
@@ -168,15 +156,6 @@ export const ItemAction: Story = { name: '单项 action 回调', ...itemActionEx
 /** 键盘操作：上下方向键切换菜单项，Enter / 空格选中，Esc 关闭 */
 export const KeyboardInteraction: Story = { name: '键盘操作', ...keyboardInteractionExample };
 
-/** `width` 传数字：内部补 `px` */
-export const NumericWidth: Story = { name: '固定宽度（数字）', ...numericWidthExample };
-
-/** `width` 传字符串：原样作为 CSS 长度 */
-export const StringWidth: Story = { name: '固定宽度（字符串）', ...stringWidthExample };
-
-/** 用 CSS 变量覆盖宽度：`--bst-context-menu-width` */
-export const WidthByCssVariable: Story = { name: 'CSS 变量覆盖宽度', ...widthByCssVariableExample };
-
 /** 多实例：同一页面两个菜单互不干扰 */
 export const MultipleMenus: Story = { name: '同一页面多个实例', ...multipleMenusExample };
 
@@ -193,8 +172,11 @@ export const TeleportMissingSelector: Story = { name: '选择器不存在时回�
 
 // ───────────────────────────── 边界场景 ─────────────────────────────
 
-/** 长文本：左侧单行省略，右侧快捷键不折行 */
-export const LongText: Story = { name: '长文本与溢出', ...longTextExample };
+/** 长文本：面板宽度自动包裹内容，文本不折行也不省略 */
+export const LongText: Story = { name: '长文本自适应宽度', ...longTextExample };
+
+/** 左右文本都很长：左侧超长时截断，右侧快捷键保持完整贴右 */
+export const LongBothText: Story = { name: '左右文本都很长', ...longBothTextExample };
 
 /** 超出 `maxHeight` 时在面板内部滚动 */
 export const WithMaxHeight: Story = { name: '限制最大高度', ...maxHeightExample };

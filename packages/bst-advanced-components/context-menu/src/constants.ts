@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2026 Felix Tang (BinarySovereign). Licensed under the MIT License. See the LICENSE file in the root directory for the full license text.
+ */
+
 /** 组件标识 */
 export const BST_CONTEXT_MENU_CONSTANT_COMPONENT_NAMES = {
   /** 根组件名 */
@@ -47,8 +51,6 @@ export const BST_CONTEXT_MENU_CONSTANT_ERROR_MESSAGES = {
   IS_CLOSE_ON_OUTSIDE_SCROLL_INVALID: `[${BST_CONTEXT_MENU_CONSTANT_COMPONENT_NAMES.ROOT}] "isCloseOnOutsideScroll" must be a boolean.`,
   /** `isCloseOnEscKeyDown` 非布尔 */
   IS_CLOSE_ON_ESC_KEY_DOWN_INVALID: `[${BST_CONTEXT_MENU_CONSTANT_COMPONENT_NAMES.ROOT}] "isCloseOnEscKeyDown" must be a boolean.`,
-  /** `width` 非数字或 CSS 长度 */
-  WIDTH_INVALID: `[${BST_CONTEXT_MENU_CONSTANT_COMPONENT_NAMES.ROOT}] "width" must be a number or a CSS length string.`,
   /** `maxHeight` 非数字或 CSS 长度 */
   MAX_HEIGHT_INVALID: `[${BST_CONTEXT_MENU_CONSTANT_COMPONENT_NAMES.ROOT}] "maxHeight" must be a number or a CSS length string.`,
   /** `teleport` 非布尔或非空选择器 */

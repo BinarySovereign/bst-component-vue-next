@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2026 Felix Tang (BinarySovereign). Licensed under the MIT License. See the LICENSE file in the root directory for the full license text.
+ */
+
 import { computed, nextTick, reactive, ref } from 'vue';
 import { flushPromises, mount } from '@vue/test-utils';
 import type { VueWrapper } from '@vue/test-utils';
@@ -99,17 +103,13 @@ interface MenuContext {
   props: BstContextMenuProps;
 }
 
-function createMenu(
-  overrides: BstContextMenuProps = {},
-  styles: { width?: string; maxHeight?: string } = {},
-): MenuContext {
+function createMenu(overrides: BstContextMenuProps = {}, styles: { maxHeight?: string } = {}): MenuContext {
   const props = createProps(overrides);
   const emit = vi.fn();
   const menu = useContextMenu({
     props,
     emit,
     items: computed(() => props.items ?? []),
-    widthStyle: computed(() => styles.width),
     maxHeightStyle: computed(() => styles.maxHeight),
   });
 
@@ -145,12 +145,11 @@ describe('contextMenuProps', () => {
     expect(warn).toHaveBeenCalledTimes(5);
   });
 
-  it('rejects invalid width and maxHeight', () => {
+  it('rejects invalid maxHeight', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
-    expect(contextMenuProps.width.validator(-1)).toBe(false);
     expect(contextMenuProps.maxHeight.validator('')).toBe(false);
-    expect(warn).toHaveBeenCalledTimes(2);
+    expect(warn).toHaveBeenCalledTimes(1);
   });
 
   it('rejects invalid teleport', () => {

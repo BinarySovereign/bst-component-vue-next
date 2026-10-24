@@ -52,15 +52,30 @@ export const TEXT_ONLY_ITEMS: BstContextMenuItem[] = [
   { key: 'save-as', leftText: '另存为' },
 ];
 
-/** 长文本：验证左侧省略号与右侧快捷键不折行 */
+/** 长文本：验证面板宽度由最长菜单项撑开，左右文本均不折行 */
 export const LONG_TEXT_ITEMS: BstContextMenuItem[] = [
   {
     key: 'long',
-    leftText: '这是一段非常长的菜单项文本，用于验证超出面板宽度时的省略号表现是否正常',
+    leftText: '这是一段非常长的菜单项文本，面板宽度会自动包裹内容而不会出现省略号',
     rightText: 'Ctrl+Shift+Alt+L',
   },
-  { key: 'medium', leftText: '项目名称较长时右侧快捷键仍应保持贴右对齐', rightText: 'Alt+F4' },
+  { key: 'medium', leftText: '项目名称较长时右侧快捷键仍应保持贴近面板右缘', rightText: 'Alt+F4' },
   { key: 'short', leftText: '短文本', rightText: 'F5' },
+];
+
+/** 左右都很长：验证两侧同时超长时左侧截断而右侧保持完整 */
+export const LONG_BOTH_TEXT_ITEMS: BstContextMenuItem[] = [
+  {
+    key: 'both-long',
+    leftText: '左侧是一条非常长的操作名称，用于验证面板被视口夹紧后左侧文本能否正确截断',
+    rightText: 'Ctrl+Shift+Alt+Meta+Space',
+  },
+  {
+    key: 'both-longer',
+    leftText: '左侧比上一项更长的操作名称，用于验证多个超长项中面板取最宽者的表现是否稳定',
+    rightText: 'Ctrl+Alt+Shift+F12',
+  },
+  { key: 'both-short', leftText: '短项', rightText: 'F2' },
 ];
 
 /**
@@ -139,7 +154,7 @@ export const TELEPORT_ARG_OPTIONS = [
 /**
  * 把 Controls 文本框里的纯数字还原成数字。
  *
- * `width` / `maxHeight` 的 TS 类型是 `number | string`，Storybook 对这种联合类型只能
+ * `maxHeight` 的 TS 类型是 `number | string`，Storybook 对这种联合类型只能
  * 推断成 object 控件（只给一个 JSON 输入框）。改成 text 控件后输入恒为字符串，
  * 而组件的 `toCssLength` 只给「数字」补 `px`、字符串原样写入，
  * 因此这里把 `240` 这类纯数字还原成数字，使 Controls 的行为与代码里传 `240` 一致；
@@ -205,8 +220,7 @@ export interface DemoOptions {
   /**
    * 额外写到演示容器上的内联样式
    *
-   * 同时作为组件 CSS 变量的注入点：`--bst-context-menu-width` 等变量
-   * 只有在 `teleport: false`（面板留在容器内）时才会被继承。
+   * 容器的样式只有在 `teleport: false`（面板留在容器内）时才会影响面板。
    */
   containerStyle?: CSSProperties;
 }
@@ -535,7 +549,6 @@ export const createDemo = (args: BstContextMenuProps, options: DemoOptions = {})
           {
             ref: menuRef,
             items,
-            width: toLengthArg(args.width),
             maxHeight: toLengthArg(args.maxHeight),
             teleport: toTeleportArg(args.teleport),
             isVisible: isVisible.value,

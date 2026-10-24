@@ -1,18 +1,20 @@
-// 入场与出场动画：复用 utilities 的全局淡入淡出关键帧，本分片只负责挂载与降级
-// 只引动画分片而非整个 utilities 入口，避免把 float 一类的全局工具类一并拖进组件产物
+/**
+ * Copyright (c) 2026 Felix Tang (BinarySovereign). Licensed under the MIT License. See the LICENSE file in the root directory for the full license text.
+ */
+
 @import '../../utilities/_animation.less';
 
-// 入场：由组件在显示阶段挂载
+// 入场动画
 .@{prefix}-context-menu-is-open {
   animation: bst-fade-in @context-menu-anim-duration @context-menu-anim-easing;
 }
 
-// 出场：由组件在隐藏阶段挂载，animationend 后移除节点
+// 出场动画
 .@{prefix}-context-menu-is-closing {
   animation: bst-fade-out @context-menu-anim-duration @context-menu-anim-easing;
 }
 
-// 无障碍降级：系统声明减少动效时关闭非必要动画
+// 减少动效偏好降级
 @media (prefers-reduced-motion: reduce) {
   .@{prefix}-context-menu-is-open,
   .@{prefix}-context-menu-is-closing {

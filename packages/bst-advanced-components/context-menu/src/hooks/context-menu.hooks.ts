@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2026 Felix Tang (BinarySovereign). Licensed under the MIT License. See the LICENSE file in the root directory for the full license text.
+ */
+
 import { ref } from 'vue';
 import type { ComputedRef, CSSProperties, Ref } from 'vue';
 import type {
@@ -23,8 +27,6 @@ export interface UseContextMenuOptions {
   emit: ContextMenuEmit;
   /** 归一化后的菜单项列表 */
   items: ComputedRef<BstContextMenuItem[]>;
-  /** 宽度内联样式 */
-  widthStyle: ComputedRef<string | undefined>;
   /** 最大高度内联样式 */
   maxHeightStyle: ComputedRef<string | undefined>;
 }
@@ -78,7 +80,7 @@ export interface UseContextMenuReturn {
 }
 
 export function useContextMenu(options: UseContextMenuOptions): UseContextMenuReturn {
-  const { props, emit, items, widthStyle, maxHeightStyle } = options;
+  const { props, emit, items, maxHeightStyle } = options;
 
   const innerVisible = ref(props.isVisible === true);
   const rootRef = ref<HTMLElement | null>(null);
@@ -101,7 +103,6 @@ export function useContextMenu(options: UseContextMenuOptions): UseContextMenuRe
     position: positionState.position,
     offset: positionState.offset,
     isMeasuring: positionState.isMeasuring,
-    widthStyle,
     maxHeightStyle,
   });
 
