@@ -96,7 +96,11 @@ export function useContextMenu(options: UseContextMenuOptions): UseContextMenuRe
 
   const keyboard = useContextMenuKeyboard({ props, emit, items, rootRef, onSelect: handleItemSelect, onClose: hide });
 
-  const outside = useContextMenuOutside({ props, emit, rootRef, onClose: hide });
+  function isDismissing(): boolean {
+    return !innerVisible.value || phaseState.phase.value === 'closing';
+  }
+
+  const outside = useContextMenuOutside({ props, emit, rootRef, isDismissing, onClose: hide });
 
   const view = useContextMenuView({
     phase: phaseState.phase,
@@ -110,6 +114,7 @@ export function useContextMenu(options: UseContextMenuOptions): UseContextMenuRe
     if (visible) {
       if (phaseState.isEntering()) return;
 
+      outside.captureScrollBaseline();
       keyboard.resetActiveIndex();
 
       const isFreshMount = phaseState.isIdle();

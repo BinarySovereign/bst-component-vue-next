@@ -6,7 +6,7 @@ import type { Ref } from 'vue';
 import type { BstContextMenuProps } from '@binarysovereign/bst-types';
 
 import type { ContextMenuEmit } from '../types';
-import { isInsideContextMenu } from '../utils';
+import { isBrowserEnvironment, isInsideContextMenu } from '../utils';
 
 /** `useContextMenuOutside` 的入参 */
 export interface UseContextMenuOutsideOptions {
@@ -16,6 +16,8 @@ export interface UseContextMenuOutsideOptions {
   emit: ContextMenuEmit;
   /** 面板根节点，用于判定事件目标是否在面板内部 */
   rootRef: Ref<HTMLElement | null>;
+  /** 是否已进入关闭流程，用于避免一次关闭被重复上报 */
+  isDismissing: () => boolean;
   /** 关闭回调 */
   onClose: () => void;
 }
@@ -28,13 +30,31 @@ export interface UseContextMenuOutsideReturn {
   handleOutsideScroll: (event: Event) => void;
   /** 面板自身右键处理 */
   handleRootContextMenu: (event: MouseEvent) => void;
+  /** 记录当前页面滚动位置，作为忽略历史滚动的基线 */
+  captureScrollBaseline: () => void;
 }
 
 export function useContextMenuOutside(options: UseContextMenuOutsideOptions): UseContextMenuOutsideReturn {
-  const { props, emit, rootRef, onClose } = options;
+  const { props, emit, rootRef, isDismissing, onClose } = options;
+
+  const scrollBaseline = { x: 0, y: 0 };
+
+  function captureScrollBaseline(): void {
+    if (!isBrowserEnvironment()) return;
+
+    scrollBaseline.x = window.scrollX;
+    scrollBaseline.y = window.scrollY;
+  }
+
+  function _isStalePageScroll(event: Event): boolean {
+    if (event.target !== document) return false;
+
+    return window.scrollX === scrollBaseline.x && window.scrollY === scrollBaseline.y;
+  }
 
   function _shouldClose(isCloseEnabled: boolean, target: EventTarget | null): boolean {
     if (!isCloseEnabled) return false;
+    if (isDismissing()) return false;
 
     return !isInsideContextMenu(rootRef.value, target);
   }
@@ -47,6 +67,7 @@ export function useContextMenuOutside(options: UseContextMenuOutsideOptions): Us
   }
 
   function handleOutsideScroll(event: Event): void {
+    if (_isStalePageScroll(event)) return;
     if (!_shouldClose(props.isCloseOnOutsideScroll !== false, event.target)) return;
 
     emit('scroll-outside', { nativeEvent: event });
@@ -58,5 +79,5 @@ export function useContextMenuOutside(options: UseContextMenuOutsideOptions): Us
     event.stopPropagation();
   }
 
-  return { handleOutsideClick, handleOutsideScroll, handleRootContextMenu };
+  return { handleOutsideClick, handleOutsideScroll, handleRootContextMenu, captureScrollBaseline };
 }

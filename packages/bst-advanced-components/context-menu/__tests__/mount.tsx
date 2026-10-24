@@ -26,6 +26,8 @@ const originalOffsetWidth = Object.getOwnPropertyDescriptor(HTMLElement.prototyp
 const originalOffsetHeight = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'offsetHeight');
 const originalInnerWidth = window.innerWidth;
 const originalInnerHeight = window.innerHeight;
+const originalScrollX = Object.getOwnPropertyDescriptor(window, 'scrollX');
+const originalScrollY = Object.getOwnPropertyDescriptor(window, 'scrollY');
 
 export function mountContextMenu(
   props: Partial<BstContextMenuProps> = {},
@@ -130,6 +132,29 @@ export function dispatchOutsideMousedown(): void {
   document.body.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
 }
 
+export function mockPageScroll(x: number, y: number): void {
+  Object.defineProperty(window, 'scrollX', { configurable: true, writable: true, value: x });
+  Object.defineProperty(window, 'scrollY', { configurable: true, writable: true, value: y });
+}
+
+export function resetPageScroll(): void {
+  if (originalScrollX) {
+    Object.defineProperty(window, 'scrollX', originalScrollX);
+  } else {
+    Reflect.deleteProperty(window, 'scrollX');
+  }
+
+  if (originalScrollY) {
+    Object.defineProperty(window, 'scrollY', originalScrollY);
+  } else {
+    Reflect.deleteProperty(window, 'scrollY');
+  }
+}
+
+export function dispatchPageScroll(): void {
+  document.dispatchEvent(new Event('scroll'));
+}
+
 export function dispatchOutsideScroll(): void {
   document.body.dispatchEvent(new Event('scroll'));
 }
@@ -156,4 +181,5 @@ export function cleanup(): void {
 
   resetElementSize();
   resetViewport();
+  resetPageScroll();
 }

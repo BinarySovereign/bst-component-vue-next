@@ -16,6 +16,7 @@ import {
   dispatchKey,
   dispatchOutsideMousedown,
   dispatchOutsideScroll,
+  dispatchPageScroll,
   finishAnimation,
   getExpose,
   getItems,
@@ -23,6 +24,7 @@ import {
   getPanelElement,
   getPanelInBody,
   mockElementSize,
+  mockPageScroll,
   mockViewport,
   mountContextMenu,
 } from './mount';
@@ -493,6 +495,58 @@ describe('BstContextMenu', () => {
 
         expect(wrapper.emitted('scroll-outside')).toHaveLength(1);
         expect(wrapper.emitted('update:isVisible')?.[0]).toEqual([false]);
+      });
+
+      it('reports an outside scroll only once while closing', async () => {
+        const wrapper = mountContextMenu();
+        await flushPromises();
+
+        dispatchOutsideScroll();
+        await nextTick();
+        dispatchOutsideScroll();
+        await nextTick();
+
+        expect(wrapper.emitted('scroll-outside')).toHaveLength(1);
+        expect(wrapper.emitted('update:isVisible')).toHaveLength(1);
+      });
+
+      it('ignores a page scroll that happened before opening', async () => {
+        mockPageScroll(0, 120);
+
+        const wrapper = mountContextMenu();
+        await flushPromises();
+
+        dispatchPageScroll();
+        await nextTick();
+
+        expect(wrapper.emitted('scroll-outside')).toBeUndefined();
+        expect(getPanel(wrapper).exists()).toBe(true);
+      });
+
+      it('closes when the page scrolls vertically after opening', async () => {
+        mockPageScroll(0, 120);
+
+        const wrapper = mountContextMenu();
+        await flushPromises();
+
+        mockPageScroll(0, 180);
+        dispatchPageScroll();
+        await nextTick();
+
+        expect(wrapper.emitted('scroll-outside')).toHaveLength(1);
+      });
+
+      it('closes when the page scrolls horizontally after opening', async () => {
+        mockPageScroll(0, 120);
+
+        const wrapper = mountContextMenu();
+        await flushPromises();
+
+        mockPageScroll(60, 120);
+        dispatchPageScroll();
+        await nextTick();
+
+        expect(wrapper.emitted('scroll-outside')).toHaveLength(1);
       });
 
       it('ignores a scroll inside the panel', async () => {
