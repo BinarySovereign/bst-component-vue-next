@@ -2,7 +2,11 @@
 import { computed, ref, watch } from 'vue';
 
 import { BstContextMenu } from '@binarysovereign/bst-advanced-components';
-import type { BstContextMenuItem, BstContextMenuPosition } from '@binarysovereign/bst-advanced-components';
+import type {
+  BstContextMenuItem,
+  BstContextMenuItemSelectContext,
+  BstContextMenuPosition,
+} from '@binarysovereign/bst-advanced-components';
 
 interface PropsPlaygroundProps {
   itemsText?: string;
@@ -28,26 +32,31 @@ const props = withDefaults(defineProps<PropsPlaygroundProps>(), {
   teleport: true,
 });
 
-const DEFAULT_ITEMS: BstContextMenuItem[] = [
-  { key: 'copy', leftText: '复制', rightText: 'Ctrl+C' },
-  { key: 'paste', leftText: '粘贴', rightText: 'Ctrl+V' },
-  { key: 'divider', type: 'divider' },
-  { key: 'delete', leftText: '删除', rightText: 'Delete', isDisabled: true },
-];
-
 const isVisible = ref(false);
 
 const position = ref<BstContextMenuPosition>({ x: 0, y: 0 });
 
 const triggerRef = ref<HTMLButtonElement>();
 
-const items = ref<BstContextMenuItem[]>(DEFAULT_ITEMS);
+const items = ref<BstContextMenuItem[]>([]);
+
+function handleItemSelect(context: BstContextMenuItemSelectContext): void {
+  window.alert(`已选择：${context.item.leftText ?? String(context.item.key)}`);
+}
+
+function attachAction(item: BstContextMenuItem): BstContextMenuItem {
+  if (item.type === 'divider' || item.isDisabled === true) {
+    return item;
+  }
+
+  return { ...item, action: handleItemSelect };
+}
 
 function parseItems(text: string): BstContextMenuItem[] | undefined {
   try {
     const parsed: unknown = JSON.parse(text);
 
-    return Array.isArray(parsed) ? (parsed as BstContextMenuItem[]) : undefined;
+    return Array.isArray(parsed) ? (parsed as BstContextMenuItem[]).map(attachAction) : undefined;
   } catch {
     return undefined;
   }
@@ -105,6 +114,18 @@ watch(
   { immediate: true },
 );
 
+function resolveOrigin(): BstContextMenuPosition {
+  const container = triggerRef.value?.parentElement;
+
+  if (props.teleport || !container) {
+    return { x: 0, y: 0 };
+  }
+
+  const rect = container.getBoundingClientRect();
+
+  return { x: rect.left, y: rect.top };
+}
+
 function handleOpen(): void {
   const configured = configuredPosition.value;
 
@@ -121,8 +142,12 @@ function handleOpen(): void {
     return;
   }
 
-  position.value = { x: rect.left + rect.width / 2, y: rect.bottom + 8 };
+  const origin = resolveOrigin();
 
+  position.value = {
+    x: rect.left - origin.x + rect.width / 2,
+    y: rect.bottom - origin.y + 8,
+  };
   isVisible.value = true;
 }
 </script>

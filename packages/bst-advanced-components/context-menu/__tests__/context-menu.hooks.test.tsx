@@ -664,6 +664,52 @@ describe('useContextMenu', () => {
       expect(menu.rootStyle.value.left).toBe('37px');
       expect(menu.rootStyle.value.top).toBe('-13px');
     });
+
+    it('anchors coordinates to the mounting container', async () => {
+      const { menu } = createMenu({ position: { x: 100, y: 50 } });
+      const container = createRectElement(600, 400, 50, 520);
+      const element = createRectElement(200, 100, 100, 50);
+
+      container.appendChild(element);
+      menu.rootRef.value = element;
+      await menu.measureAndClamp();
+
+      // 容器原点参与样式，坐标因此落在容器内 100/50 处
+      expect(menu.rootStyle.value.left).toBe('150px');
+      expect(menu.rootStyle.value.top).toBe('570px');
+
+      setElementRect(element, 200, 100, 150, 570);
+      await menu.measureAndClamp();
+
+      expect(menu.rootStyle.value.left).toBe('150px');
+      expect(menu.rootStyle.value.top).toBe('570px');
+    });
+
+    it('clamps relative coordinates inside the viewport', async () => {
+      const { menu, emit } = createMenu({ position: { x: 900, y: 600 } });
+      const container = createRectElement(600, 400, 50, 520);
+      const element = createRectElement(200, 100, 950, 1120);
+
+      vi.spyOn(window, 'innerWidth', 'get').mockReturnValue(1000);
+      vi.spyOn(window, 'innerHeight', 'get').mockReturnValue(700);
+
+      container.appendChild(element);
+      menu.rootRef.value = element;
+      await menu.measureAndClamp();
+
+      expect(emit).toHaveBeenCalledWith('update:position', { x: 742, y: 72 });
+    });
+
+    it('ignores a stale measurement when called twice in the same tick', async () => {
+      const { menu } = createMenu({ position: { x: 100, y: 50 } });
+      const element = createRectElement(200, 100, 163, 113);
+
+      menu.rootRef.value = element;
+      await Promise.all([menu.measureAndClamp(), menu.measureAndClamp()]);
+
+      expect(menu.rootStyle.value.left).toBe('37px');
+      expect(menu.rootStyle.value.top).toBe('-13px');
+    });
   });
 });
 
@@ -789,6 +835,15 @@ describe('useContextMenuLife', () => {
     await nextTick();
 
     expect(harness.onItemsChange).toHaveBeenCalledTimes(1);
+    expect(harness.onReMeasure).toHaveBeenCalledTimes(1);
+  });
+
+  it('remeasures when the teleport target changes', async () => {
+    const harness = mountLifeHarness();
+
+    harness.props.teleport = false;
+    await nextTick();
+
     expect(harness.onReMeasure).toHaveBeenCalledTimes(1);
   });
 

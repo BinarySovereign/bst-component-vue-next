@@ -11,6 +11,7 @@ import {
   normalizeContextMenuItems,
   resolveContextMenuItemIndex,
   resolveContextMenuOffset,
+  resolveContextMenuOrigin,
   toCssLength,
 } from '../src/utils';
 
@@ -266,6 +267,72 @@ describe('resolveContextMenuOffset', () => {
 
   it('still resolves when only one axis has size', () => {
     expect(resolveContextMenuOffset({ ...baseOptions, width: 0, height: 100 })).toEqual({ x: -63, y: -63 });
+  });
+});
+
+describe('resolveContextMenuOrigin', () => {
+  function createParent(left: number, top: number): HTMLElement {
+    const parent = document.createElement('div');
+
+    parent.getBoundingClientRect = (): DOMRect => ({
+      left,
+      top,
+      x: left,
+      y: top,
+      right: left + 100,
+      bottom: top + 100,
+      width: 100,
+      height: 100,
+      toJSON: (): Record<string, number> => ({ left, top, width: 100, height: 100 }),
+    });
+
+    return parent;
+  }
+
+  it('returns the viewport origin without an element', () => {
+    expect(resolveContextMenuOrigin(null)).toEqual({ x: 0, y: 0 });
+  });
+
+  it('returns the viewport origin without a browser environment', () => {
+    const parent = createParent(50, 520);
+    const element = document.createElement('div');
+
+    parent.appendChild(element);
+    vi.stubGlobal('window', undefined);
+    vi.stubGlobal('document', undefined);
+
+    expect(resolveContextMenuOrigin(element)).toEqual({ x: 0, y: 0 });
+  });
+
+  it('returns the viewport origin without a parent', () => {
+    expect(resolveContextMenuOrigin(document.createElement('div'))).toEqual({ x: 0, y: 0 });
+  });
+
+  it('returns the viewport origin when mounted on the body', () => {
+    const element = document.createElement('div');
+
+    document.body.appendChild(element);
+
+    expect(resolveContextMenuOrigin(element)).toEqual({ x: 0, y: 0 });
+  });
+
+  it('returns the viewport origin when mounted on the document element', () => {
+    const element = document.createElement('div');
+
+    document.documentElement.appendChild(element);
+
+    expect(resolveContextMenuOrigin(element)).toEqual({ x: 0, y: 0 });
+
+    element.remove();
+  });
+
+  it('returns the top-left corner of the mounting container', () => {
+    const parent = createParent(50, 520);
+    const element = document.createElement('div');
+
+    parent.appendChild(element);
+
+    expect(resolveContextMenuOrigin(element)).toEqual({ x: 50, y: 520 });
   });
 });
 

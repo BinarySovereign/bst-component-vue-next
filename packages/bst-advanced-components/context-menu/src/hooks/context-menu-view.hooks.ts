@@ -15,6 +15,8 @@ export interface UseContextMenuViewOptions {
   phase: Ref<ContextMenuPhase>;
   /** 当前生效坐标 */
   position: Ref<BstContextMenuPosition>;
+  /** 挂载容器左上角的视口坐标 */
+  origin: Ref<BstContextMenuPosition>;
   /** 包含块偏移补偿量 */
   offset: Ref<BstContextMenuPosition>;
   /** 是否处于首帧测量中 */
@@ -32,7 +34,7 @@ export interface UseContextMenuViewReturn {
 }
 
 export function useContextMenuView(options: UseContextMenuViewOptions): UseContextMenuViewReturn {
-  const { phase, position, offset, isMeasuring, maxHeightStyle } = options;
+  const { phase, position, origin, offset, isMeasuring, maxHeightStyle } = options;
 
   const rootClass = computed((): string[] => {
     const classNames: string[] = [BST_CONTEXT_MENU_CONSTANT_CLASS_NAMES.ROOT];
@@ -50,8 +52,8 @@ export function useContextMenuView(options: UseContextMenuViewOptions): UseConte
 
   const rootStyle = computed((): CSSProperties => ({
     position: 'fixed',
-    left: `${position.value.x + offset.value.x}px`,
-    top: `${position.value.y + offset.value.y}px`,
+    left: `${origin.value.x + position.value.x + offset.value.x}px`,
+    top: `${origin.value.y + position.value.y + offset.value.y}px`,
     maxHeight: maxHeightStyle.value,
     visibility: isMeasuring.value ? 'hidden' : undefined,
   }));

@@ -31,6 +31,14 @@ export function resolveContextMenuOffset(options: ContextMenuOffsetOptions): Bst
   return { x: appliedX - actualX, y: appliedY - actualY };
 }
 
+export function resolveContextMenuOrigin(element: HTMLElement | null): BstContextMenuPosition {
+  if (!element || !isBrowserEnvironment()) return { x: 0, y: 0 };
+  const parent = element.parentElement;
+  if (!parent || parent === document.body || parent === document.documentElement) return { x: 0, y: 0 };
+  const rect = parent.getBoundingClientRect();
+  return { x: rect.left, y: rect.top };
+}
+
 export function toCssLength(value?: number | string): string | undefined {
   if (typeof value === 'number') {
     return Number.isFinite(value) && value >= 0 ? `${value}px` : undefined;

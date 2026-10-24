@@ -65,6 +65,27 @@
   box-shadow: 0 0 0 2px var(--bst-brand-color-1);
 }
 
+.bst-demo-input-with-suffix {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.bst-demo-input-with-suffix .bst-demo-input {
+  padding-right: var(--bst-size-9);
+}
+
+.bst-demo-input-suffix {
+  position: absolute;
+  top: 50%;
+  right: var(--bst-size-3);
+  color: var(--bst-text-color-secondary);
+  font: var(--bst-font-mark-small);
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
 .bst-demo-select {
   position: relative;
   display: inline-flex;

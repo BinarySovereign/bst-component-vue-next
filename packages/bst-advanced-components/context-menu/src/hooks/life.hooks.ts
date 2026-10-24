@@ -95,6 +95,11 @@ export function useContextMenuLife(options: UseContextMenuLifeOptions): void {
     },
   );
 
+  watch(
+    () => options.props.teleport,
+    () => options.onReMeasure(),
+  );
+
   onUnmounted(() => {
     detach();
     options.onCleanup();

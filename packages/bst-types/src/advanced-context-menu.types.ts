@@ -36,9 +36,9 @@ export interface BstContextMenuEscKeyDownContext {
 
 /** 上下文菜单的位置坐标 */
 export interface BstContextMenuPosition {
-  /** 相对视口或容器的 X 轴坐标 */
+  /** 挂到 body 时相对视口的 X 轴坐标，否则相对挂载容器左上角 */
   x: number;
-  /** 相对视口或容器的 Y 轴坐标 */
+  /** 挂到 body 时相对视口的 Y 轴坐标，否则相对挂载容器左上角 */
   y: number;
 }
 
@@ -67,7 +67,7 @@ export interface BstContextMenuProps {
   isVisible?: boolean;
   /** 菜单的数据列表 */
   items?: BstContextMenuItem[];
-  /** 菜单弹出的位置，相对于 body 视口坐标，支持 v-model:position */
+  /** 菜单弹出的位置：挂到 body 时相对视口，否则相对挂载容器左上角，支持 v-model:position */
   position?: BstContextMenuPosition;
   /** 点击菜单外部是否自动关闭，默认 true */
   isCloseOnOutsideClick?: boolean;

@@ -105,6 +105,7 @@ export function useContextMenu(options: UseContextMenuOptions): UseContextMenuRe
   const view = useContextMenuView({
     phase: phaseState.phase,
     position: positionState.position,
+    origin: positionState.origin,
     offset: positionState.offset,
     isMeasuring: positionState.isMeasuring,
     maxHeightStyle,

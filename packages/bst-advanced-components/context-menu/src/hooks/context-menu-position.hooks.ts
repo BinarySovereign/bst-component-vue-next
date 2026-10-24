@@ -8,7 +8,12 @@ import type { BstContextMenuPosition, BstContextMenuProps } from '@binarysoverei
 
 import { BST_CONTEXT_MENU_CONSTANT_DEFAULT_POSITION, BST_CONTEXT_MENU_CONSTANT_METRICS } from '../constants';
 import type { ContextMenuEmit } from '../types';
-import { clampContextMenuPosition, isBrowserEnvironment, resolveContextMenuOffset } from '../utils';
+import {
+  clampContextMenuPosition,
+  isBrowserEnvironment,
+  resolveContextMenuOffset,
+  resolveContextMenuOrigin,
+} from '../utils';
 
 /** `useContextMenuPosition` 的入参 */
 export interface UseContextMenuPositionOptions {
@@ -24,6 +29,8 @@ export interface UseContextMenuPositionOptions {
 export interface UseContextMenuPositionReturn {
   /** 当前生效坐标 */
   position: Ref<BstContextMenuPosition>;
+  /** 挂载容器左上角的视口坐标 */
+  origin: Ref<BstContextMenuPosition>;
   /** 包含块偏移补偿量 */
   offset: Ref<BstContextMenuPosition>;
   /** 是否处于首帧测量中 */
@@ -49,8 +56,10 @@ export function useContextMenuPosition(options: UseContextMenuPositionOptions): 
   const { props, emit, rootRef } = options;
 
   const position = ref<BstContextMenuPosition>(_createInitialPosition(props.position));
+  const origin = ref<BstContextMenuPosition>({ x: 0, y: 0 });
   const offset = ref<BstContextMenuPosition>({ x: 0, y: 0 });
   const isMeasuring = ref(false);
+  let measureToken = 0;
 
   function resolveMeasuredPosition(target: BstContextMenuPosition): BstContextMenuPosition | undefined {
     const element = rootRef.value;
@@ -59,8 +68,8 @@ export function useContextMenuPosition(options: UseContextMenuPositionOptions): 
 
     const rect = element.getBoundingClientRect();
     const nextOffset = resolveContextMenuOffset({
-      appliedX: position.value.x + offset.value.x,
-      appliedY: position.value.y + offset.value.y,
+      appliedX: origin.value.x + position.value.x + offset.value.x,
+      appliedY: origin.value.y + position.value.y + offset.value.y,
       actualX: rect.left,
       actualY: rect.top,
       width: rect.width,
@@ -69,15 +78,19 @@ export function useContextMenuPosition(options: UseContextMenuPositionOptions): 
 
     if (nextOffset) offset.value = nextOffset;
 
-    return clampContextMenuPosition({
-      x: target.x,
-      y: target.y,
+    origin.value = resolveContextMenuOrigin(element);
+
+    const clamped = clampContextMenuPosition({
+      x: origin.value.x + target.x,
+      y: origin.value.y + target.y,
       menuWidth: element.offsetWidth,
       menuHeight: element.offsetHeight,
       viewportWidth: window.innerWidth,
       viewportHeight: window.innerHeight,
       gap: BST_CONTEXT_MENU_CONSTANT_METRICS.VIEWPORT_GAP,
     });
+
+    return { x: clamped.x - origin.value.x, y: clamped.y - origin.value.y };
   }
 
   function commitPosition(next: BstContextMenuPosition): void {
@@ -88,7 +101,11 @@ export function useContextMenuPosition(options: UseContextMenuPositionOptions): 
   }
 
   async function measureAndClamp(): Promise<void> {
+    const token = ++measureToken;
+
     await nextTick();
+
+    if (token !== measureToken) return;
 
     const next = resolveMeasuredPosition(position.value);
 
@@ -101,5 +118,14 @@ export function useContextMenuPosition(options: UseContextMenuPositionOptions): 
     position.value = { x: value.x, y: value.y };
   }
 
-  return { position, offset, isMeasuring, resolveMeasuredPosition, commitPosition, measureAndClamp, setPosition };
+  return {
+    position,
+    origin,
+    offset,
+    isMeasuring,
+    resolveMeasuredPosition,
+    commitPosition,
+    measureAndClamp,
+    setPosition,
+  };
 }

@@ -1,19 +1,39 @@
 <script setup lang="ts">
+const PLAYGROUND_ITEM_KINDS = ['dual', 'single', 'disabled', 'divider'] as const;
+
+function createItemsText(count: number): string {
+  const items = Array.from({ length: count }, (_, index) => {
+    const kind = PLAYGROUND_ITEM_KINDS[index % PLAYGROUND_ITEM_KINDS.length];
+    const order = index + 1;
+
+    if (kind === 'divider') {
+      return { key: `divider-${order}`, type: 'divider' };
+    }
+
+    if (kind === 'disabled') {
+      return { key: `item-${order}`, leftText: `禁用项 ${order}`, rightText: 'Disabled', isDisabled: true };
+    }
+
+    if (kind === 'single') {
+      return { key: `item-${order}`, leftText: `单项 ${order}` };
+    }
+
+    return { key: `item-${order}`, leftText: `双项 ${order}`, rightText: `Ctrl+${order}` };
+  });
+
+  return JSON.stringify(items, null, 2);
+}
+
 const playgroundInit = {
-  itemsText: `[
-  { "key": "copy", "leftText": "复制", "rightText": "Ctrl+C" },
-  { "key": "paste", "leftText": "粘贴", "rightText": "Ctrl+V" },
-  { "key": "divider", "type": "divider" },
-  { "key": "delete", "leftText": "删除", "rightText": "Delete", "isDisabled": true }
-]`,
+  itemsText: createItemsText(50),
   isCloseOnOutsideClick: true,
   isCloseOnOutsideScroll: true,
   isCloseOnEscKeyDown: true,
   maxHeightType: 'string',
-  maxHeightValue: '',
-  positionX: '',
-  positionY: '',
-  teleport: true,
+  maxHeightValue: '320px',
+  positionX: '147',
+  positionY: '143',
+  teleport: false,
 };
 </script>
 
@@ -37,12 +57,15 @@ const playgroundInit = {
       </DemoConfigItem>
       <DemoConfigItem label="最大高度">
         <span class="bst-demo-select">
-          <select v-model="playground.maxHeightType">
-            <option value="string">字符串</option>
-            <option value="number">数字</option>
+          <select v-model="playground.maxHeightType" @change="playground.maxHeightValue = ''">
+            <option value="string">高度(CSS)</option>
+            <option value="number">高度(数字)</option>
           </select>
         </span>
-        <input v-model="playground.maxHeightValue" class="bst-demo-input" type="text" placeholder="不限制" />
+        <span class="bst-demo-input-with-suffix">
+          <input v-model="playground.maxHeightValue" class="bst-demo-input" type="text" placeholder="不限制" />
+          <span v-if="playground.maxHeightType === 'number'" class="bst-demo-input-suffix">px</span>
+        </span>
       </DemoConfigItem>
       <DemoConfigItem label="位置">
         <input v-model="playground.positionX" class="bst-demo-input bst-demo-input-compact" type="number" placeholder="X" />
@@ -71,7 +94,7 @@ const playgroundInit = {
 | 属性名 | 类型 | 默认值 | 说明 | 必填 |
 | --- | --- | --- | --- | --- |
 | `isVisible` | `boolean` | `false` | 是否显示菜单，支持 `v-model:is-visible` | N |
-| `position` | `BstContextMenuPosition` | `{ x: 0, y: 0 }` | 菜单定位坐标，支持 `v-model:position` | N |
+| `position` | `BstContextMenuPosition` | `{ x: 0, y: 0 }` | 菜单定位坐标，挂到 `body` 时相对视口，原地渲染或挂到自定义容器时相对该容器左上角，支持 `v-model:position` | N |
 | `items` | `BstContextMenuItem[]` | `[]` | 菜单数据列表 | N |
 | `isCloseOnOutsideClick` | `boolean` | `true` | 点击面板外部是否关闭 | N |
 | `isCloseOnOutsideScroll` | `boolean` | `true` | 面板外部滚动是否关闭 | N |
