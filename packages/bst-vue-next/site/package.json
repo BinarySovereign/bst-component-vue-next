@@ -15,18 +15,22 @@
     "dev": "vitepress dev",
     "build": "vitepress build",
     "preview": "vitepress preview",
-    "typecheck": "vue-tsc --noEmit -p tsconfig.json"
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json",
+    "style:lint": "stylelint \".vitepress/theme/**/*.{less,css}\" --max-warnings 0",
+    "style:lint:fix": "stylelint \".vitepress/theme/**/*.{less,css}\" --fix"
   },
   "dependencies": {
     "@binarysovereign/styles": "workspace:*",
     "@binarysovereign/bst-basic-components": "workspace:*",
     "@binarysovereign/bst-advanced-components": "workspace:*",
     "@binarysovereign/bst-ai-components": "workspace:*",
+    "clipboard": "catalog:runtime",
     "vue": "catalog:runtime"
   },
   "devDependencies": {
     "@types/node": "catalog:types",
     "@vitejs/plugin-vue-jsx": "catalog:build",
+    "less": "catalog:build",
     "postcss": "catalog:build",
     "vitepress": "catalog:docs",
     "vue-tsc": "catalog:types"

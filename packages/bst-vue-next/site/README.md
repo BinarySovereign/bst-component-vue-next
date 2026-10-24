@@ -63,9 +63,12 @@ packages/bst-vue-next/site/
 │  ├─ theme/
 │  │  ├─ index.ts                # 主题入口：引组件库样式、注册站点组件、明暗桥接
 │  │  ├─ demo-source.ts          # 示例索引：懒加载组件 + 高亮数据载入器
-│  │  ├─ styles/                 # 站点外壳样式，与组件库样式互不混写│  │  │  ├─ demo/                # 示例样式：index.css 汇总 + block / shared / 各组件层分片
-│  │  │  ├─ vars.css             # VitePress 品牌色与组件库令牌的接缝
-│  │  │  └─ preview.css          # 样式预览页（设计令牌总览）│  │  └─ components/             # DemoBlock（示例预览 + 高亮源码）、TokenPalette（令牌总览）
+│  │  ├─ styles/                 # 站点外壳样式，与组件库样式互不混写
+│  │  │  ├─ demo/                # 示例样式：index.less 汇总 + block / shared / 各组件层分片
+│  │  │  ├─ vars.less            # VitePress 品牌色与组件库令牌的接缝
+│  │  │  └─ preview.less         # 样式预览页（设计令牌总览）
+│  │  └─ components/             # DemoBlock（示例预览 + 高亮源码）、DemoConfigItem（配置区行）、DemoJsonEditor（JSON 输入）、TokenPalette（令牌总览）
+│  ├─ icons/                     # DemoBlock 图标组件，一个文件一个图标
 │  ├─ types/                     # 补声明：styles 按需入口无类型文件、虚拟模块
 │  ├─ cache/                     # 运行期缓存（git 忽略）
 │  └─ dist/                      # 构建产物（git 忽略）
@@ -107,11 +110,17 @@ packages/bst-vue-next/site/
 ```
 
 三层路径一一对应：示例目录、组件文档页（`src/components/<层>/`）、样式分片
-（`theme/styles/demo/<层>/<组件名>.css`）同名同层级，新增组件时三处一起建即可。
+（`theme/styles/demo/<层>/<组件名>.less`）同名同层级，新增组件时三处一起建即可。
 
-样式分层的收录规则：`block.css` 只放 DemoBlock 骨架；`shared.css` 只放被两个以上层用到的辅助类；
-其余落在 `demo/<层>/<组件名>.css`，并在同层 `index.css` 里 `@import` 登记。
-全量静态引入（`demo/index.css` 统一汇总），不做按层懒加载。
+样式分层的收录规则：`block.less` 只放 DemoBlock 骨架；`shared.less` 只放被两个以上层用到的辅助类；
+其余落在 `demo/<层>/<组件名>.less`，并在同层 `index.less` 里 `@import` 登记。
+全量静态引入（`demo/index.less` 统一汇总），不做按层懒加载。
+
+站点自有的样式**统一用 Less 编写**（`theme/styles/**` 下不存在 `.css` 源文件），内容仍是普通 CSS 语法即可，
+这样所有分片都有资格引入样式包 mixin，也不会出现同一目录两种后缀。组件库样式仍然消费 `.css` 产物，与这里不冲突。
+
+滚动条就靠这套机制统一：需要滚动的分片 `@import '@binarysovereign/styles/web/mixins/_scrollbar.less'`
+后调用 `.scrollbar(8px, 2px)`，颜色随 `--bst-scrollbar-color` 令牌变化，不再手写 `::-webkit-scrollbar`。
 
 `src/examples/README.md` 同样记录了一份约定，便于直接在该目录下工作的人就地看到。
 
@@ -137,13 +146,72 @@ packages/bst-vue-next/site/
 
 因此示例与源码不可能不一致——它们是同一个文件。若某个示例需要自定义容器，写默认插槽即可覆盖预览区内容。
 
+`DemoBlock` 的结构按设计稿分为四块：
+
+| 区域 | 内容 |
+| --- | --- |
+| 标题栏 | `title` / `description`，右上角「重置示例」按钮（重新挂载示例组件，清空其内部状态） |
+| 演示区 | 固定 240px 高、内容超出时内部滚动；左上角「演示区」标签，右下角复制源码与查看源码两个图标按钮 |
+| 配置区 | 仅当使用方提供 `config` 插槽时渲染，与演示区并排、同样固定 240px 高；无插槽时演示区占满整行 |
+| 源码区 | 展开后横跨整行、最大 400px 高且内部滚动，内容来自构建期高亮 HTML；可用 `codeTabs` 开标签页 |
+
+图标为 `.vitepress/icons/` 下的独立单文件组件（`IconCopy.vue`、`IconCode.vue`、`IconCheck.vue`），颜色统一走 `currentColor`。
+复制按钮取同一份高亮 HTML 的文本内容写入剪贴板（用 `clipboard` 包的 `ClipboardJS.copy()`，它在不支持
+`navigator.clipboard` 的环境下也能工作），因此不需要构建期为每份示例额外保存一份纯源码。
+复制始终取 **Vue** 写法（`.vue` 就是被渲染的那个文件），与当前选中的标签页无关。
+标题栏的「重置示例」会把配置区恢复成 `playground` 传入的初值，并重新挂载示例组件清空其内部状态。
+
+配置区通过 `playground` 打通左右两侧：`DemoBlock` 用同名 prop 接收初值，放进一个 `reactive` 对象，
+再以 `v-bind` 透传给示例组件、以插槽参数交给 `#config` 插槽，两边操作的是同一份数据：
+
+```md
+<DemoBlock demo="<层>/<组件名>/<场景名>" :playground="{ isDisabled: false }">
+  <template #config="{ playground }">
+    <label><input v-model="playground.isDisabled" type="checkbox" />禁用</label>
+  </template>
+</DemoBlock>
+```
+
+示例组件按需声明 `isDisabled` 等 props 并给默认值即可。`ContextMenu` 文档页就用这套机制把全部可配置属性
+收进一个 `props-playground` 示例，不再为每个开关单独建示例。
+
+初值里含 JSON 这类带引号的内容时，页面可用 `<script setup>` 声明一个对象再整体传给 `:playground`
+（属性值内不能直接写双引号）；JSON 的解析与「解析失败时保留上一次有效值」都放在示例组件内，
+配置区只负责 `v-model` 绑定。配置区每个属性占一行，统一用全局组件 `DemoConfigItem`（左为属性名、右为默认插槽），
+行高固定 36px；配置区内容超出时在内部滚动（滚动条同样走样式包 mixin）。
+
+需要编辑 JSON 时用全局组件 `DemoJsonEditor`：它把高亮的 `<pre>` 铺在透明文字的 `<textarea>` 下面，
+光标与选区仍是原生行为，失焦时自动 `JSON.parse` + `JSON.stringify(…, null, 2)` 格式化一次。
+分词是站点内的小正则（键 / 字符串 / 数字 / 字面量 / 标点），颜色取自主题令牌，明暗模式自动切换。
+
+```md
+<DemoConfigItem label="菜单数据">
+  <DemoJsonEditor v-model="playground.itemsText" />
+</DemoConfigItem>
+```
+
+### 源码的多语言标签
+
+`codeTabs` 控制源码区的标签页，取值是语言后缀，默认 `['vue']`：
+
+```md
+<DemoBlock demo="advanced/context-menu/props-playground" :code-tabs="['vue', 'tsx']" />
+```
+
+每个标签对应示例目录下一个同名文件：`vue` 读 `<demo>.vue`（即真正被渲染的那个示例），
+`tsx` 读 `<demo>.tsx`。`.tsx` 只作为代码样本参与高亮与类型检查，**不会被渲染**（
+`demo-source.ts` 只 glob `.vue`），因此不会有第二套演示实例。
+
+`DemoBlock` 按语言分别缓存高亮结果，首次切到某个标签时才请求；复制按钮复制的是 Vue 写法。
+
 ### 源码高亮是怎么做的
 
 链路：**构建期高亮 → 虚拟模块 → 运行时 `v-html`**。
 
-1. `.vitepress/plugin/demo-highlight.ts` 在构建期扫描 `src/examples/**/*.vue`
+1. `.vitepress/plugin/demo-highlight.ts` 在构建期扫描 `src/examples/**` 下的 `.vue` 与 `.tsx`
    （目录不存在或尚无示例时返回空集，使「尚无示例」是合法状态而非构建错误），
    用 vitepress 公开导出的 `createMarkdownRenderer` 取得它内置的 Shiki 高亮函数，逐个渲染成高亮 HTML；
+   `.vue` 以 `<demo id>` 为键，`.tsx` 以 `<demo id>.tsx` 为键；
 2. 结果以一个 JSON 对象从虚拟模块 `virtual:bst-demo-highlight` 导出；
 3. `demo-source.ts` 的 `loadDemoHighlights()` 动态 `import` 它，`DemoBlock` 在**首次展开**时才请求，
    因此高亮数据自成独立 chunk，未展开源码的页面不会为它付出体积。
@@ -153,7 +221,7 @@ packages/bst-vue-next/site/
 | 决策 | 原因 |
 | --- | --- |
 | 复用 vitepress 的渲染器，而非直引 `shiki` | 站点本就未声明 shiki；复用后示例的配色、主题切换行为与页面正文代码块完全一致 |
-| 不复用默认主题的代码块样式，只复用它给的颜色规则 | 高亮 HTML 自带 `vp-code` 类，`.dark .vp-code span` 那条全局规则会自动命中；而代码块的盒模型样式作用域是 `.vp-doc` 下的 `language-*` 选择器，命中不了，需在 `theme/styles/demo/block.css` 自补 |
+| 不复用默认主题的代码块样式，只复用它给的颜色规则 | 高亮 HTML 自带 `vp-code` 类，`.dark .vp-code span` 那条全局规则会自动命中；而代码块的盒模型样式作用域是 `.vp-doc` 下的 `language-*` 选择器，命中不了，需在 `theme/styles/demo/block.less` 自补 |
 | 去掉输出中的 `v-pre` 属性 | 该属性是 markdown 渲染器为「参与 Vue 编译」而加的，而源码区经 `v-html` 输出、不经过模板编译 |
 | 高亮主题设为 `{ light, dark }` 双套 | 颜色以内联 CSS 变量挂在每个 span 上，切换明暗无需重新渲染 |
 | 不声明 `markdown.languages` | 默认语言集已覆盖本站所需（实测无回退警告）；且该字段类型为 shiki 的 `LanguageInput[]`（只接受语言注册对象），与其运行时接受语言 id 字符串不符，显式声明需加断言。详见 `markdown-options.ts` 注释 |
@@ -165,9 +233,11 @@ packages/bst-vue-next/site/
 | `vitepress` | `devDependencies`（`catalog:docs`） | 站点生成器，自带 vite / shiki / minisearch / @vueuse/core |
 | `vue` | `dependencies`（`catalog:runtime`） | 主题与示例的运行时 |
 | `postcss` | `devDependencies`（`catalog:build`） | 满足 vitepress 的 optional peer |
+| `less` | `devDependencies`（`catalog:build`） | 示例样式用 Less 编写，才能引入样式包的 `.scrollbar()` mixin |
 | `@types/node` | `devDependencies`（`catalog:types`） | 构建期插件读写示例文件（`node:fs` / `node:path`） |
 | `@vitejs/plugin-vue-jsx` | `devDependencies`（`catalog:build`） | 示例从源码包直接引入 `.tsx` 组件，需 Vue JSX 转换；缺它会退回 React JSX 运行时并报 `React is not defined`，组件渲染结果为空 |
 | `vue-tsc` | `devDependencies`（`catalog:types`） | 站点自有 `typecheck` 脚本 |
+| `clipboard` | `dependencies`（`catalog:runtime`） | 源码区复制按钮写剪贴板；`ClipboardJS.copy()` 走 `execCommand` 兜底，且在调用时直接返回选中的文本，不依赖 `navigator.clipboard` 的安全上下文前提 |
 | `@binarysovereign/styles` | `dependencies`（`workspace:*`） | 组件样式来源，走其导出子路径 |
 
 **刻意不声明**的项：

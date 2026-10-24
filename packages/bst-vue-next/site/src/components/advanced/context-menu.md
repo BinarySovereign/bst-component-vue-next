@@ -1,104 +1,68 @@
+<script setup lang="ts">
+const playgroundInit = {
+  itemsText: `[
+  { "key": "copy", "leftText": "复制", "rightText": "Ctrl+C" },
+  { "key": "paste", "leftText": "粘贴", "rightText": "Ctrl+V" },
+  { "key": "divider", "type": "divider" },
+  { "key": "delete", "leftText": "删除", "rightText": "Delete", "isDisabled": true }
+]`,
+  isCloseOnOutsideClick: true,
+  isCloseOnOutsideScroll: true,
+  isCloseOnEscKeyDown: true,
+  maxHeightType: 'string',
+  maxHeightValue: '',
+  positionX: '',
+  positionY: '',
+  teleport: true,
+};
+</script>
+
 # ContextMenu 上下文菜单
 
 [点击查看源码](https://github.com/BinarySovereign/bst-component-vue-next/tree/develop/packages/bst-advanced-components/context-menu)
 
 ## 代码演示
 
-### 基础用法
-
 <DemoBlock
-  demo="advanced/context-menu/basic-usage"
+  demo="advanced/context-menu/props-playground"
   title="基础用法"
-  description="在区域内右键唤出菜单，点击任意项后显示选中结果。"
-/>
-
-### 分割线与禁用项
-
-<DemoBlock
-  demo="advanced/context-menu/divider-and-disabled"
-  title="分割线与禁用项"
-  description="分割线用于分组，禁用项保持可见但不参与交互。"
-/>
-
-### 自定义项渲染
-
-<DemoBlock
-  demo="advanced/context-menu/custom-item-slot"
-  title="自定义项渲染"
-  description="通过 item 插槽渲染序号、文本与状态胶囊，点击与禁用逻辑仍由组件负责。"
-/>
-
-### 键盘操作
-
-<DemoBlock
-  demo="advanced/context-menu/keyboard-navigation"
-  title="键盘操作"
-  description="用按钮打开菜单后，靠方向键、回车与 Esc 完成整套操作，高亮会自动跳过禁用项与分割线。"
-/>
-
-### 业务回调
-
-<DemoBlock
-  demo="advanced/context-menu/item-action-callback"
-  title="业务回调"
-  description="items[].action 与 @item-select 并存，日志按触发顺序记录两者谁先执行。"
-/>
-
-### 关闭行为开关
-
-<DemoBlock
-  demo="advanced/context-menu/close-behavior-switches"
-  title="关闭行为开关"
-  description="三个布尔开关分别控制点击外部、外部滚动与 Esc 是否关闭，日志记录每次关闭的触发来源。"
-/>
-
-### 程序化控制
-
-<DemoBlock
-  demo="advanced/context-menu/programmatic-show-hide"
-  title="程序化控制"
-  description="通过实例暴露的 show(x, y) 与 hide() 由业务代码控制显隐，并观察 after-enter 与 after-leave 的时机。"
-/>
-
-### 视口边缘自适应
-
-<DemoBlock
-  demo="advanced/context-menu/viewport-edge-clamping"
-  title="视口边缘自适应"
-  description="在预览区右下角右键，坐标会被夹取到视口内，v-model:position 同步回夹取后的结果。"
-/>
-
-### 面板最大高度与滚动
-
-<DemoBlock
-  demo="advanced/context-menu/panel-size-and-scroll"
-  title="面板最大高度与滚动"
-  description="切换 maxHeight，长菜单在面板内部滚动而不撑破视口；面板宽度始终由菜单项内容自动决定。"
-/>
-
-### 完全自定义内容
-
-<DemoBlock
-  demo="advanced/context-menu/custom-panel-content"
-  title="完全自定义内容"
-  description="default 插槽接管面板内容，键盘导航仍以 items 为准。"
-/>
-
-### 动态菜单数据
-
-<DemoBlock
-  demo="advanced/context-menu/dynamic-items"
-  title="动态菜单数据"
-  description="切换只读与编辑模式后，同一个实例的菜单项随数据实时变化。"
-/>
-
-### 多实例
-
-<DemoBlock
-  demo="advanced/context-menu/multiple-instances"
-  title="多实例"
-  description="每行各持有一份菜单，在某行右键时其他行的菜单状态互不干扰。"
-/>
+  description="点击「打开菜单」按钮唤出菜单，右侧配置区实时调整组件入参。"
+  :playground="playgroundInit"
+  :code-tabs="['vue', 'tsx']"
+>
+  <template #config="{ playground }">
+    <div class="bst-demo-panel">
+      <DemoConfigItem label="菜单数据">
+        <DemoJsonEditor v-model="playground.itemsText" placeholder="[ ]" />
+      </DemoConfigItem>
+      <DemoConfigItem label="最大高度">
+        <span class="bst-demo-select">
+          <select v-model="playground.maxHeightType">
+            <option value="string">字符串</option>
+            <option value="number">数字</option>
+          </select>
+        </span>
+        <input v-model="playground.maxHeightValue" class="bst-demo-input" type="text" placeholder="不限制" />
+      </DemoConfigItem>
+      <DemoConfigItem label="位置">
+        <input v-model="playground.positionX" class="bst-demo-input bst-demo-input-compact" type="number" placeholder="X" />
+        <input v-model="playground.positionY" class="bst-demo-input bst-demo-input-compact" type="number" placeholder="Y" />
+      </DemoConfigItem>
+      <DemoConfigItem label="挂载到 body">
+        <input v-model="playground.teleport" class="bst-demo-switch" type="checkbox" />
+      </DemoConfigItem>
+      <DemoConfigItem label="点击外部关闭">
+        <input v-model="playground.isCloseOnOutsideClick" class="bst-demo-switch" type="checkbox" />
+      </DemoConfigItem>
+      <DemoConfigItem label="外部滚动关闭">
+        <input v-model="playground.isCloseOnOutsideScroll" class="bst-demo-switch" type="checkbox" />
+      </DemoConfigItem>
+      <DemoConfigItem label="按 Esc 关闭">
+        <input v-model="playground.isCloseOnEscKeyDown" class="bst-demo-switch" type="checkbox" />
+      </DemoConfigItem>
+    </div>
+  </template>
+</DemoBlock>
 
 ## API
 

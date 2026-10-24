@@ -5,21 +5,25 @@ import DefaultTheme from 'vitepress/theme';
 import { watch } from 'vue';
 
 import DemoBlock from './components/DemoBlock.vue';
+import DemoConfigItem from './components/DemoConfigItem.vue';
+import DemoJsonEditor from './components/DemoJsonEditor.vue';
 import TokenPalette from './components/TokenPalette.vue';
 
 import '@binarysovereign/styles/web/tokens.css';
 import '@binarysovereign/styles/web/base.css';
 import '@binarysovereign/styles/web/advanced-components/context-menu';
 
-import './styles/vars.css';
-import './styles/demo/index.css';
-import './styles/preview.css';
+import './styles/vars.less';
+import './styles/demo/index.less';
+import './styles/preview.less';
 
 export default {
   extends: DefaultTheme,
 
   enhanceApp({ app }) {
     app.component('DemoBlock', DemoBlock);
+    app.component('DemoConfigItem', DemoConfigItem);
+    app.component('DemoJsonEditor', DemoJsonEditor);
     app.component('TokenPalette', TokenPalette);
   },
 

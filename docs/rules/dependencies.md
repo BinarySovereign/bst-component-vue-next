@@ -53,7 +53,7 @@
 | `glob` | 400,842,242 | 按通配符匹配文件 | 取 `^13.0.6`，`engines.node` 为 `18 \|\| 20 \|\| >=22`。注意 13 线导出为命名导出且返回 Promise，写法不同于旧版 |
 | `rimraf` | 162,777,700 | 递归删除目录（**当前未使用**） | 取 `^6.1.3`，`engines.node` 为 `20 \|\| >=22`。原计划的 `clean:dist` 脚本已不存在，产物清理由 `scripts/build/dist.js` 内的 `fs-extra` 承担 |
 | `cross-env` | 26,711,501 | 跨平台设置环境变量 | 取 `^10.1.0`，`engines.node >= 20`。测试包脚本已在使用（如 `test:snap` 的 `cross-env TEST_TARGET=snap`） |
-| `less` | 11,230,518 | 编译 `packages/bst-styles/web` 下的 `.less` 样式源码 | 取 `^4.9.1`。仓库 `.vscode/settings.json` 含 `[less]` 格式化配置、`docs/rules/stylelint-rules.md` 全篇围绕 `.less`，样式语言确定为 Less。实际调用点为 `scripts/build/styles.js` 的 `less.render` |
+| `less` | 11,230,518 | 编译 `packages/bst-styles/web` 下的 `.less` 样式源码；文档站示例样式也用它复用样式包 mixin | 取 `^4.9.1`。仓库 `.vscode/settings.json` 含 `[less]` 格式化配置、`docs/rules/stylelint-rules.md` 全篇围绕 `.less`，样式语言确定为 Less。实际调用点为 `scripts/build/styles.js` 的 `less.render`，以及 `packages/bst-vue-next/site` 经 Vite 内建 less 支持编译示例样式 |
 | `postcss` | 308,191,800 | CSS 后处理管道，承托 `autoprefixer` | 取 `^8.5.30`，是 `autoprefixer` 与 `rollup-plugin-postcss` 的 peer 前置。实际调用点为 `scripts/build/styles.js` 的 `postcss([autoprefixer]).process(...)` |
 | `autoprefixer` | 61,877,458 | 依据 `browserslist` 自动补全厂商前缀 | 取 `^10.6.1`，peer `postcss: ^8.1.0` 满足。与仓库已声明的 `browserslist` 配套。当前目标集为纯 Blink（`chrome` / `edge` `>= 152`、`Electron >= 42`），实测对现有样式产物**新增 0 条前缀**——产物中的 `-webkit-` 全部来自样式源码手写，`-moz-` / `-ms-` 已无来源 |
 | `rollup-plugin-postcss` | 1,334,818 | 在 Rollup 中编译样式并抽取为独立 CSS（**当前未进入管线**） | 取 `^4.0.2`。peer 仅约束 `postcss: 8.x`，**不约束 rollup 版本**；组件源码不含任何样式（样式统一由 `@binarysovereign/styles` 提供），且样式包不经 Rollup，故本插件暂无调用点。竞品 `rollup-plugin-styles@4.0.0` 的 peer 为 `rollup: ^2.63.0`，与 rollup 4 不兼容，且其周下载量仅 53,547 落在灰区，故排除 |

@@ -1,4 +1,10 @@
-/* 站点外壳与组件库令牌的接缝：把 VitePress 的品牌色指向组件库品牌色。 */
+/* 站点外壳与组件库令牌的接缝：把 VitePress 的品牌色指向组件库品牌色，并统一页面滚动条外观。 */
+@import '@binarysovereign/styles/web/mixins/_scrollbar.less';
+
+html {
+  .scrollbar(8px, 2px);
+}
+
 :root {
   --vp-c-brand-1: var(--bst-brand-color-7);
   --vp-c-brand-2: var(--bst-brand-color-6);

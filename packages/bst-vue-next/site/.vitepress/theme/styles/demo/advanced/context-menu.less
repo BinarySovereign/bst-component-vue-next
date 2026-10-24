@@ -1,0 +1,163 @@
+/* 高级组件 ContextMenu 示例的辅助类：演示区按钮与配置区控件。 */
+@import '@binarysovereign/styles/web/mixins/_scrollbar.less';
+
+.bst-demo-button {
+  padding: var(--bst-comp-padding-tb-xs) var(--bst-comp-padding-lr-s);
+  border: 1px solid var(--bst-component-stroke);
+  border-radius: var(--bst-radius-default);
+  background-color: var(--bst-bg-color-container);
+  color: var(--bst-text-color-primary);
+  font: var(--bst-font-body-medium);
+  cursor: pointer;
+}
+
+.bst-demo-button:hover {
+  border-color: var(--bst-brand-color);
+  color: var(--bst-text-color-brand);
+}
+
+.bst-demo-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: var(--bst-text-color-primary);
+  font: var(--bst-font-body-small);
+}
+
+.bst-demo-input {
+  flex: 1 1 auto;
+  box-sizing: border-box;
+  min-width: 0;
+  height: var(--bst-size-8);
+  padding: 0 var(--bst-size-3);
+  border: 1px solid var(--bst-component-stroke);
+  border-radius: var(--bst-radius-default);
+  background-color: var(--bst-bg-color-container);
+  color: var(--bst-text-color-primary);
+  font: var(--bst-font-body-small);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.bst-demo-input::placeholder {
+  color: var(--bst-text-color-placeholder);
+}
+
+.bst-demo-input:hover {
+  border-color: var(--bst-brand-color-4);
+}
+
+.bst-demo-input-compact {
+  flex: 0 0 72px;
+  text-align: center;
+}
+
+.bst-demo-input-compact::-webkit-inner-spin-button,
+.bst-demo-input-compact::-webkit-outer-spin-button {
+  margin: 0;
+  appearance: none;
+}
+
+.bst-demo-input:focus {
+  outline: none;
+  border-color: var(--bst-brand-color);
+  box-shadow: 0 0 0 2px var(--bst-brand-color-1);
+}
+
+.bst-demo-select {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+}
+
+.bst-demo-select select {
+  height: var(--bst-size-8);
+  padding: 0 var(--bst-size-10) 0 var(--bst-size-3);
+  border: 1px solid var(--bst-component-stroke);
+  border-radius: var(--bst-radius-default);
+  background-color: var(--bst-bg-color-container);
+  color: var(--bst-text-color-primary);
+  font: var(--bst-font-body-small);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  appearance: none;
+  cursor: pointer;
+}
+
+.bst-demo-select select:hover {
+  border-color: var(--bst-brand-color-4);
+}
+
+.bst-demo-select select:focus-visible {
+  outline: none;
+  border-color: var(--bst-brand-color);
+  box-shadow: 0 0 0 2px var(--bst-brand-color-1);
+}
+
+.bst-demo-select option {
+  padding: var(--bst-size-2) var(--bst-size-3);
+  background-color: var(--bst-bg-color-container);
+  color: var(--bst-text-color-primary);
+  font: var(--bst-font-body-small);
+}
+
+.bst-demo-select option:checked {
+  background-color: var(--bst-brand-color-1);
+  color: var(--bst-brand-color-8);
+}
+
+.bst-demo-select::after {
+  position: absolute;
+  top: 50%;
+  right: var(--bst-size-4);
+  width: var(--bst-size-2);
+  height: var(--bst-size-2);
+  border-right: 1.5px solid var(--bst-text-color-secondary);
+  border-bottom: 1.5px solid var(--bst-text-color-secondary);
+  transform: translateY(-65%) rotate(45deg);
+  content: '';
+  pointer-events: none;
+  transition: border-color 0.2s ease;
+}
+
+.bst-demo-select:hover::after {
+  border-color: var(--bst-brand-color-6);
+}
+
+.bst-demo-switch {
+  position: relative;
+  box-sizing: border-box;
+  flex: none;
+  width: var(--bst-size-10);
+  height: var(--bst-size-6);
+  margin: 0;
+  border: none;
+  border-radius: var(--bst-radius-round);
+  background-color: var(--bst-text-color-placeholder);
+  appearance: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.bst-demo-switch::after {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  box-sizing: border-box;
+  width: var(--bst-size-5);
+  height: var(--bst-size-5);
+  border-radius: var(--bst-radius-circle);
+  background-color: var(--bst-bg-color-container);
+  content: '';
+  transition: transform 0.2s ease;
+}
+
+.bst-demo-switch:checked {
+  background-color: var(--bst-brand-color);
+}
+
+.bst-demo-switch:checked::after {
+  transform: translateX(var(--bst-size-6));
+}

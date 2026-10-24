@@ -1,0 +1,16 @@
+/* 跨层复用的示例辅助类：铺满预览区。 */
+
+.bst-demo-fill {
+  flex: 1 1 auto;
+  align-self: stretch;
+  min-width: 0;
+  margin: calc(-1 * var(--bst-size-10)) calc(-1 * var(--bst-size-8));
+  padding: var(--bst-size-10) var(--bst-size-8);
+}
+
+@media (width <= 640px) {
+  .bst-demo-fill {
+    margin: calc(-1 * var(--bst-size-8)) calc(-1 * var(--bst-size-6));
+    padding: var(--bst-size-8) var(--bst-size-6);
+  }
+}

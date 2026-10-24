@@ -1,0 +1,387 @@
+/* DemoBlock 示例容器骨架：标题栏、演示区、配置区与源码区的外观。 */
+@import '@binarysovereign/styles/web/mixins/_scrollbar.less';
+
+.bst-demo-block {
+  margin: var(--bst-size-6) 0;
+  padding-top: var(--bst-size-5);
+  border: 1px solid var(--bst-component-border);
+  background-color: var(--bst-bg-color-container);
+}
+
+.bst-demo-block-header {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bst-size-2);
+  padding: 0 var(--bst-size-8);
+}
+
+.bst-demo-block-title {
+  margin: 0;
+  padding-right: 80px;
+  color: var(--bst-text-color-primary);
+  font: var(--bst-font-title-medium);
+}
+
+.bst-demo-block-description {
+  margin: 0;
+  color: var(--bst-text-color-secondary);
+  font: var(--bst-font-body-medium);
+}
+
+.bst-demo-block-reset {
+  position: absolute;
+  top: 0;
+  right: var(--bst-size-8);
+  height: var(--bst-size-10);
+  padding: 0 var(--bst-size-4);
+  border: none;
+  border-radius: var(--bst-radius-default);
+  background-color: var(--bst-brand-color);
+  color: var(--bst-text-color-anti);
+  font: var(--bst-font-mark-small);
+  cursor: pointer;
+}
+
+.bst-demo-block-reset:hover {
+  background-color: var(--bst-brand-color-7);
+}
+
+.bst-demo-block-content {
+  display: flex;
+  padding: var(--bst-size-5) var(--bst-size-8);
+}
+
+.bst-demo-block-display {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 240px;
+  overflow: hidden;
+  border: 1px solid var(--bst-component-border);
+  background-color: var(--bst-bg-color-secondarycontainer);
+}
+
+.bst-demo-block-display-content {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: var(--bst-size-10) var(--bst-size-8);
+  overflow: auto;
+
+  .scrollbar(8px, 2px);
+}
+
+.bst-demo-block-config {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: var(--bst-size-3);
+  box-sizing: border-box;
+  min-width: 0;
+  height: 240px;
+  padding: var(--bst-size-5);
+  overflow: hidden;
+  border: 1px solid var(--bst-component-border);
+}
+
+.bst-demo-block-config > .bst-demo-block-panel-label {
+  position: static;
+  align-self: flex-start;
+}
+
+.bst-demo-block-config-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+
+  .scrollbar(8px, 2px);
+}
+
+.bst-demo-config-item {
+  display: flex;
+  flex: none;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--bst-size-3);
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: var(--bst-size-11);
+}
+
+.bst-demo-config-item-label {
+  flex: none;
+  padding-top: var(--bst-size-4);
+  color: var(--bst-text-color-secondary);
+  font: var(--bst-font-mark-small);
+  white-space: nowrap;
+}
+
+.bst-demo-config-item-control {
+  display: flex;
+  flex: 1 1 auto;
+  align-self: stretch;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--bst-size-1);
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.bst-json-editor {
+  position: relative;
+  flex: 1 1 auto;
+  align-self: stretch;
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 120px;
+  max-height: 720px;
+  overflow: hidden;
+  border: 1px solid var(--bst-component-stroke);
+  border-radius: var(--bst-radius-default);
+  background-color: var(--bst-bg-color-container);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.bst-json-editor:hover {
+  border-color: var(--bst-brand-color-4);
+}
+
+.bst-json-editor:focus-within {
+  border-color: var(--bst-brand-color);
+  box-shadow: 0 0 0 2px var(--bst-brand-color-1);
+}
+
+.bst-json-editor-highlight,
+.bst-json-editor-input {
+  box-sizing: border-box;
+  margin: 0;
+  font-family: ui-monospace, sfmono-regular, menlo, monaco, consolas, monospace;
+  font-size: var(--bst-font-size-mark-small);
+  line-height: var(--bst-line-height-body-small);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  tab-size: 2;
+}
+
+.bst-json-editor-highlight {
+  position: absolute;
+  inset: 0;
+  padding: var(--bst-size-1) calc(var(--bst-size-2) + 8px) var(--bst-size-1) var(--bst-size-2);
+  overflow: hidden;
+  color: var(--bst-text-color-secondary);
+  pointer-events: none;
+}
+
+.bst-json-editor-highlight code {
+  font: inherit;
+}
+
+.bst-json-editor-input {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: var(--bst-size-1) var(--bst-size-2);
+  border: none;
+  background-color: transparent;
+  color: transparent;
+  caret-color: var(--bst-text-color-primary);
+  resize: none;
+
+  .scrollbar(8px, 2px);
+}
+
+.bst-json-editor-input::placeholder {
+  color: var(--bst-text-color-placeholder);
+}
+
+.bst-json-editor-input::selection {
+  background-color: var(--bst-brand-color-2);
+}
+
+.bst-json-editor-key {
+  color: var(--bst-brand-color-6);
+}
+
+.bst-json-editor-string {
+  color: var(--bst-success-color-6);
+}
+
+.bst-json-editor-number {
+  color: var(--bst-warning-color-6);
+}
+
+.bst-json-editor-literal {
+  color: var(--bst-error-color-6);
+}
+
+.bst-json-editor-punctuation {
+  color: var(--bst-text-color-placeholder);
+}
+
+.bst-demo-block-panel-label {
+  position: absolute;
+  top: var(--bst-size-5);
+  left: var(--bst-size-5);
+  color: var(--bst-text-color-brand);
+  font: var(--bst-font-mark-small);
+  pointer-events: none;
+}
+
+.bst-demo-block-missing {
+  margin: 0;
+  color: var(--bst-text-color-placeholder);
+  font: var(--bst-font-body-small);
+}
+
+.bst-demo-block-actions {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  gap: var(--bst-size-2);
+  padding: var(--bst-size-4);
+}
+
+.bst-demo-block-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--bst-size-7);
+  height: var(--bst-size-7);
+  padding: 0;
+  border: none;
+  border-radius: var(--bst-radius-default);
+  background-color: transparent;
+  color: var(--bst-text-color-secondary);
+  cursor: pointer;
+}
+
+.bst-demo-block-action:not(.bst-demo-block-action-active):hover {
+  background-color: var(--bst-bg-color-container-hover);
+}
+
+.bst-demo-block-action-active {
+  background-color: var(--bst-brand-color, #00b42a);
+  color: var(--bst-text-color-anti);
+}
+
+.bst-demo-block-action svg {
+  display: block;
+}
+
+.bst-demo-block-source-open .bst-demo-block-content {
+  padding-bottom: 0;
+}
+
+.bst-demo-source {
+  display: flex;
+  flex-direction: column;
+  margin: 0 var(--bst-size-8);
+  max-height: 400px;
+  overflow: auto;
+  border: 1px solid var(--bst-component-border);
+  border-top: none;
+
+  .scrollbar(8px, 2px);
+}
+
+.bst-demo-source-tabs {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex: none;
+  justify-content: center;
+  border-bottom: 1px solid var(--bst-component-border);
+  background-color: var(--bst-bg-color-container);
+}
+
+.bst-demo-source-tab {
+  min-width: 120px;
+  padding: var(--bst-size-3) var(--bst-size-5);
+  border: none;
+  border-bottom: 2px solid transparent;
+  background-color: transparent;
+  color: var(--bst-text-color-secondary);
+  font: var(--bst-font-body-medium);
+  text-align: center;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.bst-demo-source-tab:hover {
+  color: var(--bst-text-color-brand);
+}
+
+.bst-demo-source-tab-active {
+  border-bottom-color: var(--bst-brand-color);
+  color: var(--bst-text-color-brand);
+}
+
+.bst-demo-source-hint {
+  flex: none;
+  margin: 0;
+  padding: var(--bst-size-6);
+  color: var(--bst-text-color-placeholder);
+  font: var(--bst-font-body-small);
+}
+
+.bst-demo-source-body {
+  flex: none;
+}
+
+.bst-demo-source-body pre {
+  margin: 0;
+  padding: var(--bst-size-6);
+  overflow: visible;
+  background-color: var(--bst-bg-color-secondarycontainer);
+  color: var(--bst-text-color-primary);
+  font-family: ui-monospace, sfmono-regular, menlo, monaco, consolas, monospace;
+  font-size: var(--bst-font-size-body-small);
+  line-height: var(--bst-line-height-body-small);
+}
+
+@media (width <= 640px) {
+  .bst-demo-block-header {
+    padding: 0 var(--bst-size-6);
+  }
+
+  .bst-demo-block-title {
+    padding-right: 0;
+  }
+
+  .bst-demo-block-reset {
+    position: static;
+    align-self: flex-start;
+  }
+
+  .bst-demo-block-content {
+    flex-direction: column;
+    padding: var(--bst-size-4) var(--bst-size-6);
+  }
+
+  .bst-demo-block-display-content {
+    padding: var(--bst-size-8) var(--bst-size-6);
+  }
+
+  .bst-demo-source {
+    margin: 0 var(--bst-size-6);
+  }
+
+  .bst-demo-source-tab {
+    min-width: 96px;
+  }
+
+  .bst-demo-source-body pre {
+    padding: var(--bst-size-4);
+  }
+}

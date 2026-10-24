@@ -11,6 +11,6 @@
     // 它 re-export vite/client，import.meta.glob 的类型由它提供
     "types": ["node", "vitepress/client"]
   },
-  "include": [".vitepress/**/*.ts", ".vitepress/**/*.vue", "src/**/*.ts", "src/**/*.vue"],
+  "include": [".vitepress/**/*.ts", ".vitepress/**/*.vue", "src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
   "exclude": [".vitepress/cache", ".vitepress/dist"]
 }

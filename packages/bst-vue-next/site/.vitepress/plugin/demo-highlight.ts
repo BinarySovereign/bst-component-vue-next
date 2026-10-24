@@ -11,9 +11,20 @@ const RESOLVED_MODULE_ID = `\0${VIRTUAL_MODULE_ID}`;
 
 const EXAMPLES_DIR = 'examples';
 
-const EXAMPLE_LANG = 'vue';
+interface ExampleSource {
+  ext: string;
+  lang: string;
+  keySuffix: string;
+}
 
-const EXAMPLE_EXT = '.vue';
+const EXAMPLE_SOURCES: ExampleSource[] = [
+  { ext: '.vue', lang: 'vue', keySuffix: '' },
+  { ext: '.tsx', lang: 'tsx', keySuffix: '.tsx' },
+];
+
+function toSourceConfig(file: string): ExampleSource | undefined {
+  return EXAMPLE_SOURCES.find((source) => file.endsWith(source.ext));
+}
 
 function collectExamples(dir: string): string[] {
   if (!existsSync(dir)) {
@@ -27,14 +38,14 @@ function collectExamples(dir: string): string[] {
       return collectExamples(full);
     }
 
-    return full.endsWith(EXAMPLE_EXT) ? [full] : [];
+    return toSourceConfig(full) === undefined ? [] : [full];
   });
 }
 
-function toDemoId(examplesDir: string, file: string): string {
+function toDemoId(examplesDir: string, file: string, ext: string): string {
   const rel = relative(examplesDir, file).split(sep).join('/');
 
-  return rel.slice(0, rel.length - EXAMPLE_EXT.length);
+  return rel.slice(0, rel.length - ext.length);
 }
 
 export function demoHighlightPlugin(markdownOptions: MarkdownOptions): Plugin {
@@ -80,10 +91,15 @@ export function demoHighlightPlugin(markdownOptions: MarkdownOptions): Plugin {
       const map: Record<string, string> = {};
 
       for (const file of files) {
-        map[toDemoId(examplesDir, file)] = highlight(readFileSync(file, 'utf8'), EXAMPLE_LANG, '').replace(
-          ' v-pre=""',
-          '',
-        );
+        const source = toSourceConfig(file);
+
+        if (source === undefined) {
+          continue;
+        }
+
+        const key = `${toDemoId(examplesDir, file, source.ext)}${source.keySuffix}`;
+
+        map[key] = highlight(readFileSync(file, 'utf8'), source.lang, '').replace(' v-pre=""', '');
       }
 
       return `export default ${JSON.stringify(map)};`;
